@@ -1,0 +1,2084 @@
+{
+  "last_updated": 1738580265372,
+  "models": [
+    {
+      "has_recovery_drive": false,
+      "boot_type": "Legacy",
+      "name": "2x4pro",
+      "d3Model": "2x4pro",
+      "redisguises": [
+        {
+          "os_wim_file_size": 7513632386,
+          "iso_file_name": "PRO_180_841.iso",
+          "iso_file_size": 8396734464,
+          "release_notes": "Disguise OS Image Version 180.841 is specific to the 2x4pro, GX 1 and GX 2. This image includes no driver change, however it patches a critical bug released in 175.819; as such, we recommend any users currently on version 175 or older to update with priority. \r\n\r\nEssential to security and overall system stability. A fix to the windows product id process on deployment prevents windows from failing to activate post deployment, as in previous versions of the OS image.\r\n\r\n - Nvidia driver updated to 461.92; fixing the issue where UCRS is blocked by no OpenCL support in driver. Lower versions of the Nvidia driver also showed instability in Genlock. This version has been rigorously tested by the Disguise team.\r\n - Bluefish drivers remain 5.11.0.47",
+          "release_date": 1633046400000,
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/boot_PRO_180_841.2.5.wim",
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/gxW10_180.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/PROW11_d180_p841.7z.001",
+          "redisguise_name": "180.841",
+          "redisguise_handle": "[D3PRO813][180.841]",
+          "r2_sends_remote_reimager_logs": false,
+          "os_wim_file_name": "gxW10_180.wim",
+          "boot_wim_file_size": 830776715,
+          "boot_wim_file_name": "boot_PRO_180_841.2.5.wim",
+          "r2_is_compatible": true,
+          "os_family_handle": "D3PRO813",
+          "public_version_table": [
+            {
+              "Package": "Audio: RME",
+              "Version": "4.2.9"
+            },
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "461.92"
+            },
+            {
+              "Package": "Capture: Bluefish",
+              "Version": "5.11.0.47"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "EX 2",
+      "d3Model": "EX 2",
+      "redisguises": [
+        {
+          "boot_wim_file_size": 1110878323,
+          "os_wim_file_size": 10523807371,
+          "r2_sends_remote_reimager_logs": true,
+          "release_notes": "Disguise OS image version EX2C_EX2_EX3P_24Q2 is the launch OS and specific to the EX 2, EX 2C and EX 3+.\r\n\r\nThis is the Initial Release OS for the EX2, EX2C & EX3P Models\r\n\r\nDisguise OS image version RXIII_24Q2 is the launch OS and specific to the RX III.\r\n\r\nHardware support for this machine has been enabled from Designer software version r27.5.1 and above.",
+          "iso_file_name": "EX2C_EX2_EX3P_24Q2_1668.iso",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/boot_EX2C_EX2_EX3P_24Q2_1668.2.2.wim",
+          "os_wim_file_name": "EX2C_EX2_EX3P_w11-23H2_24Q2_PROD.wim",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/EX2C_EX2_EX3P_w11-23H2_24Q2_PROD.wim",
+          "release_date": 1717977600000,
+          "iso_file_size": 11687034880,
+          "r2_is_compatible": true,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/EX2C_EX2_EX3P_d24Q2_p1668.iso",
+          "redisguise_name": "24Q2.1668",
+          "os_family_handle": "EX2C_EX2_EX3P",
+          "redisguise_handle": "[EX2C_EX2_EX3P][24Q2.1668]",
+          "r2_sends_remote_postboot_logs": true,
+          "boot_wim_file_name": "boot_EX2C_EX2_EX3P_24Q2_1668.2.2.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "551.52.0"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Vimba X SDK",
+              "Version": "2023.4.0.2776"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (ADA)",
+              "Version": "0.7.2"
+            },
+            {
+              "Package": "NVIDIA AR SDK (ADA)",
+              "Version": "0.8.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "EX 2C",
+      "d3Model": "EX 2C",
+      "redisguises": [
+        {
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/EX2C_EX2_EX3P_d24Q2_p1668.iso",
+          "redisguise_name": "24Q2.1668",
+          "iso_file_size": 11687034880,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/boot_EX2C_EX2_EX3P_24Q2_1668.2.2.wim",
+          "r2_sends_remote_postboot_logs": true,
+          "release_notes": "Disguise OS image version EX2C_EX2_EX3P_24Q2 is the launch OS and specific to the EX 2, EX 2C and EX 3+.\r\n\r\nThis is the Initial Release OS for the EX2, EX2C & EX3P Models\r\n\r\nDisguise OS image version RXIII_24Q2 is the launch OS and specific to the RX III.\r\n\r\nHardware support for this machine has been enabled from Designer software version r27.5.1 and above.",
+          "release_date": 1717977600000,
+          "os_family_handle": "EX2C_EX2_EX3P",
+          "redisguise_handle": "[EX2C_EX2_EX3P][24Q2.1668]",
+          "os_wim_file_size": 10523807371,
+          "os_wim_file_name": "EX2C_EX2_EX3P_w11-23H2_24Q2_PROD.wim",
+          "boot_wim_file_size": 1110878323,
+          "boot_wim_file_name": "boot_EX2C_EX2_EX3P_24Q2_1668.2.2.wim",
+          "iso_file_name": "EX2C_EX2_EX3P_24Q2_1668.iso",
+          "r2_is_compatible": true,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/EX2C_EX2_EX3P_w11-23H2_24Q2_PROD.wim",
+          "r2_sends_remote_reimager_logs": true,
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "551.52.0"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Vimba X SDK",
+              "Version": "2023.4.0.2776"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (ADA)",
+              "Version": "0.7.2"
+            },
+            {
+              "Package": "NVIDIA AR SDK (ADA)",
+              "Version": "0.8.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "EX 3+",
+      "d3Model": "EX 3+",
+      "redisguises": [
+        {
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/boot_EX2C_EX2_EX3P_24Q2_1668.2.2.wim",
+          "boot_wim_file_size": 1110878323,
+          "boot_wim_file_name": "boot_EX2C_EX2_EX3P_24Q2_1668.2.2.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/EX2C_EX2_EX3P_d24Q2_p1668.iso",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/EX2C_EX2_EX3P/24Q2/EX2C_EX2_EX3P_w11-23H2_24Q2_PROD.wim",
+          "os_wim_file_name": "EX2C_EX2_EX3P_w11-23H2_24Q2_PROD.wim",
+          "os_wim_file_size": 10523807371,
+          "release_notes": "Disguise OS image version EX2C_EX2_EX3P_24Q2 is the launch OS and specific to the EX 2, EX 2C and EX 3+.\r\n\r\nThis is the Initial Release OS for the EX2, EX2C & EX3P Models\r\n\r\nDisguise OS image version RXIII_24Q2 is the launch OS and specific to the RX III.\r\n\r\nHardware support for this machine has been enabled from Designer software version r27.5.1 and above.",
+          "r2_sends_remote_reimager_logs": true,
+          "iso_file_name": "EX2C_EX2_EX3P_24Q2_1668.iso",
+          "r2_sends_remote_postboot_logs": true,
+          "iso_file_size": 11687034880,
+          "redisguise_name": "24Q2.1668",
+          "release_date": 1717977600000,
+          "r2_is_compatible": true,
+          "redisguise_handle": "[EX2C_EX2_EX3P][24Q2.1668]",
+          "os_family_handle": "EX2C_EX2_EX3P",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "551.52.0"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Vimba X SDK",
+              "Version": "2023.4.0.2776"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (ADA)",
+              "Version": "0.7.2"
+            },
+            {
+              "Package": "NVIDIA AR SDK (ADA)",
+              "Version": "0.8.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "EX3",
+      "d3Model": "EX3",
+      "redisguises": [
+        {
+          "r2_is_compatible": true,
+          "redisguise_name": "205.1104",
+          "os_wim_file_size": 8807200915,
+          "os_family_handle": "ex3",
+          "iso_file_size": 9746972672,
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/EX3/205/rxW10_205_PROD.wim",
+          "r2_sends_remote_postboot_logs": true,
+          "iso_file_name": "rx_205_1104.iso",
+          "release_date": 1694390400000,
+          "redisguise_handle": "[ex3][205.1104]",
+          "os_wim_file_name": "EX3W10_205_PROD.wim",
+          "boot_wim_file_name": "boot_rx_205_1104.2.5.wim",
+          "aws_url_boot_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/EX3/205/boot_EX3_205_1104.2.5.wim",
+          "aws_url_iso": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/EX3/205/ex3W10_d205_p1104.iso",
+          "release_notes": "Support for Nanite is still built into this version thanks to the move on rx to 21H2 of Windows 10. Security updates are included up to August 2022.\r\n\r\nWe have updated the NVIDIA driver to 516.94 but users are able to update to newer version of the NVIDIA driver without waiting for a new OS release. This major release features an update to the Mellanox NIC driver and includes the latest Rivermax licensing and SDK. OS 205 is part of the disguise OS 200+ range and requires versions of d3 r22 and newer to license and run Mellanox NIC with improved performance. \r\n\r\n - Windows 10 updates to 21h2, this includes the latest security updates up to August 2022. It includes a UAC bug fix to allow d3 to remote install.\r\n\r\n - NVIDIA driver 516.94 provides driver updates up to August 2022 and is a DCH branch driver.\r\n\r\n - Direct X 12 is now the main graphics engine in the version of windows and provides significant performance improvements.\r\n\r\n - The latest version of Designer will be installed on new servers, and upgrading a media server will preserve the existing version of Designer installed. disguise recommends upgrading to r21 in order to work in local languages and find solutions for the most complex projects with peers around the world. Take advantage of improved workflows and integrations with most of the leading technology. \r\n\r\n - Intel Network Proset 26.8 is included and comes with a new advanced teaming utility for teaming compatible intel adapters. Please note that teaming may not be possible with vLANs and the  Mellanox adapters.  \r\n\r\n - Mellanox transitions to 2.90.50010 with rivermax 1.10.20 support. The driver and renderstream license is now fully integrated and will require no reinstallation of the driver after redisguise.",
+          "boot_wim_file_size": 887419128,
+          "r2_sends_remote_reimager_logs": false,
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "516.94"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "Legacy",
+      "name": "gx 1",
+      "d3Model": "gx 1",
+      "redisguises": [
+        {
+          "boot_wim_file_size": 830776715,
+          "boot_wim_file_name": "boot_PRO_180_841.2.5.wim",
+          "os_wim_file_size": 7513632386,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/boot_PRO_180_841.2.5.wim",
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/gxW10_180.wim",
+          "os_family_handle": "D3PRO813",
+          "redisguise_handle": "[D3PRO813][180.841]",
+          "release_date": 1633046400000,
+          "redisguise_name": "180.841",
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/PROW11_d180_p841.7z.001",
+          "iso_file_size": 8396734464,
+          "release_notes": "Disguise OS Image Version 180.841 is specific to the 2x4pro, GX 1 and GX 2. This image includes no driver change, however it patches a critical bug released in 175.819; as such, we recommend any users currently on version 175 or older to update with priority. \r\n\r\nEssential to security and overall system stability. A fix to the windows product id process on deployment prevents windows from failing to activate post deployment, as in previous versions of the OS image.\r\n\r\n - Nvidia driver updated to 461.92; fixing the issue where UCRS is blocked by no OpenCL support in driver. Lower versions of the Nvidia driver also showed instability in Genlock. This version has been rigorously tested by the Disguise team.\r\n - Bluefish drivers remain 5.11.0.47",
+          "iso_file_name": "PRO_180_841.iso",
+          "os_wim_file_name": "gxW10_180.wim",
+          "r2_is_compatible": true,
+          "r2_sends_remote_reimager_logs": false,
+          "public_version_table": [
+            {
+              "Package": "Audio: RME",
+              "Version": "4.2.9"
+            },
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "461.92"
+            },
+            {
+              "Package": "Capture: Bluefish",
+              "Version": "5.11.0.47"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "Legacy",
+      "name": "gx 2",
+      "d3Model": "gx 2",
+      "redisguises": [
+        {
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/PROW11_d180_p841.7z.001",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/boot_PRO_180_841.2.5.wim",
+          "os_wim_file_name": "gxW10_180.wim",
+          "release_date": 1633046400000,
+          "iso_file_size": 8396734464,
+          "release_notes": "Disguise OS Image Version 180.841 is specific to the 2x4pro, GX 1 and GX 2. This image includes no driver change, however it patches a critical bug released in 175.819; as such, we recommend any users currently on version 175 or older to update with priority. \r\n\r\nEssential to security and overall system stability. A fix to the windows product id process on deployment prevents windows from failing to activate post deployment, as in previous versions of the OS image.\r\n\r\n - Nvidia driver updated to 461.92; fixing the issue where UCRS is blocked by no OpenCL support in driver. Lower versions of the Nvidia driver also showed instability in Genlock. This version has been rigorously tested by the Disguise team.\r\n - Bluefish drivers remain 5.11.0.47",
+          "os_family_handle": "D3PRO813",
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/2xgx/11.0/180.841/gxW10_180.wim",
+          "boot_wim_file_name": "boot_PRO_180_841.2.5.wim",
+          "iso_file_name": "PRO_180_841.iso",
+          "redisguise_name": "180.841",
+          "r2_sends_remote_reimager_logs": false,
+          "r2_is_compatible": true,
+          "boot_wim_file_size": 830776715,
+          "redisguise_handle": "[D3PRO813][180.841]",
+          "os_wim_file_size": 7513632386,
+          "public_version_table": [
+            {
+              "Package": "Audio: RME",
+              "Version": "4.2.9"
+            },
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "461.92"
+            },
+            {
+              "Package": "Capture: Bluefish",
+              "Version": "5.11.0.47"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "Legacy",
+      "name": "gx 2c",
+      "d3Model": "gx 2c",
+      "redisguises": [
+        {
+          "os_wim_file_size": 8978414920,
+          "os_family_handle": "DGX813C",
+          "iso_file_name": "gx2c_24Q1_1497.iso",
+          "iso_file_size": 9941942272,
+          "release_notes": "Disguise OS image version gx2c_24Q1 is specific to the gx 2c media server. This OS includes an update to the Deltacast SDK (6.22.01) to enable support for the Disguise VX 3 media server, which makes use of a new capture card variant.\r\n\r\nIn order to make use of this new Deltacast SDK, please note that users will need to run this OS with Designer software version r27.2 and above. \r\n\r\nThe previous OS will work with Designer software versions up to r27.1.3.",
+          "boot_wim_file_size": 917894793,
+          "os_wim_file_name": "gx2cW10_24Q1_PROD.wim",
+          "r2_is_compatible": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx2c/24Q1/boot_gx2c_24Q1_1497.2.3.wim",
+          "boot_wim_file_name": "boot_gx2c_24Q1_1497.2.3.wim",
+          "r2_sends_remote_postboot_logs": true,
+          "redisguise_handle": "[DGX813C][24Q1.1497]",
+          "release_date": 1709510400000,
+          "r2_sends_remote_reimager_logs": true,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx2c/24Q1/gx2cW10_24Q1_PROD.wim",
+          "redisguise_name": "24Q1.1497",
+          "aws_url_iso": "https://d3packages.amazonaws.com/pkg/os-image/gx2c/24Q1/gx2cW10_24Q1_p1497.iso",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (Turing)",
+              "Version": "0.6.5"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Turing)",
+              "Version": "0.7.6"
+            }
+          ]
+        },
+        {
+          "os_wim_file_size": 9138647635,
+          "os_family_handle": "DGX813C",
+          "iso_file_name": "gx2c_199B_947.iso",
+          "iso_file_size": 10012196864,
+          "release_notes": "Disguise OS Image Version 199B.947 is specific to the GX 2C media server and is a cumulative system update. This update includes the latest system drivers recommended and tested by the Disguise team built with the latest windows security updates.\r\n\r\n - Windows 10 remains at 1809 but Microsoft's cumulative and security updates have been included up to April 2022.\r\n - NVIDIA driver updated to 472.98 to improve performance with notch blocks. Full details of the driver can be found in the release notes here.\r\n - dotNet has been updated to 4.8+.\r\n - Designer r21.0.2 will be installed at the factory or your existing version of Designer will be reinstalled on postboot. \r\n - Deltacast 6.15.10 is the driver we recommend at this time, and we’re currently working with Deltacast towards updating the driver in the next base version release.\r\n - RME Audio Driver has been updated to 4.3.8 and tested to ensure audio performs as expected from previous versions of the driver.",
+          "boot_wim_file_size": 827895141,
+          "os_wim_file_name": "gx2c_199B_PROD.wim",
+          "r2_is_compatible": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx2c/199/boot_gx2c_199B_947.2.3.wim",
+          "boot_wim_file_name": "boot_gx2c_199B_947.2.3.wim",
+          "r2_sends_remote_postboot_logs": true,
+          "redisguise_handle": "[DGX813C][199B.947]",
+          "release_date": 1651622400000,
+          "r2_sends_remote_reimager_logs": false,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx2c/199/gx2c_199B_PROD.wim",
+          "redisguise_name": "199B.947",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx2c/199/gx2c_d199B_p947.7z.001",
+          "public_version_table": [
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.2.101.26081"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "gx 3",
+      "d3Model": "gx 3",
+      "redisguises": [
+        {
+          "aws_url_iso": "https://cfpkg.disguise.one/pkg/os-image/gx3/201/gx3W10_d201F_p1346.7z.001",
+          "r2_is_compatible": true,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx3/201/gx3W10_201F_PROD.wim",
+          "release_notes": "Disguise OS Image Version 201F.1063 is specific to the GX 3 media server. This is a performance update allowing you to upgrade from the previous OS version for the GX 3.\r\n\r\n201F is are-release of 201 with the addition of rollup and rollback support. The F version of this OS also provides NVIDIA AR and Video Effects SDK support on notch blocks.\r\n\r\nWindows is at 1809 and security updates up to Q3 2022 are included. This version is lock stepped with Designer r22.0 through r26.5.1, and features both major improvements to Mellanox drivers and a new SDK that enables support for 3G-Level B and 48Hz SDI signals on Matrox capture cards. Rivermax 1.10.20 improves stream stability on RenderStream reducing packet and frame loss.\r\n\r\nIMPORTANT: Please note that users will need to run this OS version with Designer software versions r22 - r26.5.1 only. For any user wishing to use Designer software versions r27 and above with the GX 3, please run Disguise OS image version gx3_24Q1 and above.\r\n\r\n - NVIDIA driver updated to 513.12; is included out of box and uses the new NVIDIA DCH control panel.\r\n - Mellanox transitions to 2.90.50010 with Rivermax 1.10.20 support. Both the driver and RenderStream license are now fully integrated and will require no reinstallation of the driver after redisguise.\r\n - Matrox driver and SDK 10.3.100.6 provide support for video formats in 48Hz and 3G-Level B SDI on Matrox capture cards.",
+          "redisguise_name": "201F.1346",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx3/201/boot_gx3_201F_1346.2.5.wim",
+          "boot_wim_file_name": "boot_gx3_201F_1346.2.5.wim",
+          "boot_wim_file_size": 887714006,
+          "r2_sends_remote_reimager_logs": true,
+          "release_date": 1688688000000,
+          "r2_sends_remote_postboot_logs": true,
+          "os_family_handle": "gx3",
+          "os_wim_file_size": 11343514191,
+          "iso_file_size": 12283543552,
+          "os_wim_file_name": "gx3W10_201F_PROD.wim",
+          "redisguise_handle": "[gx3][201F.1346]",
+          "iso_file_name": "gx3_201F_1346.iso",
+          "public_version_table": [
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "513.12"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.3.100.673"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "RAID: Broadcom",
+              "Version": "7.20"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (Turing)",
+              "Version": "0.6.5"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Turing)",
+              "Version": "0.7.6"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        },
+        {
+          "aws_url_iso": "https://d3packages.amazonaws.com/pkg/os-image/gx3/24Q1/gx3W10_24Q1.7z.001",
+          "r2_is_compatible": true,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx3/24Q1/gx3W10_24Q1_PROD.wim",
+          "release_notes": "Disguise OS image version gx3_24Q1 is specific to the GX 3 media server. This OS includes an update to the Matrox SDK (10.4.101) and provides the following improvements to Disguise media servers with a Matrox SDI capture card installed.\r\n\r\n - Mixed frame rate support - users can now work with any combination of video resolution formats and refresh rates across each video input\r\n - Ultra low latency mode - we have reduced the video latency when running in ultra low-latency mode from 4 frames per second to 3 frames per second at 30Hz, 50Hz and 60Hz\r\n - General performance improvements",
+          "redisguise_name": "24Q1.1696",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx3/24Q1/boot_gx3_24Q1_1696.2.3.wim",
+          "boot_wim_file_name": "boot_gx3_24Q1_1696.2.3.wim",
+          "boot_wim_file_size": 942795299,
+          "r2_sends_remote_reimager_logs": true,
+          "release_date": 1612051200000,
+          "r2_sends_remote_postboot_logs": true,
+          "os_family_handle": "gx3",
+          "os_wim_file_size": 11681578080,
+          "iso_file_size": 12676694016,
+          "os_wim_file_name": "gx3W10_24Q1_PROD.wim",
+          "redisguise_handle": "[gx3][24Q1.1696]",
+          "iso_file_name": "gx3_24Q1_1696.iso",
+          "public_version_table": [
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "513.12"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "RAID: Broadcom",
+              "Version": "7.20"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (Turing)",
+              "Version": "0.6.5"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Turing)",
+              "Version": "0.7.6"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        },
+        {
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx3/24Q2/gx3_24Q2_p1736.iso",
+          "r2_is_compatible": true,
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/gx3/24Q2/GX3_W11-23H2_24Q2_PROD.wim",
+          "release_notes": "Disguise OS image version gx3_24Q2 is specific to the GX 3 media server. This OS includes an update to the Windows Version (Windows 11 23H2); in addition to the Nvidia graphics driver (551.52), Nvidia AR SDK (0.8.2) and Nvidia Video Effects SDK (0.7.2), which collectively provide mitigations to these 2 technical Advisories (TA-49 and TA-57):\r\n\r\nhttps://support.disguise.one/s/article/Use-of-Nvidia-Virtual-Background-in-a-Notch-block-can-cause-a-crash-to-desktop-CTD-on-specific-Disguise-media-servers\r\n\r\nhttps://support.disguise.one/s/article/TA-57-Face-Tracker-node-in-a-Notch-block-can-cause-spontaneous-CTD\r\n\r\nThis OS is designed for d3 Designer Software Version r28.0 onwards",
+          "redisguise_name": "24Q2.1736",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/gx3/24Q2/boot_gx3_24Q2_1736.2.3.wim",
+          "boot_wim_file_name": "boot_gx3_24Q2_1736.2.3.wim",
+          "boot_wim_file_size": 1118235222,
+          "r2_sends_remote_reimager_logs": true,
+          "release_date": 1725494400000,
+          "r2_sends_remote_postboot_logs": true,
+          "os_family_handle": "gx3",
+          "os_wim_file_size": 11363429575,
+          "iso_file_size": 12534022144,
+          "os_wim_file_name": "GX3_W11-23H2_24Q2_PROD.wim",
+          "redisguise_handle": "[gx3][24Q2.1736]",
+          "iso_file_name": "gx3_24Q2_1736.iso",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "551.52.0"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Vimba X SDK",
+              "Version": "2023.4.0.2776"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (Ampere)",
+              "Version": "0.7.2"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Ampere)",
+              "Version": "0.8.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "MX MOVE",
+      "d3Model": "MX MOVE",
+      "redisguises": [
+        {
+          "boot_wim_file_size": 887712898,
+          "os_wim_file_size": 8322681603,
+          "r2_is_compatible": true,
+          "os_wim_file_name": "rxW10_23Q3_233_PROD.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/rxW10_23Q3.7z.001",
+          "boot_wim_file_name": "boot_rx_23Q3_1349.2.5.wim",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/rxW10_23Q3_233_PROD.wim",
+          "release_notes": "Disguise OS Image Version rx_23Q3 is specific to the RX and RX II render nodes.\r\n\r\nThe following updates have been made:\r\n - NVIDIA - upgraded driver to v536.25\r\n - Windows - upgraded to Windows 10 version 22H2\r\n\r\nNOTE: We have updated our naming convention for Disguise OS and we will be phasing this in with updates to the Current OS range. It will be based off the year and quarter in which it was introduced.",
+          "redisguise_name": "23Q3.1349",
+          "r2_sends_remote_postboot_logs": true,
+          "iso_file_size": 9262727168,
+          "iso_file_name": "rx_23Q3_1349.iso",
+          "release_date": 1696982400000,
+          "r2_sends_remote_reimager_logs": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/boot_rx_23Q3_1349.2.5.wim",
+          "redisguise_handle": "[rx][23Q3.1349]",
+          "os_family_handle": "rx",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "536.25"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.940.22655.23"
+            },
+            {
+              "Package": "DEPRECATED: Mellanox Rivermax Full SDK Install",
+              "Version": "1.1.22655"
+            }
+          ]
+        },
+        {
+          "boot_wim_file_size": 873375494,
+          "os_wim_file_size": 8849211873,
+          "r2_is_compatible": true,
+          "os_wim_file_name": "rxW10_198_PROD.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/198/rxW10_d198_p945.7z.001",
+          "boot_wim_file_name": "boot_rx_198_945.2.5.wim",
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/rx/198/rxW10_198_PROD.wim",
+          "release_notes": "Disguise OS Image Version 198.945 is specific to the RX media servers and is a major system update that we recommend to anyone requiring Nanite support on UE5. \r\n\r\nThe OS update rolls up windows to version WIndown 10 21H2 bringing with it significant changes to the Windows operating system:\r\n - DirectX 12 now features as an aspect of the operating system\r\n - The Nvidia control panel comes embedded with Windows apps as part of NVIDIA’s DCH branch. \r\n - Improved Nanite support in Unreal Engine 5.0 through driver integration. \r\n - Windows 21H2 is the precursor to Windows 11; packed with features and all the latest security updates to mid April 2022.\r\n - It includes a UAC bug fix to allow Designer to remote install.\r\n\r\nNVIDIA driver 511.79 provides driver updates up to March 2022 and moves our NVIDIA drivers over to the DCH branch for faster release intervals.\r\nThe latest Designer will be installed on new servers, and upgrading a media server will preserve the existing version of Designer installed. \r\n\r\nDisguise recommends upgrading to Designer r21, to work in local languages and find solutions for the most complex projects with peers around the world. Take advantage of improved workflows and integrations with most of the leading technology.\r\n\r\nIntel Network Proset 26.8 is included and comes with a new advanced teaming utility for teaming compatible intel adapters. Please note:  that teaming may not be possible with vLANs and the Mellanox adapters.\r\n\r\nMellanox driver has been reverted to 2.940.22655.23 for Rivermax integration with RenderStream and Designer",
+          "redisguise_name": "198.945",
+          "r2_sends_remote_postboot_logs": true,
+          "iso_file_size": 9774956544,
+          "iso_file_name": "rx_198_945.iso",
+          "release_date": 1656892800000,
+          "r2_sends_remote_reimager_logs": false,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/198/boot_rx_198_945.2.5.wim",
+          "redisguise_handle": "[rx][198.945]",
+          "os_family_handle": "rx",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "511.79"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.80"
+            }
+          ]
+        },
+        {
+          "boot_wim_file_size": 829183474,
+          "os_wim_file_size": 7035785470,
+          "r2_is_compatible": true,
+          "os_wim_file_name": "rxW10_6b_2_171.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/171.796/rxW10_d171_p796.7z.001",
+          "boot_wim_file_name": "boot_rx_171_796.2.5.wim",
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/rx/171.796/rxW10_6b_2_171.wim",
+          "release_notes": "Disguise OS image version 171.796 Supports RX and RX II and is the original OS launched with the RX.\r\n\r\nPlease note this Launch OS does not support Nanite and may have some bugs with Mellanox connectivity.\r\n\r\nFixes included:\r\n - Fixed issue where some systems with newer than 16.29.2002 NIC firmware would get stuck at 95% during reimaging.\r\n - Fixed versioning number issues by promoting to OS 171",
+          "redisguise_name": "171.796",
+          "r2_sends_remote_postboot_logs": true,
+          "iso_file_size": 7917338624,
+          "iso_file_name": "rx_171_796.iso",
+          "release_date": 1625356800000,
+          "r2_sends_remote_reimager_logs": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/171.796/boot_rx_171_796.2.5.wim",
+          "redisguise_handle": "[rx][171.796]",
+          "os_family_handle": "rx",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "461.09"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.940.22655.23"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "px",
+      "d3Model": "px",
+      "redisguises": [
+        {
+          "os_wim_file_size": 7591918098,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/pxW10_23Q3_279_PROD.wim",
+          "r2_sends_remote_reimager_logs": false,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/px_d23Q3_236_p1363.iso",
+          "os_wim_file_name": "pxW10_23Q3_279_PROD.wim",
+          "iso_file_name": "px_23Q3_1363.iso",
+          "redisguise_name": "23Q3.1363",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/pxW10_23Q3_279_PROD.wim",
+          "release_date": 1697673600000,
+          "r2_sends_remote_postboot_logs": false,
+          "redisguise_handle": "[px][23Q3.1363]",
+          "r2_is_compatible": false,
+          "boot_wim_file_size": 0,
+          "release_notes": "Disguise OS Image Version 23Q3 is the current OS and is specific to the PX media server.",
+          "boot_wim_file_name": null,
+          "os_family_handle": "px",
+          "iso_file_size": 9082765312,
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "517.40"
+            },
+            {
+              "Package": "Capture: Blackmagic",
+              "Version": "12.6"
+            },
+            {
+              "Package": "Capture: AJA",
+              "Version": "16.2.5.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "px +",
+      "d3Model": "px +",
+      "redisguises": [
+        {
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/pxW10_23Q3_279_PROD.wim",
+          "boot_wim_file_name": null,
+          "redisguise_handle": "[px][23Q3.1363]",
+          "r2_sends_remote_postboot_logs": false,
+          "os_wim_file_size": 7591918098,
+          "os_family_handle": "px",
+          "redisguise_name": "23Q3.1363",
+          "iso_file_size": 9082765312,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/px_d23Q3_236_p1363.iso",
+          "os_wim_file_name": "pxW10_23Q3_279_PROD.wim",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/pxW10_23Q3_279_PROD.wim",
+          "boot_wim_file_size": 0,
+          "release_notes": "Disguise OS Image Version 23Q3 is the current OS and is specific to the PX media server.",
+          "r2_is_compatible": false,
+          "release_date": 1697673600000,
+          "iso_file_name": "px_23Q3_1363.iso",
+          "r2_sends_remote_reimager_logs": false,
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "517.40"
+            },
+            {
+              "Package": "Capture: Blackmagic",
+              "Version": "12.6"
+            },
+            {
+              "Package": "Capture: AJA",
+              "Version": "16.2.5.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "px c",
+      "d3Model": "px c",
+      "redisguises": [
+        {
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/px_d23Q3_236_p1363.iso",
+          "os_family_handle": "px",
+          "release_notes": "Disguise OS Image Version 23Q3 is the current OS and is specific to the PX media server.",
+          "boot_wim_file_name": null,
+          "r2_sends_remote_postboot_logs": false,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/pxW10_23Q3_279_PROD.wim",
+          "r2_sends_remote_reimager_logs": false,
+          "boot_wim_file_size": 0,
+          "release_date": 1697673600000,
+          "iso_file_size": 9082765312,
+          "r2_is_compatible": false,
+          "os_wim_file_size": 7591918098,
+          "os_wim_file_name": "pxW10_23Q3_279_PROD.wim",
+          "redisguise_handle": "[px][23Q3.1363]",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/px/23Q3/pxW10_23Q3_279_PROD.wim",
+          "redisguise_name": "23Q3.1363",
+          "iso_file_name": "px_23Q3_1363.iso",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "517.40"
+            },
+            {
+              "Package": "Capture: Blackmagic",
+              "Version": "12.6"
+            },
+            {
+              "Package": "Capture: AJA",
+              "Version": "16.2.5.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "rx",
+      "d3Model": "rx",
+      "redisguises": [
+        {
+          "release_date": 1696982400000,
+          "iso_file_name": "rx_23Q3_1349.iso",
+          "iso_file_size": 9262727168,
+          "os_wim_file_size": 8322681603,
+          "release_notes": "Disguise OS Image Version rx_23Q3 is specific to the RX and RX II render nodes.\r\n\r\nThe following updates have been made:\r\n - NVIDIA - upgraded driver to v536.25\r\n - Windows - upgraded to Windows 10 version 22H2\r\n\r\nNOTE: We have updated our naming convention for Disguise OS and we will be phasing this in with updates to the Current OS range. It will be based off the year and quarter in which it was introduced.",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/rxW10_23Q3.7z.001",
+          "r2_is_compatible": true,
+          "redisguise_handle": "[rx][23Q3.1349]",
+          "r2_sends_remote_reimager_logs": true,
+          "redisguise_name": "23Q3.1349",
+          "os_wim_file_name": "rxW10_23Q3_233_PROD.wim",
+          "boot_wim_file_name": "boot_rx_23Q3_1349.2.5.wim",
+          "boot_wim_file_size": 887712898,
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/rxW10_23Q3_233_PROD.wim",
+          "os_family_handle": "rx",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/boot_rx_23Q3_1349.2.5.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "536.25"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.940.22655.23"
+            },
+            {
+              "Package": "DEPRECATED: Mellanox Rivermax Full SDK Install",
+              "Version": "1.1.22655"
+            }
+          ]
+        },
+        {
+          "release_date": 1656892800000,
+          "iso_file_name": "rx_198_945.iso",
+          "iso_file_size": 9774956544,
+          "os_wim_file_size": 8849211873,
+          "release_notes": "Disguise OS Image Version 198.945 is specific to the RX media servers and is a major system update that we recommend to anyone requiring Nanite support on UE5. \r\n\r\nThe OS update rolls up windows to version WIndown 10 21H2 bringing with it significant changes to the Windows operating system:\r\n - DirectX 12 now features as an aspect of the operating system\r\n - The Nvidia control panel comes embedded with Windows apps as part of NVIDIA’s DCH branch. \r\n - Improved Nanite support in Unreal Engine 5.0 through driver integration. \r\n - Windows 21H2 is the precursor to Windows 11; packed with features and all the latest security updates to mid April 2022.\r\n - It includes a UAC bug fix to allow Designer to remote install.\r\n\r\nNVIDIA driver 511.79 provides driver updates up to March 2022 and moves our NVIDIA drivers over to the DCH branch for faster release intervals.\r\nThe latest Designer will be installed on new servers, and upgrading a media server will preserve the existing version of Designer installed. \r\n\r\nDisguise recommends upgrading to Designer r21, to work in local languages and find solutions for the most complex projects with peers around the world. Take advantage of improved workflows and integrations with most of the leading technology.\r\n\r\nIntel Network Proset 26.8 is included and comes with a new advanced teaming utility for teaming compatible intel adapters. Please note:  that teaming may not be possible with vLANs and the Mellanox adapters.\r\n\r\nMellanox driver has been reverted to 2.940.22655.23 for Rivermax integration with RenderStream and Designer",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/198/rxW10_d198_p945.7z.001",
+          "r2_is_compatible": true,
+          "redisguise_handle": "[rx][198.945]",
+          "r2_sends_remote_reimager_logs": false,
+          "redisguise_name": "198.945",
+          "os_wim_file_name": "rxW10_198_PROD.wim",
+          "boot_wim_file_name": "boot_rx_198_945.2.5.wim",
+          "boot_wim_file_size": 873375494,
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/rx/198/rxW10_198_PROD.wim",
+          "os_family_handle": "rx",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/198/boot_rx_198_945.2.5.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "511.79"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.80"
+            }
+          ]
+        },
+        {
+          "release_date": 1625356800000,
+          "iso_file_name": "rx_171_796.iso",
+          "iso_file_size": 7917338624,
+          "os_wim_file_size": 7035785470,
+          "release_notes": "Disguise OS image version 171.796 Supports RX and RX II and is the original OS launched with the RX.\r\n\r\nPlease note this Launch OS does not support Nanite and may have some bugs with Mellanox connectivity.\r\n\r\nFixes included:\r\n - Fixed issue where some systems with newer than 16.29.2002 NIC firmware would get stuck at 95% during reimaging.\r\n - Fixed versioning number issues by promoting to OS 171",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/171.796/rxW10_d171_p796.7z.001",
+          "r2_is_compatible": true,
+          "redisguise_handle": "[rx][171.796]",
+          "r2_sends_remote_reimager_logs": true,
+          "redisguise_name": "171.796",
+          "os_wim_file_name": "rxW10_6b_2_171.wim",
+          "boot_wim_file_name": "boot_rx_171_796.2.5.wim",
+          "boot_wim_file_size": 829183474,
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/rx/171.796/rxW10_6b_2_171.wim",
+          "os_family_handle": "rx",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/171.796/boot_rx_171_796.2.5.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "461.09"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.940.22655.23"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "RX 3",
+      "d3Model": "RX 3",
+      "redisguises": [
+        {
+          "r2_is_compatible": true,
+          "boot_wim_file_size": 1110878960,
+          "release_date": 1717977600000,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/RX3/24Q2/RX3_d24Q2_p1668.iso",
+          "iso_file_name": "RX3_24Q2_1668.iso",
+          "release_notes": "Disguise OS image version RXIII_24Q2 is the launch OS and is specific to the RX III.\r\n\r\nHardware support for this machine has been enabled from Designer software version r27.5.1 and above.",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/RX3/24Q2/RX3_w11-23H2_24Q2_PROD.wim",
+          "r2_sends_remote_postboot_logs": true,
+          "redisguise_name": "24Q2.1668",
+          "boot_wim_file_name": "boot_RX3_24Q2_1668.2.3.wim",
+          "redisguise_handle": "[RX3][24Q2.1668]",
+          "os_wim_file_name": "RX3_w11-23H2_24Q2_PROD.wim",
+          "os_family_handle": "RX3",
+          "r2_sends_remote_reimager_logs": true,
+          "iso_file_size": 11793268736,
+          "os_wim_file_size": 10630062712,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/RX3/24Q2/boot_RX3_24Q2_1668.2.3.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "551.52.0"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (ADA)",
+              "Version": "0.7.2"
+            },
+            {
+              "Package": "NVIDIA AR SDK (ADA)",
+              "Version": "0.8.2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "rx-II",
+      "d3Model": "rx-II",
+      "redisguises": [
+        {
+          "r2_sends_remote_postboot_logs": true,
+          "release_notes": "Disguise OS Image Version rx_23Q3 is specific to the RX and RX II render nodes.\r\n\r\nThe following updates have been made:\r\n - NVIDIA - upgraded driver to v536.25\r\n - Windows - upgraded to Windows 10 version 22H2\r\n\r\nNOTE: We have updated our naming convention for Disguise OS and we will be phasing this in with updates to the Current OS range. It will be based off the year and quarter in which it was introduced.",
+          "boot_wim_file_name": "boot_rx_23Q3_1349.2.5.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/rxW10_23Q3.7z.001",
+          "redisguise_handle": "[rx][23Q3.1349]",
+          "r2_sends_remote_reimager_logs": true,
+          "os_wim_file_size": 8322681603,
+          "redisguise_name": "23Q3.1349",
+          "os_family_handle": "rx",
+          "os_wim_file_name": "rxW10_23Q3_233_PROD.wim",
+          "r2_is_compatible": true,
+          "iso_file_size": 9262727168,
+          "iso_file_name": "rx_23Q3_1349.iso",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/rxW10_23Q3_233_PROD.wim",
+          "boot_wim_file_size": 887712898,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/23Q3/boot_rx_23Q3_1349.2.5.wim",
+          "release_date": 1696982400000,
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "536.25"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.940.22655.23"
+            },
+            {
+              "Package": "DEPRECATED: Mellanox Rivermax Full SDK Install",
+              "Version": "1.1.22655"
+            }
+          ]
+        },
+        {
+          "r2_sends_remote_postboot_logs": true,
+          "release_notes": "Disguise OS Image Version 198.945 is specific to the RX media servers and is a major system update that we recommend to anyone requiring Nanite support on UE5. \r\n\r\nThe OS update rolls up windows to version WIndown 10 21H2 bringing with it significant changes to the Windows operating system:\r\n - DirectX 12 now features as an aspect of the operating system\r\n - The Nvidia control panel comes embedded with Windows apps as part of NVIDIA’s DCH branch. \r\n - Improved Nanite support in Unreal Engine 5.0 through driver integration. \r\n - Windows 21H2 is the precursor to Windows 11; packed with features and all the latest security updates to mid April 2022.\r\n - It includes a UAC bug fix to allow Designer to remote install.\r\n\r\nNVIDIA driver 511.79 provides driver updates up to March 2022 and moves our NVIDIA drivers over to the DCH branch for faster release intervals.\r\nThe latest Designer will be installed on new servers, and upgrading a media server will preserve the existing version of Designer installed. \r\n\r\nDisguise recommends upgrading to Designer r21, to work in local languages and find solutions for the most complex projects with peers around the world. Take advantage of improved workflows and integrations with most of the leading technology.\r\n\r\nIntel Network Proset 26.8 is included and comes with a new advanced teaming utility for teaming compatible intel adapters. Please note:  that teaming may not be possible with vLANs and the Mellanox adapters.\r\n\r\nMellanox driver has been reverted to 2.940.22655.23 for Rivermax integration with RenderStream and Designer",
+          "boot_wim_file_name": "boot_rx_198_945.2.5.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/198/rxW10_d198_p945.7z.001",
+          "redisguise_handle": "[rx][198.945]",
+          "r2_sends_remote_reimager_logs": false,
+          "os_wim_file_size": 8849211873,
+          "redisguise_name": "198.945",
+          "os_family_handle": "rx",
+          "os_wim_file_name": "rxW10_198_PROD.wim",
+          "r2_is_compatible": true,
+          "iso_file_size": 9774956544,
+          "iso_file_name": "rx_198_945.iso",
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/rx/198/rxW10_198_PROD.wim",
+          "boot_wim_file_size": 873375494,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/198/boot_rx_198_945.2.5.wim",
+          "release_date": 1656892800000,
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "511.79"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.80"
+            }
+          ]
+        },
+        {
+          "r2_sends_remote_postboot_logs": true,
+          "release_notes": "Disguise OS image version 171.796 Supports RX and RX II and is the original OS launched with the RX.\r\n\r\nPlease note this Launch OS does not support Nanite and may have some bugs with Mellanox connectivity.\r\n\r\nFixes included:\r\n - Fixed issue where some systems with newer than 16.29.2002 NIC firmware would get stuck at 95% during reimaging.\r\n - Fixed versioning number issues by promoting to OS 171",
+          "boot_wim_file_name": "boot_rx_171_796.2.5.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/171.796/rxW10_d171_p796.7z.001",
+          "redisguise_handle": "[rx][171.796]",
+          "r2_sends_remote_reimager_logs": true,
+          "os_wim_file_size": 7035785470,
+          "redisguise_name": "171.796",
+          "os_family_handle": "rx",
+          "os_wim_file_name": "rxW10_6b_2_171.wim",
+          "r2_is_compatible": true,
+          "iso_file_size": 7917338624,
+          "iso_file_name": "rx_171_796.iso",
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/rx/171.796/rxW10_6b_2_171.wim",
+          "boot_wim_file_size": 829183474,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/rx/171.796/boot_rx_171_796.2.5.wim",
+          "release_date": 1625356800000,
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "461.09"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.940.22655.23"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "Legacy",
+      "name": "solo",
+      "d3Model": "solo",
+      "redisguises": [
+        {
+          "iso_file_size": 8857059328,
+          "redisguise_handle": "[solo][197.948]",
+          "os_family_handle": "solo",
+          "os_wim_file_size": 7930578929,
+          "boot_wim_file_size": 874133657,
+          "aws_url_os_wim": "https://d3packages.s3.us-east-1.amazonaws.com/pkg/os-image/solo/197/SOLOW10_197_PROD.wim",
+          "r2_is_compatible": true,
+          "r2_sends_remote_reimager_logs": false,
+          "release_notes": "Disguise OS Image Version 197.948 is specific to the Solo media server is a cumulative update to the Windows 1607 OS. \r\n\r\nThe Solo OS is built within the long term servicing channel (LTSC) of Windows 10 and runs Windows 10 2016 LTSB (1607) until 2026. It includes security and cumulative system update up to mid April 2022. Updates to the NVIDIA Graphics drivers, and .net 4.8 improved Designer performance and compatibility with the new gold version. Newer capture card drivers are included for both optional Bluefish and Vision cards.\r\n\r\n - Windows 10 remains at 1607, with cumulative security updates up until mid April 2022.\r\n - NVIDIA driver 472.98 released on 31st Jan 2022 is installed within this OS. It includes updates to CUDA and some improved notch block performance.\r\n - dotNet has been updated to 4.8+ with all the latest security updates.\r\n - Designer r21.0.2 will be installed at the factory or your existing version of Designer will be reinstalled on postboot.\r\n - Intel Network Proset 26.8 is included; Intel Teaming is not fully supported on the Solo under Windows 1607\r\n - Bluefish (optional SDI card) has been updated to driver 6.5.0.51 with new firmware v32 to improve performance in Designer. The update to the firmware will cause the media server to shut down and initiate a cold boot.\r\n - The BlueInfo tool has been replaced by BlueToolbox, a new tool combining the features of the previous tools (e.g. BlueInfo, BlueProps, DMABenchmarking, etc.) whilst adding new features like video/audio capture preview, changing default card behaviour and user card licence query. A new firmware updater allows the Disguise re-imaging tool to update to the latest bluefish firmware.\r\n - Vision LC (optional HDMI card) has been updated to the latest version 1.2.4\r\n - RMEAudio has been updated to version 4.3, please note you will need to set the WDM device configuration in hammerfall to enable all of the audio devices. This cannot be set in Window 1607 the way that we usually set this in our other products.",
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/solo/197/boot_SOLO_197_948.2.5.wim",
+          "release_date": 1651795200000,
+          "redisguise_name": "197.948",
+          "boot_wim_file_name": "boot_SOLO_197_948.2.5.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/solo/197/SOLOW10_d197_p948.7z.001",
+          "iso_file_name": "SOLO_197_948.iso",
+          "os_wim_file_name": "SOLOW10_197_PROD.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "Capture: Bluefish",
+              "Version": "6.5.0.51"
+            },
+            {
+              "Package": "Capture: Datapath",
+              "Version": "1.2.4"
+            },
+            {
+              "Package": "Chipset: ASMB-785",
+              "Version": "10.1.1.38"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "vx 1",
+      "d3Model": "vx 1",
+      "redisguises": [
+        {
+          "r2_sends_remote_postboot_logs": true,
+          "os_wim_file_name": "vx12W10_203C_PROD.wim",
+          "iso_file_name": "vx12_203C_1048.iso",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/203/vx12W10_d203C_p1048.7z.001",
+          "iso_file_size": 10711597056,
+          "r2_sends_remote_reimager_logs": false,
+          "r2_is_compatible": true,
+          "boot_wim_file_size": 841878976,
+          "release_date": 1668470400000,
+          "os_wim_file_size": 9824121046,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/203/vx12W10_203C_PROD.wim",
+          "release_notes": "203C is the same base OS as 203, but with rollup and rollback support for current and previous OS versions of in the vx1, vx2 range. OS 203C succeeds 203 disabling power saving mode from the previous OS. \r\n\r\nWindows Security updates up to Q2 2022 are included. This version is lock stepped with d3 r22 gold and features both major improvement to Mellanox drivers and a new SDK that enables Level B support on Matrox capture cards. Rivermax 1.10.20 improves stream stability on RenderStream reducing packet and frame loss.\r\n\r\nWindows 10 remains at 1809 but Microsoft's cumulative updates to March 2022 are included for improved security and functionality.\r\n\r\nNVIDIA driver updated to 472.98, fixing the issue where UCRS is blocked by no OpenCL support in the driver. There is improved genlock stability and support for DLSS. Notch background removal features may require an RTX A6000. Includes the latest NVIDIA DCH Control panel. \r\n\r\nMellanox transitions to 2.90.50010 with Rivermax 1.10.20 support.\r\n\r\nMatrox driver and SDK 10.3.100.6 provide for 48Hz and Level B support on Matrox. \r\n\r\ndCare and dScope have been update to the latest versions to use with the stable driver 6.15.10",
+          "redisguise_handle": "[vx12][203C.1048]",
+          "boot_wim_file_name": "boot_vx12_203C_1048.2.5.wim",
+          "os_family_handle": "vx12",
+          "redisguise_name": "203C.1048",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/203/boot_vx12_203C_1048.2.5.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.3.100.673"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.2.9"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            }
+          ]
+        },
+        {
+          "r2_sends_remote_postboot_logs": true,
+          "os_wim_file_name": "vx12W10_24Q1_PROD.wim",
+          "iso_file_name": "vx12_24Q1_1480.iso",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q1/vx12W10_24Q1.7z.001",
+          "iso_file_size": 12183207936,
+          "r2_sends_remote_reimager_logs": true,
+          "r2_is_compatible": true,
+          "boot_wim_file_size": 909577223,
+          "release_date": 1704240000000,
+          "os_wim_file_size": 11228032367,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q1/vx12W10_24Q1_PROD.wim",
+          "release_notes": "Disguise OS image version vx1_vx2_24Q1 is specific to both the VX 1 and VX 2 media servers. \r\n\r\nThis OS includes an update to the Matrox SDK (10.4.101) and provides the following improvements to Disguise media servers with a Matrox SDI capture card installed:\r\n- Mixed frame rate support - users can now work with any combination of video resolution formats and refresh rates across each video input \r\n - Ultra-low latency mode - we have reduced the video latency when running in ultra-low-latency mode from 4 frames per second to 3 frames per second at 30Hz, 50Hz and 60Hz\r\n - General performance improvements\r\n \r\nTo benefit from these improvements, please note that users will need to run this OS version with Designer software versions r27.0 through r27.2",
+          "redisguise_handle": "[vx12][24Q1.1480]",
+          "boot_wim_file_name": "boot_vx12_24Q1_1480.2.4.wim",
+          "os_family_handle": "vx12",
+          "redisguise_name": "24Q1.1480",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q1/boot_vx12_24Q1_1480.2.4.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        },
+        {
+          "r2_sends_remote_postboot_logs": true,
+          "os_wim_file_name": "vx12_w10-1809_24Q2_PROD.wim",
+          "iso_file_name": "vx12_24Q2_1482.iso",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q2/vx12W10_d24Q2_p1482.iso",
+          "iso_file_size": 10698883072,
+          "r2_sends_remote_reimager_logs": true,
+          "r2_is_compatible": true,
+          "boot_wim_file_size": 909577305,
+          "release_date": 1713744000000,
+          "os_wim_file_size": 9743649753,
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q2/vx12_w10-1809_24Q2_PROD.wim",
+          "release_notes": "",
+          "redisguise_handle": "[vx12][24Q2.1482]",
+          "boot_wim_file_name": "boot_vx12_24Q2_1482.2.3.wim",
+          "os_family_handle": "vx12",
+          "redisguise_name": "24Q2.1482",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q2/boot_vx12_24Q2_1482.2.3.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (Turing)",
+              "Version": "0.6.5"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Turing)",
+              "Version": "0.7.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "vx 2",
+      "d3Model": "vx 2",
+      "redisguises": [
+        {
+          "iso_file_name": "vx12_203C_1048.iso",
+          "os_wim_file_name": "vx12W10_203C_PROD.wim",
+          "release_date": 1668470400000,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/203/boot_vx12_203C_1048.2.5.wim",
+          "boot_wim_file_name": "boot_vx12_203C_1048.2.5.wim",
+          "iso_file_size": 10711597056,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/203/vx12W10_d203C_p1048.7z.001",
+          "redisguise_name": "203C.1048",
+          "release_notes": "203C is the same base OS as 203, but with rollup and rollback support for current and previous OS versions of in the vx1, vx2 range. OS 203C succeeds 203 disabling power saving mode from the previous OS. \r\n\r\nWindows Security updates up to Q2 2022 are included. This version is lock stepped with d3 r22 gold and features both major improvement to Mellanox drivers and a new SDK that enables Level B support on Matrox capture cards. Rivermax 1.10.20 improves stream stability on RenderStream reducing packet and frame loss.\r\n\r\nWindows 10 remains at 1809 but Microsoft's cumulative updates to March 2022 are included for improved security and functionality.\r\n\r\nNVIDIA driver updated to 472.98, fixing the issue where UCRS is blocked by no OpenCL support in the driver. There is improved genlock stability and support for DLSS. Notch background removal features may require an RTX A6000. Includes the latest NVIDIA DCH Control panel. \r\n\r\nMellanox transitions to 2.90.50010 with Rivermax 1.10.20 support.\r\n\r\nMatrox driver and SDK 10.3.100.6 provide for 48Hz and Level B support on Matrox. \r\n\r\ndCare and dScope have been update to the latest versions to use with the stable driver 6.15.10",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/203/vx12W10_203C_PROD.wim",
+          "os_wim_file_size": 9824121046,
+          "boot_wim_file_size": 841878976,
+          "r2_is_compatible": true,
+          "os_family_handle": "vx12",
+          "r2_sends_remote_postboot_logs": true,
+          "r2_sends_remote_reimager_logs": false,
+          "redisguise_handle": "[vx12][203C.1048]",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.3.100.673"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.2.9"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            }
+          ]
+        },
+        {
+          "iso_file_name": "vx12_24Q1_1480.iso",
+          "os_wim_file_name": "vx12W10_24Q1_PROD.wim",
+          "release_date": 1704240000000,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q1/boot_vx12_24Q1_1480.2.4.wim",
+          "boot_wim_file_name": "boot_vx12_24Q1_1480.2.4.wim",
+          "iso_file_size": 12183207936,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q1/vx12W10_24Q1.7z.001",
+          "redisguise_name": "24Q1.1480",
+          "release_notes": "Disguise OS image version vx1_vx2_24Q1 is specific to both the VX 1 and VX 2 media servers. \r\n\r\nThis OS includes an update to the Matrox SDK (10.4.101) and provides the following improvements to Disguise media servers with a Matrox SDI capture card installed:\r\n- Mixed frame rate support - users can now work with any combination of video resolution formats and refresh rates across each video input \r\n - Ultra-low latency mode - we have reduced the video latency when running in ultra-low-latency mode from 4 frames per second to 3 frames per second at 30Hz, 50Hz and 60Hz\r\n - General performance improvements\r\n \r\nTo benefit from these improvements, please note that users will need to run this OS version with Designer software versions r27.0 through r27.2",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q1/vx12W10_24Q1_PROD.wim",
+          "os_wim_file_size": 11228032367,
+          "boot_wim_file_size": 909577223,
+          "r2_is_compatible": true,
+          "os_family_handle": "vx12",
+          "r2_sends_remote_postboot_logs": true,
+          "r2_sends_remote_reimager_logs": true,
+          "redisguise_handle": "[vx12][24Q1.1480]",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        },
+        {
+          "iso_file_name": "vx12_24Q2_1482.iso",
+          "os_wim_file_name": "vx12_w10-1809_24Q2_PROD.wim",
+          "release_date": 1713744000000,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q2/boot_vx12_24Q2_1482.2.3.wim",
+          "boot_wim_file_name": "boot_vx12_24Q2_1482.2.3.wim",
+          "iso_file_size": 10698883072,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q2/vx12W10_d24Q2_p1482.iso",
+          "redisguise_name": "24Q2.1482",
+          "release_notes": "",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx12/24Q2/vx12_w10-1809_24Q2_PROD.wim",
+          "os_wim_file_size": 9743649753,
+          "boot_wim_file_size": 909577305,
+          "r2_is_compatible": true,
+          "os_family_handle": "vx12",
+          "r2_sends_remote_postboot_logs": true,
+          "r2_sends_remote_reimager_logs": true,
+          "redisguise_handle": "[vx12][24Q2.1482]",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "472.98"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (Turing)",
+              "Version": "0.6.5"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Turing)",
+              "Version": "0.7.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "vx 2+",
+      "d3Model": "vx 2+",
+      "redisguises": [
+        {
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx2p/23Q4/boot_vx2p_23Q4_321_1413.2.3.wim",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx2p/23Q4/vx2pW11_23Q4_321_PROD.wim",
+          "r2_sends_remote_postboot_logs": true,
+          "boot_wim_file_size": 942796766,
+          "os_wim_file_name": "vx2pW11_23Q4_321_PROD.wim",
+          "os_family_handle": "vx2p",
+          "redisguise_handle": "[vx2p][23Q4.1413]",
+          "release_notes": "Disguise OS image version vx2p_23Q4 is the launch OS and specific to the VX 2+",
+          "r2_is_compatible": true,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx2p/23Q4/vx2p_23Q4.7z.001",
+          "release_date": 1702598400000,
+          "boot_wim_file_name": "boot_vx2p_23Q4_321_1413.2.3.wim",
+          "iso_file_name": "vx2p_23Q4_321_1413.iso",
+          "redisguise_name": "23Q4.1413",
+          "r2_sends_remote_reimager_logs": true,
+          "iso_file_size": 11805589504,
+          "os_wim_file_size": 10810458234,
+          "public_version_table": [
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "516.94"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "NVIDIA Video Effects SDK (Turing)",
+              "Version": "0.6.5"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Turing)",
+              "Version": "0.7.6"
+            }
+          ]
+        },
+        {
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx2p/24Q1/boot_vx2p_24Q1_1697.2.3.wim",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx2p/24Q1/vx2pW11_24Q1_PROD.wim",
+          "r2_sends_remote_postboot_logs": true,
+          "boot_wim_file_size": 963376648,
+          "os_wim_file_name": "vx2pW11_24Q1_PROD.wim",
+          "os_family_handle": "vx2p",
+          "redisguise_handle": "[vx2p][24Q1.1697]",
+          "release_notes": "Disguise OS image version vx2p_24Q1 is specific to the VX 2+ media server. This OS includes an update to the Deltacast SDK (6.22.01) to enable support for the Disguise VX 3 media server, which makes use of a new capture card variant. \r\n\r\nIn order to make use of this new Deltacast SDK, please note that users will need to run this OS with Designer software version r27.2 and above. \r\n\r\nThe previous OS will work with Designer software versions r26.4 to r27.1.3",
+          "r2_is_compatible": true,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx2p/24Q1/vx2pW11_d24Q1_p1697.iso",
+          "release_date": 1710288000000,
+          "boot_wim_file_name": "boot_vx2p_24Q1_1697.2.3.wim",
+          "iso_file_name": "vx2p_24Q1_1697.iso",
+          "redisguise_name": "24Q1.1697",
+          "r2_sends_remote_reimager_logs": true,
+          "iso_file_size": 12050956288,
+          "os_wim_file_size": 11035241138,
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "516.94"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Ampere)",
+              "Version": "0.7.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "vx 3",
+      "d3Model": "vx 3",
+      "redisguises": [
+        {
+          "boot_wim_file_name": "boot_vx3_24Q1_384_1697.2.2.wim",
+          "release_notes": "Disguise OS image version vx3_24Q1 is the launch OS and specific to the VX 3 media server. \r\n\r\nHardware support for the VX 3 has been enabled from Designer software version r27.2 and above.",
+          "r2_sends_remote_reimager_logs": false,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx3/24Q1/boot_vx3_24Q1_384_1697.2.2.wim",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx3/24Q1/vx3W11_24Q1_384_PROD.wim",
+          "redisguise_handle": "[vx3][24Q1.1697]",
+          "boot_wim_file_size": 963373037,
+          "release_date": 1710288000000,
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx3/24Q1/vx3W11_24Q1_1697.iso",
+          "iso_file_name": "vx3_24Q1_384_1697.iso",
+          "redisguise_name": "24Q1.1697",
+          "iso_file_size": 10799611904,
+          "os_wim_file_size": 9783865869,
+          "r2_sends_remote_postboot_logs": true,
+          "r2_is_compatible": true,
+          "os_family_handle": "vx3",
+          "os_wim_file_name": "vx3W11_24Q1_384_PROD.wim",
+          "public_version_table": [
+            {
+              "Package": "GPU: NVIDIA",
+              "Version": "551.52.0"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "NVIDIA AR SDK (Ampere)",
+              "Version": "0.7.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "vx 4",
+      "d3Model": "vx 4",
+      "redisguises": [
+        {
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/215/UNI_vx4W10_23Q2_p1147.iso",
+          "r2_is_compatible": true,
+          "r2_sends_remote_postboot_logs": true,
+          "os_wim_file_name": "UNI_vx4n_23Q1_vx4_23Q2.wim",
+          "r2_sends_remote_reimager_logs": false,
+          "iso_file_size": 11955339264,
+          "os_family_handle": "vx4",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/215/UNI_vx4n_23Q1_vx4_23Q2.wim",
+          "redisguise_handle": "[vx4][23Q2.1147]",
+          "release_date": 1681776000000,
+          "iso_file_name": "UNI_vx4n_vx4_23Q2_1147.iso",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/215/boot_UNI_vx4n_vx4_23Q2_1147.2.4.wim",
+          "boot_wim_file_name": "boot_UNI_vx4n_vx4_23Q2_1147.2.4.wim",
+          "redisguise_name": "23Q2.1147",
+          "release_notes": "Disguise OS Image Version vx4_23Q2 is the current OS and specific to the vx 4 media server.\r\n\r\nWe have updated our naming convention for Disguise OS' and we will be phasing this in with updates to the Current OS range. It will be based off the year and quarter in which it was introduced. \r\n\r\nWe have created a combined ISO to support a number of vx 4 users with 100Gb NIC upgrades that require an alternative AMD driver. The ISO is built so that only the users that require the alternative AMD driver will receive the modified image.\r\n\r\nPlease note that in d3manager the image version will be shown as [215.1147]. We will update this to show the new naming convention in future OS updates",
+          "os_wim_file_size": 11067537848,
+          "boot_wim_file_size": 842145624,
+          "public_version_table": [
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "GPU: AMD",
+              "Version": "19Q3"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.3.101.740"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "RAID: Broadcom",
+              "Version": "7.20"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        },
+        {
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/24Q1_1/UNI_vx4W10_24Q1_1_p1496.iso",
+          "r2_is_compatible": true,
+          "r2_sends_remote_postboot_logs": true,
+          "os_wim_file_name": "UNI_vx4_W10_24Q1_1_d1496.wim",
+          "r2_sends_remote_reimager_logs": true,
+          "iso_file_size": 11449008128,
+          "os_family_handle": "vx4",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/24Q1_1/UNI_vx4_W10_24Q1_1_d1496.wim",
+          "redisguise_handle": "[vx4][24Q1_1.1496]",
+          "release_date": 1709510400000,
+          "iso_file_name": "UNI_vx4n_vx4_24Q1_1_1496.iso",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/24Q1_1/boot_UNI_vx4n_vx4_24Q1_1_1496.2.4.wim",
+          "boot_wim_file_name": "boot_UNI_vx4n_vx4_24Q1_1_1496.2.4.wim",
+          "redisguise_name": "24Q1_1.1496",
+          "release_notes": "Disguise OS image version vx4_24Q1_1 is the current OS and specific to the VX 4 media server. This OS includes an update to the Deltacast SDK (6.22.01) to enable support for the Disguise VX 3 media server, which makes use of a new capture card variant. \r\n\r\nIn order to make use of this new Deltacast SDK, please note that users will need to run this OS with Designer software version r27.2 and above. \r\n\r\nThe previous OS will work with Designer software versions r27.0 to r27.1.3",
+          "os_wim_file_size": 10485483242,
+          "boot_wim_file_size": 917896113,
+          "public_version_table": [
+            {
+              "Package": "GPU: AMD",
+              "Version": "19Q3"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "RAID: Broadcom",
+              "Version": "7.20"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        },
+        {
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/24Q1/UNI_vx4W10_24Q1.7z.001",
+          "r2_is_compatible": true,
+          "r2_sends_remote_postboot_logs": true,
+          "os_wim_file_name": "UNI_vx4_24Q1.wim",
+          "r2_sends_remote_reimager_logs": true,
+          "iso_file_size": 12808552448,
+          "os_family_handle": "vx4",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/24Q1/vx4W10_24Q1_PROD.wim",
+          "redisguise_handle": "[vx4][24Q1.1419]",
+          "release_date": 1706659200000,
+          "iso_file_name": "UNI_vx4n_vx4_24Q1_1419.iso",
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4/24Q1/boot_UNI_vx4n_vx4_24Q1_1419.2.4.wim",
+          "boot_wim_file_name": "boot_UNI_vx4n_vx4_24Q1_1419.2.4.wim",
+          "redisguise_name": "24Q1.1419",
+          "release_notes": "Disguise OS image version vx4_24Q1 is the current OS and is specific to the VX 4 media server. This OS includes an update to the Matrox SDK (10.4.101) and provides the following improvements to Disguise media servers with a Matrox SDI capture card installed:\r\n\r\n - Mixed frame rate support - users can now work with any combination of video resolution formats and refresh rates across each video input \r\n - Ultra-low latency mode - we have reduced the video latency when running in ultra-low-latency mode from 4 frames per second to 3 frames per second at 30Hz, 50Hz and 60Hz\r\n - General performance improvements\r\n \r\nPlease keep in mind that users will need to run this OS version with Designer software versions r27.0 through r27.1.3",
+          "os_wim_file_size": 11863234351,
+          "boot_wim_file_size": 899676421,
+          "public_version_table": [
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "RAID: Broadcom",
+              "Version": "7.20"
+            },
+            {
+              "Package": "GPU: AMD",
+              "Version": "19Q3"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "vx 4+",
+      "d3Model": "vx 4+",
+      "redisguises": [
+        {
+          "os_family_handle": "vx4p",
+          "os_wim_file_size": 10157620179,
+          "redisguise_name": "204C.1346",
+          "redisguise_handle": "[vx4p][204C.1346]",
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/204/boot_vx4p_204C_1346.2.5.wim",
+          "r2_is_compatible": true,
+          "os_wim_file_name": "vx4pW10_204C_PROD.wim",
+          "boot_wim_file_size": 842232279,
+          "iso_file_name": "vx4p_204C_1346.iso",
+          "release_notes": "Cannot find release notes on confluence or public facing website",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/204/vx4pW10_204C_PROD.wim",
+          "iso_file_size": 11045502976,
+          "r2_sends_remote_reimager_logs": true,
+          "boot_wim_file_name": "boot_vx4p_204C_1346.2.5.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/204/vx4%2BW10_23Q2_1.7z.001",
+          "release_date": 1696896000000,
+          "public_version_table": null
+        },
+        {
+          "os_family_handle": "vx4p",
+          "os_wim_file_size": 8992843395,
+          "redisguise_name": "24Q2_1.1693",
+          "redisguise_handle": "[vx4p][24Q2_1.1693]",
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/24Q2_1/boot_vx4p_24Q2_1_1693.2.4.wim",
+          "r2_is_compatible": true,
+          "os_wim_file_name": "vx4p_w10-1809_24Q2_1_PROD.wim",
+          "boot_wim_file_size": 955064072,
+          "iso_file_name": "vx4p_24Q2_1_1693.iso",
+          "release_notes": "Disguise OS image version vx4p_24Q2_1 is the current OS and specific to the VX 4+ media server. This OS includes an update to the Deltacast SDK (6.22.01) to enable support for the Disguise VX 3 media server, which makes use of a new capture card variant. \r\n\r\nIn order to make use of this new Deltacast SDK, please note that users will need to run this OS with Designer software version r27.2 and above. \r\n\r\nThe previous OS will work with Designer software versions r27.0 to r27.1.3.\r\n\r\nWe have removed 24Q1_1 from the website as it contained an incorrect driver version. We have resolved this by updating the Current OS to 24Q2_1",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/24Q2_1/vx4p_w10-1809_24Q2_1PROD.wim",
+          "iso_file_size": 10000269312,
+          "r2_sends_remote_reimager_logs": true,
+          "boot_wim_file_name": "boot_vx4p_24Q2_1_1693.2.4.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/24Q2_1/vx4pW10_d24Q2_1_p1693.iso",
+          "release_date": 1713744000000,
+          "public_version_table": [
+            {
+              "Package": "GPU: AMD",
+              "Version": "22Q2"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.22.06"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "RAID: Broadcom",
+              "Version": "7.20"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12.4"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        },
+        {
+          "os_family_handle": "vx4p",
+          "os_wim_file_size": 9551452523,
+          "redisguise_name": "24Q2.1482",
+          "redisguise_handle": "[vx4p][24Q2.1482]",
+          "r2_sends_remote_postboot_logs": true,
+          "aws_url_boot_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/24Q2/boot_vx4p_24Q2_1482.2.4.wim",
+          "r2_is_compatible": true,
+          "os_wim_file_name": "vx4p_w10-1809_24Q2_PROD_1.wim",
+          "boot_wim_file_size": 955060726,
+          "iso_file_name": "vx4p_24Q2_1482.iso",
+          "release_notes": "Disguise OS image version vx4+_24Q2 is specific to the VX 4+ media server. This OS includes an update to the Matrox SDK (10.4.101) and provides the following improvements to Disguise media servers with a Matrox SDI capture card installed:\r\n\r\n - Mixed frame rate support - users can now work with any combination of video resolution formats and refresh rates across each video input \r\n - Ultra-low latency mode - we have reduced the video latency when running in ultra-low-latency mode from 4 frames per second to 3 frames per second at 30Hz, 50Hz and 60Hz\r\n - General performance improvements\r\n \r\nTo benefit from these improvements, please keep in mind that users will need to run this OS version with Designer software versions r27.0 through r27.1.3\r\n\r\nNOTE: We have removed 24Q1 from the website as it contained an incorrect driver version. We have resolved this by updating the r27.2+ to 24Q2",
+          "aws_url_os_wim": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/24Q2/vx4p_w10-1809_24Q2_PROD_1.wim",
+          "iso_file_size": 10558832640,
+          "r2_sends_remote_reimager_logs": true,
+          "boot_wim_file_name": "boot_vx4p_24Q2_1482.2.4.wim",
+          "aws_url_iso": "https://d3packages.s3.amazonaws.com/pkg/os-image/vx4p/24Q2/vx4pW10_d24Q2_p1482.iso",
+          "release_date": 1713657600000,
+          "public_version_table": [
+            {
+              "Package": "GPU: AMD",
+              "Version": "22Q2"
+            },
+            {
+              "Package": "Capture: Matrox",
+              "Version": "10.4.101.1269"
+            },
+            {
+              "Package": "Network: Mellanox",
+              "Version": "2.90.25506"
+            },
+            {
+              "Package": "Capture: Deltacast",
+              "Version": "6.15.10"
+            },
+            {
+              "Package": "Audio: RME",
+              "Version": "4.38"
+            },
+            {
+              "Package": "RAID: Broadcom",
+              "Version": "7.20"
+            },
+            {
+              "Package": "VIMBA SDK",
+              "Version": "2.1.3"
+            },
+            {
+              "Package": "Deltacast dCare",
+              "Version": "1.12"
+            },
+            {
+              "Package": "Deltacast dScope",
+              "Version": "1.9.0"
+            },
+            {
+              "Package": "Raid: LSA Utils",
+              "Version": "007.018.004.000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "has_recovery_drive": false,
+      "boot_type": "UEFI",
+      "name": "vx 4n",
+      "d3Model": "vx 4n",
+      "redisguises": []
+    }
+  ]
+}
