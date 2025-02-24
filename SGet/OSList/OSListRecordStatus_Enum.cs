@@ -3,6 +3,9 @@ namespace SGet
 {
     public enum OSListRecordStatus
     {
+        //JM: OS not in library and not required
+        Not_In_Library,
+
         // Client object is created and set to default values
         Initialized,
 

@@ -34,6 +34,7 @@ namespace SGet
         private string[] args;
 
         //////////// JOHNS STATE VARS ////////////
+        private static bool SETTING_USE_FAKE_API_FILE = false;
         private static string API_URL = "https://d3packages.s3.amazonaws.com/pkg/api/redisguises_by_model.json";
         private static string FAKE_API_PATH = "Y:\\Repos\\OSDownloader\\redisguises_by_model.json";
 
@@ -147,7 +148,7 @@ namespace SGet
 
             // Bind OSListManager to dataGrid_osList
             dataGrid_osList.ItemsSource = OSListManager.Instance.OSList;
-            OSListManager.Instance.OSList.CollectionChanged += new NotifyCollectionChangedEventHandler(DownloadsList_CollectionChanged);
+            OSListManager.Instance.OSList.CollectionChanged += new NotifyCollectionChangedEventHandler(OSList_CollectionChanged);
         }
 
         #endregion
@@ -622,16 +623,18 @@ namespace SGet
 
         private void dataGrid_osList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            foreach (OSListEntry osRecord in OSListManager.Instance.OSList)
+            {
+                osRecord.IsSelected = false;
+            }
+
             if (dataGrid_osList.SelectedItems.Count > 0)
             {
+                
+                OSListEntry selectedOSRecord = (OSListEntry)dataGrid_osList.SelectedItem;
+                selectedOSRecord.IsSelected = true;
+                textBlock_ReleaseNotes.Text = selectedOSRecord.ReleaseNotes;
                 /*
-                foreach (WebDownloadClient downld in DownloadManager.Instance.DownloadsList)
-                {
-                    downld.IsSelected = false;
-                }
-
-                var download = (WebDownloadClient)dataGrid_osList.SelectedItem;
-
                 if (propertyValues.Count > 0)
                     propertyValues.Clear();
 
@@ -659,6 +662,7 @@ namespace SGet
             }
             else
             {
+                textBlock_ReleaseNotes.Text = "Select an OS from the grid on the left to view its Release Notes";
                 /*
                 if (DownloadManager.Instance.TotalDownloads > 0)
                 {
@@ -1224,14 +1228,26 @@ namespace SGet
                 btnCheckForUpdates.Label = "Checking for Updates";
 
                 //run long running task 
-                apiContentsObject = await Task.Run(() =>
+                if (SETTING_USE_FAKE_API_FILE)
                 {
+                    apiContentsObject = await Task.Run(() =>
+                    {
 
-                    Thread.Sleep(2000);
-                    string apiContentsString = File.ReadAllText(FAKE_API_PATH);
-                    APIContentsRootObject apiContentsObj = JsonConvert.DeserializeObject<APIContentsRootObject>(apiContentsString);
-                    return apiContentsObj;
-                });
+                        Thread.Sleep(2000);
+                        string apiContentsString = File.ReadAllText(FAKE_API_PATH);
+                        APIContentsRootObject apiContentsObj = JsonConvert.DeserializeObject<APIContentsRootObject>(apiContentsString);
+                        return apiContentsObj;
+                    });
+                }
+                else
+                {
+                    var result = string.Empty;
+                    using (var webClient = new System.Net.WebClient())
+                    {
+                        string apiContentsString = await webClient.DownloadStringTaskAsync(API_URL);
+                        apiContentsObject = JsonConvert.DeserializeObject<APIContentsRootObject>(apiContentsString);
+                    }
+                }
                 //MainWindow mw = this.mainWindow;
                 string downloadsFolder = Settings.Default.DownloadLocation;
 
@@ -1245,6 +1261,7 @@ namespace SGet
                             os.redisguise_name,
                             os.aws_url_os_wim,
                             os.aws_url_boot_wim,
+                            os.release_notes,
                             this.mainWindow,
                             downloadsFolder
                         );

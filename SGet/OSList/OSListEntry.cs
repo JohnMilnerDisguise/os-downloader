@@ -40,6 +40,8 @@ namespace SGet
         //OS's Unique Identifier
         public string UniqueIdentifier { get; }
 
+        public string ReleaseNotes { get; set; }
+
         // Percentage of downloaded data across both downloads (each contribution scaled by download size)
         public float Percent
         {
@@ -250,13 +252,13 @@ namespace SGet
                 else if (DownloadClient_OSWim.HasError)
                     return DownloadClient_OSWim.StatusText;
                 else
-                    return Status.ToString();
+                    return Status.ToString().Replace( '_', ' ');
             }
-            set
-            {
-                StatusText = value;
+            //set
+            //{
+            //    StatusText = value;
                 //RaiseStatusChanged();
-            }
+            //}
         }
 
         // There was an error during download
@@ -270,11 +272,12 @@ namespace SGet
 
         #region Constructor and Events
 
-        public OSListEntry(string uniqueIdentifier, List<string> models, string name, string bootWimURL, string osWimURL)
+        public OSListEntry(string uniqueIdentifier, List<string> models, string name, string bootWimURL, string osWimURL, string releaseNotes)
         {
             this.UniqueIdentifier = uniqueIdentifier;
             this.ModelArray = models;
             this.Name = name;
+            this.ReleaseNotes = releaseNotes;
             this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
             this.DownloadClient_OSWim = new WebDownloadClient(osWimURL);
 

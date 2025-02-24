@@ -310,7 +310,13 @@ namespace SGet
             this.MaxCacheSize = Settings.Default.MemoryCacheSize * 1024; // Default cache size is 1MB
             this.BufferCountPerNotification = 64;
 
-            this.Url = new Uri(url, UriKind.Absolute);
+            try
+            {
+                this.Url = new Uri(url, UriKind.Absolute);
+            } catch( System.UriFormatException ex )
+            {
+                this.Url = null;
+            }
 
             this.SupportsRange = false;
             this.HasError = false;

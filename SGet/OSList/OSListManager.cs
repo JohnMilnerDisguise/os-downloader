@@ -125,12 +125,12 @@ namespace SGet
 
         #endregion
 
-        public static void AddOS(string uniqueIdentifier, string model, string name, string osWimURL, string bootWimURL, MainWindow mainWindow, string downloadsFolder)
+        public static void AddOS(string uniqueIdentifier, string model, string name, string osWimURL, string bootWimURL, string releaseNotes, MainWindow mainWindow, string downloadsFolder)
         {
             OSListEntry preExistingOSRecordInList = OSListManager.Instance.OSList.FirstOrDefault( os => os.UniqueIdentifier != null && os.UniqueIdentifier.Equals(uniqueIdentifier) );
             if( preExistingOSRecordInList == null )
             {
-                AddOS( uniqueIdentifier, new List<string> { model }, name, osWimURL, bootWimURL, mainWindow, downloadsFolder );
+                AddOS( uniqueIdentifier, new List<string> { model }, name, osWimURL, bootWimURL, releaseNotes, mainWindow, downloadsFolder );
             }
             else if (!preExistingOSRecordInList.ModelArray.Contains(model) )
             {
@@ -139,9 +139,9 @@ namespace SGet
             //else do nothing
         }
 
-        public static void AddOS(string uniqueIdentifier, List<string> models, string name, string osWimURL, string bootWimURL, MainWindow mainWindow, string downloadsFolder)
+        public static void AddOS(string uniqueIdentifier, List<string> models, string name, string osWimURL, string bootWimURL, string releaseNotes, MainWindow mainWindow, string downloadsFolder)
         {
-            OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, osWimURL, bootWimURL);
+            OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, osWimURL, bootWimURL, releaseNotes);
             osListEntry.DownloadClient_OSWim.FileName = "oswim.wim";
             osListEntry.DownloadClient_BootWim.FileName = "bootwim.wim";
 
@@ -213,6 +213,11 @@ namespace SGet
             osListEntry.DownloadClient_BootWim.CompletedOn = DateTime.MinValue;
             osListEntry.DownloadClient_BootWim.OpenFileOnCompletion = false;
             osListEntry.DownloadClient_BootWim.Status = DownloadStatus.Paused;
+
+            //Set Status Depending On Whether OS in library
+            osListEntry.Status = OSListRecordStatus.Not_In_Library;
+
+            //osListEntry.ReleaseNotes = $"Hello\nThese are the Release Notes for {name}";
 
             // Add the download to the downloads list
             OSListManager.Instance.OSList.Add(osListEntry);
