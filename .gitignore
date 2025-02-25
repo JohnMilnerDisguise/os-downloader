@@ -400,4 +400,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 #Johns Stuff
-SGet\Properties\Settings.settings
+SGet/app.config

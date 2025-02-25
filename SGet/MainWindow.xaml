@@ -173,6 +173,13 @@
                         <DataGridTextColumn Header="Name" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Name" Binding="{Binding Name, Mode=OneWay}" />
                         <DataGridTextColumn Header="Status" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Status" Binding="{Binding StatusString, Mode=OneWay}" />
                         <DataGridTextColumn Header="Action" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="55" Width="55" x:Name="textColumn_osList_Action" Binding="{Binding PercentString, Mode=OneWay}" />
+                        <DataGridTemplateColumn Header="Button" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="butto_osList_button">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Update Status"></Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Progress" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="textColumn_osList_Progress">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

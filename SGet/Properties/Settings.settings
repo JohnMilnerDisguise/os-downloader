@@ -36,7 +36,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DownloadLocation" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Users\john\Desktop\OSDownloads\</Value>
+      <Value Profile="(Default)">Y:\Repos\os-downloader\OSDownloads</Value>
     </Setting>
     <Setting Name="MaxDownloads" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
