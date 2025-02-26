@@ -148,7 +148,8 @@ namespace SGet
 
             // Bind OSListManager to dataGrid_osList
             dataGrid_osList.ItemsSource = OSListManager.Instance.OSList;
-            OSListManager.Instance.OSList.CollectionChanged += new NotifyCollectionChangedEventHandler(OSList_CollectionChanged);
+            //OSListManager.Instance.OSList.CollectionChanged += new NotifyCollectionChangedEventHandler(OSList_CollectionChanged);
+            OSListManager.Instance.OSList.ListChanged += new ListChangedEventHandler(OSList_CollectionChanged);
         }
 
         #endregion
@@ -594,6 +595,7 @@ namespace SGet
                 this.statusBarCompleted.Content = String.Empty;
         }
 
+
         public void DownloadCompletedHandler(object sender, EventArgs e)
         {
             if (Settings.Default.ShowBalloonNotification)
@@ -611,6 +613,81 @@ namespace SGet
         }
         #endregion
         #region Main Window Event Handlers_John
+
+        public void OSListPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            OSListEntry osRecord = (OSListEntry)sender;
+            //if (e.PropertyName == "Status" )
+            //{
+            //    this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
+            //}
+        }
+
+        private void OSListUpdatePropertiesList(object sender, PropertyChangedEventArgs e)
+        {
+            //propertyValues.RemoveRange(4, 2);
+            var osRecord = (OSListEntry)downloadsGrid.SelectedItem;
+            //propertyValues.Add(download.AverageDownloadSpeed);
+            //propertyValues.Add(download.TotalElapsedTimeString);
+
+            //propertiesList.RemoveRange(4, 2);
+            //propertiesList.Add(new PropertyModel(propertyNames[4], propertyValues[4]));
+            //propertiesList.Add(new PropertyModel(propertyNames[5], propertyValues[5]));
+            propertiesGrid.Items.Refresh();
+        }
+
+        public void OSListEntryStatusChanged(object sender, EventArgs e)
+        {
+            // Start the first download in the queue, if it exists
+            OSListEntry osRecord = (OSListEntry)sender;
+            dataGrid_osList.Items.Refresh();
+            /*
+            if (dl.Status == DownloadStatus.Paused || dl.Status == DownloadStatus.Completed
+                || dl.Status == DownloadStatus.Deleted || dl.HasError)
+            {
+                foreach (WebDownloadClient d in DownloadManager.Instance.DownloadsList)
+                {
+                    if (d.Status == DownloadStatus.Queued)
+                    {
+                        d.Start();
+                        break;
+                    }
+                }
+            }
+
+            foreach (WebDownloadClient d in DownloadManager.Instance.DownloadsList)
+            {
+                if (d.Status == DownloadStatus.Downloading)
+                {
+                    d.SpeedLimitChanged = true;
+                }
+            }
+
+            int active = DownloadManager.Instance.ActiveDownloads;
+            int completed = DownloadManager.Instance.CompletedDownloads;
+
+            if (active > 0)
+            {
+                if (completed == 0)
+                    this.statusBarActive.Content = " (" + active + " Active)";
+                else
+                    this.statusBarActive.Content = " (" + active + " Active, ";
+            }
+            else
+                this.statusBarActive.Content = String.Empty;
+
+            if (completed > 0)
+            {
+                if (active == 0)
+                    this.statusBarCompleted.Content = " (" + completed + " Completed)";
+                else
+                    this.statusBarCompleted.Content = completed + " Completed)";
+            }
+            else
+                this.statusBarCompleted.Content = String.Empty;
+            */
+
+        }
 
         private void dataGrid_osList_KeyUp(object sender, KeyEventArgs e)
         {
@@ -634,6 +711,7 @@ namespace SGet
                 OSListEntry selectedOSRecord = (OSListEntry)dataGrid_osList.SelectedItem;
                 selectedOSRecord.IsSelected = true;
                 textBlock_ReleaseNotes.Text = selectedOSRecord.ReleaseNotes;
+                statusBarItem_ReleaseNotesTitle.Content = $"{selectedOSRecord.UniqueIdentifier} Release Notes";
                 /*
                 if (propertyValues.Count > 0)
                     propertyValues.Clear();
@@ -663,6 +741,7 @@ namespace SGet
             else
             {
                 textBlock_ReleaseNotes.Text = "Select an OS from the grid on the left to view its Release Notes";
+                statusBarItem_ReleaseNotesTitle.Content = $"Select an OS to view its Release Notes";
                 /*
                 if (DownloadManager.Instance.TotalDownloads > 0)
                 {
@@ -1035,7 +1114,8 @@ namespace SGet
 
         ///JOHNS CODE /////////////////////
 
-        private void OSList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        //private void OSList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OSList_CollectionChanged(object sender, ListChangedEventArgs e)
         {
             if (OSListManager.Instance.TotalDownloads == 1)
             {
@@ -1250,7 +1330,7 @@ namespace SGet
                 }
                 //MainWindow mw = this.mainWindow;
                 string downloadsFolder = Settings.Default.DownloadLocation;
-
+                int i = 1;
                 foreach( Model model in apiContentsObject.models )
                 {
                     foreach( Redisguis os in model.redisguises )
@@ -1265,7 +1345,10 @@ namespace SGet
                             this.mainWindow,
                             downloadsFolder
                         );
+                        if (i > 5) break;
+                        i++;
                     }
+                    if (i > 5) break;
                 }
 
                 //refresh button text now api sync has finished

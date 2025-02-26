@@ -2,13 +2,17 @@
 using SGet.Properties;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows;
+using System.Windows.Documents;
+using System.Xml.Linq;
 
 namespace SGet
 {
@@ -225,6 +229,30 @@ namespace SGet
         // Download buffer count per notification (DownloadProgressChanged event)
         public int BufferCountPerNotification { get; set; }
 
+        public ObservableCollection<string> ActionOptions { get; set; }
+
+        private OSListRecordAction _selected_action;
+        public string SelectedActionString
+        {
+            get
+            {
+                return OSListRecordEnumUtils.getActionDescriptionFromActionEnum( _selected_action );
+            }
+            set
+            {
+                _selected_action = OSListRecordEnumUtils.getActionEnumFromActionDescription( value );
+                //update status if the action requires it
+                OSListRecordStatus? newstatus = OSListRecordEnumUtils.getNewOSListRecordStatusFromActionOption(_selected_action, status);
+                if( newstatus != null && newstatus != status)
+                {
+                    Status = (OSListRecordStatus)newstatus;
+                    RaiseStatusChanged();
+                    if (PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("Status"));
+                }
+            }
+        } 
+
         // Download status
         private OSListRecordStatus status;
         public OSListRecordStatus Status
@@ -236,8 +264,17 @@ namespace SGet
             set
             {
                 status = value;
-                //if (status != OSListRecordStatus.Deleting)
-                    //RaiseStatusChanged();
+                //set data for the drop down box in grid to bind to based on the Status
+                string oldSelectedAction = SelectedActionString;
+                ActionOptions = new ObservableCollection<string>( Array.ConvertAll(
+                    OSListRecordEnumUtils.getActionOptionsFromOSListRecordStatus(status), x => OSListRecordEnumUtils.getActionDescriptionFromActionEnum(x)
+                ));
+                if (oldSelectedAction != null && !oldSelectedAction.Equals("") && ActionOptions.Contains(oldSelectedAction, StringComparer.CurrentCultureIgnoreCase) ){
+                    SelectedActionString = oldSelectedAction;
+                }
+                else {
+                    SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum( OSListRecordEnumUtils.getDefaultActionFromOSListRecordStatus(status) );
+                }
             }
         }
 
@@ -272,7 +309,7 @@ namespace SGet
 
         #region Constructor and Events
 
-        public OSListEntry(string uniqueIdentifier, List<string> models, string name, string bootWimURL, string osWimURL, string releaseNotes)
+        public OSListEntry(string uniqueIdentifier, List<string> models, string name, string bootWimURL, string osWimURL, string releaseNotes, MainWindow mainWindow)
         {
             this.UniqueIdentifier = uniqueIdentifier;
             this.ModelArray = models;
@@ -283,12 +320,15 @@ namespace SGet
 
             this.StatusText = String.Empty;
             this.Status = OSListRecordStatus.Initialized;
+
+            this.PropertyChanged += mainWindow.OSListPropertyChangedHandler;
+            this.StatusChanged += mainWindow.OSListEntryStatusChanged;
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
-        /*
+    
         public event EventHandler StatusChanged;
-
+        /*
         public event EventHandler DownloadProgressChanged;
 
         public event EventHandler DownloadCompleted;
@@ -306,7 +346,7 @@ namespace SGet
                 handler(this, new PropertyChangedEventArgs(name));
             }
         }
-
+        */
         // Generate StatusChanged event
         protected virtual void RaiseStatusChanged()
         {
@@ -315,6 +355,7 @@ namespace SGet
                 StatusChanged(this, EventArgs.Empty);
             }
         }
+        /*
 
         // Generate DownloadProgressChanged event
         protected virtual void RaiseDownloadProgressChanged()
@@ -743,6 +784,64 @@ namespace SGet
         
         */
         #endregion
+
+        /* 
+         * 
+         * MOVED TO ENUM FILE
+        public static OSListRecordAction getDefaultActionFromOSListRecordStatus(OSListRecordStatus status)
+        {
+            if (status == OSListRecordStatus.Not_In_Library)
+            {
+                return OSListRecordAction.None;
+            }
+            return OSListRecordAction.None;
+        }
+
+        public static OSListRecordStatus? getNewOSListRecordStatusFromActionOption(OSListRecordAction action, OSListRecordStatus status)
+        {
+            if (action == OSListRecordAction.Add_To_Library && status == OSListRecordStatus.Not_In_Library)
+            {
+                return OSListRecordStatus.To_Be_Added;
+            }
+            if (action == OSListRecordAction.None && status == OSListRecordStatus.To_Be_Added )
+            {
+                return OSListRecordStatus.Not_In_Library;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+
+        public static string getActionDescriptionFromActionEnum(OSListRecordAction actionEnum)
+        {
+            if (actionEnum == OSListRecordAction.None)
+            {
+                return "";
+            }
+            else
+            {
+                return actionEnum.ToString().Replace('_', ' ');
+            }
+        }
+
+        public static OSListRecordAction getActionEnumFromActionDescription(string actionDescription)
+        {
+            if (actionDescription == null || actionDescription.Equals(""))
+            {
+                return OSListRecordAction.None;
+            }
+            else
+            {
+                return (OSListRecordAction)Enum.Parse(typeof(OSListRecordAction), actionDescription.Replace(' ', '_'), true);
+            }
+        }
+
+        */
+
+
     }
 
 }

@@ -86,6 +86,13 @@
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             </Style.Setters>
         </Style>
+        <Style TargetType="DataGridRow">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding StatusString}" Value="Not In Library">
+                    <Setter Property="Foreground" Value="Gray" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <DockPanel Name="dockPanel">
@@ -146,7 +153,7 @@
         <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="OSListPanel">
             <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" Name="scrollViewer_oslist">
                 <DataGrid AutoGenerateColumns="False" Name="dataGrid_osList" VerticalAlignment="Top" HorizontalContentAlignment="Center" DockPanel.Dock="Left" 
-                            BorderThickness="0" IsReadOnly="True" GridLinesVisibility="None" MinRowHeight="22" RowBackground="#FFF9F9F9"
+                            BorderThickness="0" IsReadOnly="False" GridLinesVisibility="None" MinRowHeight="22" RowBackground="#FFF9F9F9"
                             MouseDoubleClick="cmOpenFile_Click" SelectionChanged="dataGrid_osList_SelectionChanged" PreviewMouseWheel="dataGrid_osList_PreviewMouseWheel" 
                             Background="#FFF9F9F9" HorizontalGridLinesBrush="#FFCBCBCB" VerticalGridLinesBrush="#FFCBCBCB" KeyUp="dataGrid_osList_KeyUp" 
                             ContextMenuOpening="dataGrid_osList_ContextMenuOpening" CanUserResizeRows="False">
@@ -171,12 +178,27 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Models" CellStyle="{StaticResource LeftCellStyle}" MinWidth="150" Width="150" x:Name="textColumn_osList_Models" Binding="{Binding Models, Mode=OneWay}" />
                         <DataGridTextColumn Header="Name" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Name" Binding="{Binding Name, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Status" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Status" Binding="{Binding StatusString, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Action" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="55" Width="55" x:Name="textColumn_osList_Action" Binding="{Binding PercentString, Mode=OneWay}" />
-                        <DataGridTemplateColumn Header="Progress" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="textColumn_osList_Progress">
+                        <DataGridTextColumn Header="Status" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Status" Binding="{Binding StatusString, Mode=OneWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, BindsDirectlyToSource=True, UpdateSourceTrigger=PropertyChanged}" />
+                        <!--
+                        <DataGridComboBoxColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Action"  ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItemBinding="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        -->
+
+                        <DataGridTemplateColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Action">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ProgressBar Name="progressBar_osList_Progress" Value="{Binding Progress, Mode=OneWay}" VerticalAlignment="Center" Height="16" MinHeight="16" />
+                                    <Grid>
+                                        <ComboBox ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItem="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Progress" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Progress">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <ProgressBar Name="progressBar_osList_Progress" Value="{Binding Progress, Mode=OneWay}" VerticalAlignment="Center" Height="16" MinHeight="16" />
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PercentString, Mode=OneWay}" Foreground="DarkSlateGray"/>
+                                    </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -185,6 +207,7 @@
                 </DataGrid>
             </ScrollViewer>
         </DockPanel>
+        <osc:DockPanelSplitter x:Name="splitter_GridVsReleaseNotes" DockPanel.Dock="Left" Background="#FFB9C9DA" BorderThickness="2" BorderBrush="#FFDFE9F5" Thickness="6" />
 
         <DockPanel DockPanel.Dock="Bottom" Background="#FFF9F9F9" Name="propertiesPanel" Height="140">
             <StatusBar Height="26" Name="propertiesBar" DockPanel.Dock="Top" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
@@ -204,9 +227,10 @@
         <osc:DockPanelSplitter x:Name="propertiesSplitter" DockPanel.Dock="Bottom" Background="#FFB9C9DA" BorderThickness="2" BorderBrush="#FFDFE9F5" Height="6" Thickness="6" />
 
         <DockPanel DockPanel.Dock="Top" Name="downloadsPanel" Background="#FFF9F9F9">
-            
-
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Name="scrollViewer_ReleaseNotes">
+            <StatusBar Height="26" Name="statusBar_ReleaseNotesTitle" DockPanel.Dock="Top" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
+                <StatusBarItem  Name="statusBarItem_ReleaseNotesTitle" Content="Release Notes" Margin="0" Padding="10,3,3,3" FontWeight="Bold"/>
+            </StatusBar>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Name="scrollViewer_ReleaseNotes">
                 <StackPanel>
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Name="dgScrollViewer" Height="70" VerticalAlignment="Top">
                         <DataGrid AutoGenerateColumns="False" Name="downloadsGrid" VerticalContentAlignment="Center" DockPanel.Dock="Top" 

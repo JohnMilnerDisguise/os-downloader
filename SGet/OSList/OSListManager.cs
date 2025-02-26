@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using System.ComponentModel;
 namespace SGet
 {
     public class OSListManager
@@ -26,7 +27,8 @@ namespace SGet
         private static NumberFormatInfo numberFormat = NumberFormatInfo.InvariantInfo;
 
         // Collection which contains all download clients, bound to the DataGrid control
-        public ObservableCollection<OSListEntry> OSList = new ObservableCollection<OSListEntry>();
+        //public ObservableCollection<OSListEntry> OSList = new ObservableCollection<OSListEntry>();
+        public BindingList<OSListEntry> OSList = new BindingList<OSListEntry>();
 
         #region Properties
 
@@ -141,15 +143,13 @@ namespace SGet
 
         public static void AddOS(string uniqueIdentifier, List<string> models, string name, string osWimURL, string bootWimURL, string releaseNotes, MainWindow mainWindow, string downloadsFolder)
         {
-            OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, osWimURL, bootWimURL, releaseNotes);
+            OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, osWimURL, bootWimURL, releaseNotes, mainWindow);
             osListEntry.DownloadClient_OSWim.FileName = "oswim.wim";
             osListEntry.DownloadClient_BootWim.FileName = "bootwim.wim";
 
             // Register WebDownloadClient events
             //download.DownloadProgressChanged += download.DownloadProgressChangedHandler;
             //download.DownloadCompleted += download.DownloadCompletedHandler;
-            osListEntry.PropertyChanged += mainWindow.PropertyChangedHandler;
-            //download.StatusChanged += mainWindow.StatusChangedHandler;
             //download.DownloadCompleted += mainWindow.DownloadCompletedHandler;
 
             // Create path to temporary file
