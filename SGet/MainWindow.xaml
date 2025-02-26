@@ -182,7 +182,6 @@
                         <!--
                         <DataGridComboBoxColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Action"  ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItemBinding="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         -->
-
                         <DataGridTemplateColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Action">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
