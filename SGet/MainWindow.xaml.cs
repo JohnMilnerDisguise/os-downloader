@@ -27,9 +27,6 @@ namespace SGet
 {
     public partial class MainWindow
     {
-        private List<string> propertyNames;
-        private List<string> propertyValues;
-        private List<PropertyModel> propertiesList;
         private bool trayExit;
         private string[] args;
 
@@ -66,19 +63,6 @@ namespace SGet
             // In case of computer shutdown or restart, save current list of downloads to an XML file
             SystemEvents.SessionEnding += new SessionEndingEventHandler(SystemEvents_SessionEnding);
 
-            propertyNames = new List<string>();
-            propertyNames.Add("URL");
-            propertyNames.Add("Supports Resume");
-            propertyNames.Add("File Type");
-            propertyNames.Add("Download Folder");
-            propertyNames.Add("Average Speed");
-            propertyNames.Add("Total Time");
-
-            propertyValues = new List<string>();
-            propertiesList = new List<PropertyModel>();
-            SetEmptyPropertiesGrid();
-            propertiesGrid.ItemsSource = propertiesList;
-
             // Load downloads from the XML file
             LoadDownloadsFromXml();
 
@@ -104,7 +88,8 @@ namespace SGet
 
             if (this.cbShowGrid.IsChecked.Value)
             {
-                this.downloadsGrid.GridLinesVisibility = DataGridGridLinesVisibility.All;
+                this.dataGrid_osList.GridLinesVisibility = DataGridGridLinesVisibility.All;
+                this.dataGrid_os_version_table.GridLinesVisibility = DataGridGridLinesVisibility.All;
             }
             else
             {
@@ -155,18 +140,6 @@ namespace SGet
         #endregion
 
         #region Methods
-
-        private void SetEmptyPropertiesGrid()
-        {
-            if (propertiesList.Count > 0)
-                propertiesList.Clear();
-            for (int i = 0; i < 6; i++)
-            {
-                propertiesList.Add(new PropertyModel(propertyNames[i], String.Empty));
-            }
-
-            propertiesGrid.Items.Refresh();
-        }
 
         private void PauseAllDownloads()
         {
@@ -310,8 +283,8 @@ namespace SGet
 
         private void EnableMenuItems(bool enabled)
         {
-            btnDelete.IsEnabled = enabled;
-            btnClearCompleted.IsEnabled = enabled;
+            btnAddToLibrary.IsEnabled = enabled;
+            btnRemoveFromLibrary.IsEnabled = enabled;
             btnStart.IsEnabled = enabled;
             btnPause.IsEnabled = enabled;
             tcmStartAll.IsEnabled = enabled;
@@ -423,29 +396,6 @@ namespace SGet
                 }
 
                 var download = (WebDownloadClient)downloadsGrid.SelectedItem;
-
-                if (propertyValues.Count > 0)
-                    propertyValues.Clear();
-
-                propertyValues.Add(download.Url.ToString());
-                string resumeSupported = "No";
-                if (download.SupportsRange)
-                    resumeSupported = "Yes";
-                propertyValues.Add(resumeSupported);
-                propertyValues.Add(download.FileType);
-                propertyValues.Add(download.DownloadFolder);
-                propertyValues.Add(download.AverageDownloadSpeed);
-                propertyValues.Add(download.TotalElapsedTimeString);
-
-                if (propertiesList.Count > 0)
-                    propertiesList.Clear();
-
-                for (int i = 0; i < 6; i++)
-                {
-                    propertiesList.Add(new PropertyModel(propertyNames[i], propertyValues[i]));
-                }
-
-                propertiesGrid.Items.Refresh();
                 download.IsSelected = true;
             }
             else
@@ -457,30 +407,12 @@ namespace SGet
                         downld.IsSelected = false;
                     }
                 }
-                SetEmptyPropertiesGrid();
             }
         }
 
         public void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             WebDownloadClient download = (WebDownloadClient)sender;
-            if (e.PropertyName == "AverageSpeedAndTotalTime" && download.Status != DownloadStatus.Deleting)
-            {
-                this.Dispatcher.Invoke(new PropertyChangedEventHandler(UpdatePropertiesList), sender, e);
-            }
-        }
-
-        private void UpdatePropertiesList(object sender, PropertyChangedEventArgs e)
-        {
-            propertyValues.RemoveRange(4, 2);
-            var download = (WebDownloadClient)downloadsGrid.SelectedItem;
-            propertyValues.Add(download.AverageDownloadSpeed);
-            propertyValues.Add(download.TotalElapsedTimeString);
-
-            propertiesList.RemoveRange(4, 2);
-            propertiesList.Add(new PropertyModel(propertyNames[4], propertyValues[4]));
-            propertiesList.Add(new PropertyModel(propertyNames[5], propertyValues[5]));
-            propertiesGrid.Items.Refresh();
         }
 
         private void downloadsGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -623,19 +555,6 @@ namespace SGet
             //}
         }
 
-        private void OSListUpdatePropertiesList(object sender, PropertyChangedEventArgs e)
-        {
-            //propertyValues.RemoveRange(4, 2);
-            var osRecord = (OSListEntry)downloadsGrid.SelectedItem;
-            //propertyValues.Add(download.AverageDownloadSpeed);
-            //propertyValues.Add(download.TotalElapsedTimeString);
-
-            //propertiesList.RemoveRange(4, 2);
-            //propertiesList.Add(new PropertyModel(propertyNames[4], propertyValues[4]));
-            //propertiesList.Add(new PropertyModel(propertyNames[5], propertyValues[5]));
-            propertiesGrid.Items.Refresh();
-        }
-
         public void OSListEntryStatusChanged(object sender, EventArgs e)
         {
             // Start the first download in the queue, if it exists
@@ -710,8 +629,16 @@ namespace SGet
                 
                 OSListEntry selectedOSRecord = (OSListEntry)dataGrid_osList.SelectedItem;
                 selectedOSRecord.IsSelected = true;
+
+                //wire up child controls
                 textBlock_ReleaseNotes.Text = selectedOSRecord.ReleaseNotes;
                 statusBarItem_ReleaseNotesTitle.Content = $"{selectedOSRecord.UniqueIdentifier} Release Notes";
+                dataGrid_os_version_table.ItemsSource = selectedOSRecord.PublicVersionTable;
+
+                //enable/disable add/remove buttons
+                btnAddToLibrary.IsEnabled = selectedOSRecord.Status == OSListRecordStatus.Not_In_Library;
+                btnRemoveFromLibrary.IsEnabled = selectedOSRecord.Status == OSListRecordStatus.To_Be_Added;
+
                 /*
                 if (propertyValues.Count > 0)
                     propertyValues.Clear();
@@ -742,16 +669,10 @@ namespace SGet
             {
                 textBlock_ReleaseNotes.Text = "Select an OS from the grid on the left to view its Release Notes";
                 statusBarItem_ReleaseNotesTitle.Content = $"Select an OS to view its Release Notes";
-                /*
-                if (DownloadManager.Instance.TotalDownloads > 0)
-                {
-                    foreach (WebDownloadClient downld in DownloadManager.Instance.DownloadsList)
-                    {
-                        downld.IsSelected = false;
-                    }
-                }
-                SetEmptyPropertiesGrid();
-                */
+
+                //enable/disable add/remove buttons
+                btnAddToLibrary.IsEnabled = false;
+                btnRemoveFromLibrary.IsEnabled = false;
             }
         }
 
@@ -831,13 +752,13 @@ namespace SGet
 
         #region Click Event Handlers
 
-        private void btnNewDownload_Click(object sender, RoutedEventArgs e)
+        private void btnAddToLibrary_Click(object sender, RoutedEventArgs e)
         {
             NewDownload newDownloadDialog = new NewDownload(this);
             newDownloadDialog.ShowDialog();
         }
 
-        private void btnBatchDownload_Click(object sender, RoutedEventArgs e)
+        private void btnRemoveFromLibrary_Click(object sender, RoutedEventArgs e)
         {
             BatchDownload batchDownloadDialog = new BatchDownload(this);
             batchDownloadDialog.ShowDialog();
@@ -1342,7 +1263,8 @@ namespace SGet
                             os.aws_url_os_wim,
                             os.aws_url_boot_wim,
                             os.release_notes,
-                            this.mainWindow,
+                            os.public_version_table,
+                            (SGet.MainWindow)this.mainWindow,
                             downloadsFolder
                         );
                         if (i > 5) break;

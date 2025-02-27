@@ -215,6 +215,9 @@
     <Content Include="Libraries\Microsoft.Windows.Shell.dll" />
     <Content Include="Libraries\RibbonControlsLibrary.dll" />
     <Content Include="Libraries\WPFToolkit.Extended.dll" />
+    <Resource Include="Resources\stop.png" />
+    <Resource Include="Resources\addtocollection.png" />
+    <Resource Include="Resources\removefromcollection.png" />
     <Resource Include="Resources\apisync.png" />
     <Resource Include="Resources\connected.png" />
     <Resource Include="Resources\connecting.png" />

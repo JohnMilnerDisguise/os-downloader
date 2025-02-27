@@ -20,7 +20,7 @@ namespace SGet
     {
         private static NumberFormatInfo numberFormat = NumberFormatInfo.InvariantInfo;
 
-        #region Fields and Properties
+        #region Fields and Properties_John
 
         //OS Wim Download Client
         public WebDownloadClient DownloadClient_OSWim { get; set; }
@@ -45,6 +45,8 @@ namespace SGet
         public string UniqueIdentifier { get; }
 
         public string ReleaseNotes { get; set; }
+
+        public ObservableCollection<Public_Version_Table> PublicVersionTable { get; set; }
 
         // Percentage of downloaded data across both downloads (each contribution scaled by download size)
         public float Percent
@@ -100,6 +102,89 @@ namespace SGet
                 return String.Empty;
             }
         }
+
+        public ObservableCollection<string> ActionOptions { get; set; }
+
+        private OSListRecordAction _selected_action;
+        public string SelectedActionString
+        {
+            get
+            {
+                return OSListRecordEnumUtils.getActionDescriptionFromActionEnum(_selected_action);
+            }
+            set
+            {
+                _selected_action = OSListRecordEnumUtils.getActionEnumFromActionDescription(value);
+                //update status if the action requires it
+                OSListRecordStatus? newstatus = OSListRecordEnumUtils.getNewOSListRecordStatusFromActionOption(_selected_action, status);
+                if (newstatus != null && newstatus != status)
+                {
+                    Status = (OSListRecordStatus)newstatus;
+                    RaiseStatusChanged();
+                    if (PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("Status"));
+                }
+            }
+        }
+
+        // Download status
+        private OSListRecordStatus status;
+        public OSListRecordStatus Status
+        {
+            get
+            {
+                return status;
+            }
+            set
+            {
+                status = value;
+                //set data for the drop down box in grid to bind to based on the Status
+                string oldSelectedAction = SelectedActionString;
+                ActionOptions = new ObservableCollection<string>(Array.ConvertAll(
+                    OSListRecordEnumUtils.getActionOptionsFromOSListRecordStatus(status), x => OSListRecordEnumUtils.getActionDescriptionFromActionEnum(x)
+                ));
+                if (oldSelectedAction != null && !oldSelectedAction.Equals("") && ActionOptions.Contains(oldSelectedAction, StringComparer.CurrentCultureIgnoreCase))
+                {
+                    SelectedActionString = oldSelectedAction;
+                }
+                else
+                {
+                    SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordEnumUtils.getDefaultActionFromOSListRecordStatus(status));
+                }
+            }
+        }
+
+        // Status text in the DataGrid
+        public string StatusText;
+        public string StatusString
+        {
+            get
+            {
+                if (DownloadClient_BootWim.HasError)
+                    return DownloadClient_BootWim.StatusText;
+                else if (DownloadClient_OSWim.HasError)
+                    return DownloadClient_OSWim.StatusText;
+                else
+                    return Status.ToString().Replace('_', ' ');
+            }
+            //set
+            //{
+            //    StatusText = value;
+            //RaiseStatusChanged();
+            //}
+        }
+
+        // There was an error during download
+        public bool HasError
+        {
+            get
+            {
+                return DownloadClient_BootWim.HasError || DownloadClient_OSWim.HasError;
+            }
+        }
+
+        #endregion
+        #region Fields and Properties
 
         // Used for updating download speed on the DataGrid
         private int speedUpdateCount;
@@ -229,87 +314,13 @@ namespace SGet
         // Download buffer count per notification (DownloadProgressChanged event)
         public int BufferCountPerNotification { get; set; }
 
-        public ObservableCollection<string> ActionOptions { get; set; }
-
-        private OSListRecordAction _selected_action;
-        public string SelectedActionString
-        {
-            get
-            {
-                return OSListRecordEnumUtils.getActionDescriptionFromActionEnum( _selected_action );
-            }
-            set
-            {
-                _selected_action = OSListRecordEnumUtils.getActionEnumFromActionDescription( value );
-                //update status if the action requires it
-                OSListRecordStatus? newstatus = OSListRecordEnumUtils.getNewOSListRecordStatusFromActionOption(_selected_action, status);
-                if( newstatus != null && newstatus != status)
-                {
-                    Status = (OSListRecordStatus)newstatus;
-                    RaiseStatusChanged();
-                    if (PropertyChanged != null)
-                        PropertyChanged(this, new PropertyChangedEventArgs("Status"));
-                }
-            }
-        } 
-
-        // Download status
-        private OSListRecordStatus status;
-        public OSListRecordStatus Status
-        {
-            get
-            {
-                return status;
-            }
-            set
-            {
-                status = value;
-                //set data for the drop down box in grid to bind to based on the Status
-                string oldSelectedAction = SelectedActionString;
-                ActionOptions = new ObservableCollection<string>( Array.ConvertAll(
-                    OSListRecordEnumUtils.getActionOptionsFromOSListRecordStatus(status), x => OSListRecordEnumUtils.getActionDescriptionFromActionEnum(x)
-                ));
-                if (oldSelectedAction != null && !oldSelectedAction.Equals("") && ActionOptions.Contains(oldSelectedAction, StringComparer.CurrentCultureIgnoreCase) ){
-                    SelectedActionString = oldSelectedAction;
-                }
-                else {
-                    SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum( OSListRecordEnumUtils.getDefaultActionFromOSListRecordStatus(status) );
-                }
-            }
-        }
-
-        // Status text in the DataGrid
-        public string StatusText;
-        public string StatusString
-        {
-            get
-            {
-                if (DownloadClient_BootWim.HasError )
-                    return DownloadClient_BootWim.StatusText;
-                else if (DownloadClient_OSWim.HasError)
-                    return DownloadClient_OSWim.StatusText;
-                else
-                    return Status.ToString().Replace( '_', ' ');
-            }
-            //set
-            //{
-            //    StatusText = value;
-                //RaiseStatusChanged();
-            //}
-        }
-
-        // There was an error during download
-        public bool HasError { 
-            get {
-                return DownloadClient_BootWim.HasError || DownloadClient_OSWim.HasError;
-            } 
-        }
-
         #endregion
 
         #region Constructor and Events
 
-        public OSListEntry(string uniqueIdentifier, List<string> models, string name, string bootWimURL, string osWimURL, string releaseNotes, MainWindow mainWindow)
+        public OSListEntry(string uniqueIdentifier, List<string> models, string name, string bootWimURL, string osWimURL,
+            string releaseNotes, Public_Version_Table[] publicVersionTable, SGet.MainWindow mainWindow
+        )
         {
             this.UniqueIdentifier = uniqueIdentifier;
             this.ModelArray = models;
@@ -317,6 +328,7 @@ namespace SGet
             this.ReleaseNotes = releaseNotes;
             this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
             this.DownloadClient_OSWim = new WebDownloadClient(osWimURL);
+            this.PublicVersionTable = new ObservableCollection<Public_Version_Table>( publicVersionTable );
 
             this.StatusText = String.Empty;
             this.Status = OSListRecordStatus.Initialized;

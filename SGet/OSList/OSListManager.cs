@@ -127,12 +127,14 @@ namespace SGet
 
         #endregion
 
-        public static void AddOS(string uniqueIdentifier, string model, string name, string osWimURL, string bootWimURL, string releaseNotes, MainWindow mainWindow, string downloadsFolder)
+        public static void AddOS(string uniqueIdentifier, string model, string name, string osWimURL, string bootWimURL, 
+            string releaseNotes, Public_Version_Table[] publicVersionTable, SGet.MainWindow mainWindow, string downloadsFolder
+        )
         {
-            OSListEntry preExistingOSRecordInList = OSListManager.Instance.OSList.FirstOrDefault( os => os.UniqueIdentifier != null && os.UniqueIdentifier.Equals(uniqueIdentifier) );
+            OSListEntry preExistingOSRecordInList = Instance.OSList.FirstOrDefault( os => os.UniqueIdentifier != null && os.UniqueIdentifier.Equals(uniqueIdentifier) );
             if( preExistingOSRecordInList == null )
             {
-                AddOS( uniqueIdentifier, new List<string> { model }, name, osWimURL, bootWimURL, releaseNotes, mainWindow, downloadsFolder );
+                AddOS( uniqueIdentifier, new List<string> { model }, name, osWimURL, bootWimURL, releaseNotes, publicVersionTable, mainWindow, downloadsFolder );
             }
             else if (!preExistingOSRecordInList.ModelArray.Contains(model) )
             {
@@ -141,9 +143,13 @@ namespace SGet
             //else do nothing
         }
 
-        public static void AddOS(string uniqueIdentifier, List<string> models, string name, string osWimURL, string bootWimURL, string releaseNotes, MainWindow mainWindow, string downloadsFolder)
+        private static void AddOS(string uniqueIdentifier, List<string> models, string name, string osWimURL, string bootWimURL, 
+            string releaseNotes, Public_Version_Table[] publicVersionTable, SGet.MainWindow mainWindow, string downloadsFolder
+        )
         {
-            OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, osWimURL, bootWimURL, releaseNotes, mainWindow);
+            OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, osWimURL, bootWimURL,
+                releaseNotes, publicVersionTable, mainWindow
+            );
             osListEntry.DownloadClient_OSWim.FileName = "oswim.wim";
             osListEntry.DownloadClient_BootWim.FileName = "bootwim.wim";
 

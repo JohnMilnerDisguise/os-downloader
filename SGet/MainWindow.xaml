@@ -4,7 +4,7 @@
         xmlns:osc="clr-namespace:OpenSourceControls"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary" xmlns:sget="clr-namespace:SGet" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        Title="SGet" Height="800" Width="1270" MinWidth="770" MinHeight="500" Name="mainWindow" WindowStartupLocation="CenterScreen"
+        Title="SGet" Height="700" Width="1270" MinWidth="770" MinHeight="500" Name="mainWindow" WindowStartupLocation="CenterScreen"
         Icon="/SGet;component/Resources/download_icon.ico" Background="#FFF9F9F9" KeyDown="mainWindow_KeyDown" 
         Closing="mainWindow_Closing" StateChanged="mainWindow_StateChanged" ContentRendered="mainWindow_ContentRendered">
 
@@ -101,8 +101,8 @@
                 <ContextMenu>
                     <MenuItem Header="Show Main Window" Name="tcmShowMainWindow" Click="tcmShowMainWindow_Click" />
                     <Separator />
-                    <MenuItem Header="Add New Download..." Name="tcmNewDownload" Click="btnNewDownload_Click" />
-                    <MenuItem Header="Create Batch Download..." Name="tcmBatchDownload" Click="btnBatchDownload_Click" />
+                    <MenuItem Header="Add New Download..." Name="tcmNewDownload" Click="btnAddToLibrary_Click" />
+                    <MenuItem Header="Create Batch Download..." Name="tcmBatchDownload" Click="btnRemoveFromLibrary_Click" />
                     <Separator />
                     <MenuItem Header="Start All" Name="tcmStartAll" Click="cmStartAll_Click" />
                     <MenuItem Header="Pause All" Name="tcmPauseAll" Click="cmPauseAll_Click" />
@@ -118,16 +118,16 @@
                 <ribbon:RibbonApplicationMenu Visibility="Collapsed" IsMainMenu="True" Name="ribbonMenu"></ribbon:RibbonApplicationMenu>
             </ribbon:Ribbon.ApplicationMenu>
             <ribbon:RibbonTab Header="Downloads" Name="ribbonTabMain">
-                <ribbon:RibbonGroup Header="Add/Remove" Name="AddRemoveGroup" Width="Auto">
+                <ribbon:RibbonGroup Header="Add/Remove" Name="APIGroup" Width="Auto">
                     <ribbon:RibbonButton Width ="80" Label="No Internet" Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" IsEnabled="False" LargeImageSource="/SGet;component/Resources/connecting.png" />
-                    <ribbon:RibbonButton Label="Add New" Name="btnNewDownload" Click="btnNewDownload_Click" LargeImageSource="/SGet;component/Resources/new.png" />
-                    <ribbon:RibbonButton Label="Create Batch" Name="btnBatchDownload" Click="btnBatchDownload_Click" LargeImageSource="/SGet;component/Resources/batch.png" />
-                    <ribbon:RibbonButton Label="Delete" Name="btnDelete" Click="btnDelete_Click" LargeImageSource="/SGet;component/Resources/delete.png" />
-                    <ribbon:RibbonButton Label="Clear List" Name="btnClearCompleted"  Click="btnClearCompleted_Click" LargeImageSource="/SGet;component/Resources/clear.png" />
                 </ribbon:RibbonGroup>
-                <ribbon:RibbonGroup Header="Process" Name="ProcessGroup">
+                <ribbon:RibbonGroup Header="Process" Name="AddRemoveGroup">
+                    <ribbon:RibbonButton IsEnabled="False" Label="Add to Library" Name="btnAddToLibrary" Click="btnAddToLibrary_Click" LargeImageSource="/SGet;component/Resources/addtocollection.png" />
+                    <ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" Click="btnRemoveFromLibrary_Click" LargeImageSource="/SGet;component/Resources/removefromcollection.png" />
+                </ribbon:RibbonGroup>
+                <ribbon:RibbonGroup Header="Download OSses" Name="ProcessGroup">
                     <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btnStart_Click" LargeImageSource="/SGet;component/Resources/start.png" />
-                    <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btnPause_Click" LargeImageSource="/SGet;component/Resources/pause.png" />
+                    <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btnPause_Click" LargeImageSource="/SGet;component/Resources/stop.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Settings" Name="SettingsGroup">
                     <ribbon:RibbonButton Label="Set Limits" Name="btnSetLimits" Click="btnSetLimits_Click" LargeImageSource="/SGet;component/Resources/limits.png" />
@@ -182,7 +182,7 @@
                         <!--
                         <DataGridComboBoxColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Action"  ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItemBinding="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         -->
-                        <DataGridTemplateColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Action">
+                        <DataGridTemplateColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="105" Width="105" x:Name="templateColumn_osList_Action">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -213,11 +213,11 @@
                 <StatusBarItem  Name="propertiesItem" Content="Properties" Margin="0" Padding="10,3,3,3" />
             </StatusBar>
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Name="propertiesScrollViewer">
-                <DataGrid Name="propertiesGrid" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
-                            VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="propertiesGrid_PreviewMouseWheel" Background="#FFF9F9F9">
+                <DataGrid Name="dataGrid_os_version_table" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
+                          VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="propertiesGrid_PreviewMouseWheel" Background="#FFF9F9F9">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Name, Mode=OneWay}" MinWidth="110" Width="110" x:Name="tcPropertyName" />
-                        <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Value, Mode=OneWay}" MinWidth="450" Width="450" x:Name="tcPropertyValue" />
+                        <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay}" MinWidth="110" Width="110" x:Name="textColumn_PublicVersionTable_Package" />
+                        <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay}" MinWidth="450" Width="450" x:Name="textColumn_PublicVersionTable_Version" />
                     </DataGrid.Columns>
                 </DataGrid>
             </ScrollViewer>
