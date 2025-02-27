@@ -195,8 +195,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
-                                        <ProgressBar Name="progressBar_osList_Progress" Value="{Binding Progress, Mode=OneWay}" VerticalAlignment="Center" Height="16" MinHeight="16" />
-                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PercentString, Mode=OneWay}" Foreground="DarkSlateGray"/>
+                                        <ProgressBar Visibility="{Binding ProgressBarVisibility, Mode=OneWay}" Name="progressBar_osList_Progress" Value="{Binding Progress, Mode=OneWay}" VerticalAlignment="Center" Height="16" MinHeight="16" />
+                                        <TextBlock Visibility="{Binding ProgressBarVisibility, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PercentString, Mode=OneWay}" Foreground="DarkSlateGray"/>
                                     </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

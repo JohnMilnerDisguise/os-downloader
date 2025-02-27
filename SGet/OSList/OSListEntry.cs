@@ -122,8 +122,17 @@ namespace SGet
                     Status = (OSListRecordStatus)newstatus;
                     RaiseStatusChanged();
                     if (PropertyChanged != null)
-                        PropertyChanged(this, new PropertyChangedEventArgs("Status"));
+                        PropertyChanged(this, new PropertyChangedEventArgs("StatusString"));
+                        PropertyChanged(this, new PropertyChangedEventArgs("ProgressBarVisibility"));
                 }
+            }
+        }
+
+        public Visibility ProgressBarVisibility
+        {
+            get
+            {
+                return status == OSListRecordStatus.Not_In_Library ? Visibility.Hidden : Visibility.Visible;
             }
         }
 
@@ -318,17 +327,43 @@ namespace SGet
 
         #region Constructor and Events
 
-        public OSListEntry(string uniqueIdentifier, List<string> models, string name, string bootWimURL, string osWimURL,
+        public OSListEntry(string uniqueIdentifier, List<string> models, string name,
+            string osWimURL, string osWimFileName,
+            string bootWimURL, string bootWimFileName,
             string releaseNotes, Public_Version_Table[] publicVersionTable, SGet.MainWindow mainWindow
         )
         {
+
             this.UniqueIdentifier = uniqueIdentifier;
             this.ModelArray = models;
             this.Name = name;
             this.ReleaseNotes = releaseNotes;
-            this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
             this.DownloadClient_OSWim = new WebDownloadClient(osWimURL);
-            this.PublicVersionTable = new ObservableCollection<Public_Version_Table>( publicVersionTable );
+            
+            if (osWimFileName == null || osWimFileName.Trim().Length == 0)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show($"The OS .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.DownloadClient_OSWim.HasError = true;
+            }
+            this.DownloadClient_OSWim.FileName = osWimFileName;
+          
+            this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
+            if (bootWimFileName == null || bootWimFileName.Trim().Length == 0)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show($"The Boot .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.DownloadClient_BootWim.HasError = true;
+            }
+            this.DownloadClient_BootWim.FileName = bootWimFileName;
+
+            if (publicVersionTable == null)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show($"The Public Version Table for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.PublicVersionTable = new ObservableCollection<Public_Version_Table>();
+            }
+            else
+            {
+                this.PublicVersionTable = new ObservableCollection<Public_Version_Table>(publicVersionTable);
+            }
 
             this.StatusText = String.Empty;
             this.Status = OSListRecordStatus.Initialized;

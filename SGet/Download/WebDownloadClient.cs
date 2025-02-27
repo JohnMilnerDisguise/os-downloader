@@ -490,7 +490,7 @@ namespace SGet
             }
             catch (Exception)
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show("There was an error while getting the file information. Please make sure the URL is accessible.",
+                Xceed.Wpf.Toolkit.MessageBox.Show($"There was an error while getting the [{this.FileName}] file information using the following download URL:\n\n{this.Url}\n\nPlease make sure the URL is accessible.",
                                                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.HasError = true;
             }

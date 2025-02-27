@@ -11,6 +11,9 @@ namespace SGet
         //JM: OS not in library bug flagged for download
         To_Be_Added,
 
+        //JM: Failed Validation so should be excluded from all download functionality
+        FAILED_VALIDATION,
+
         // Client object is created and set to default values
         Initialized,
 

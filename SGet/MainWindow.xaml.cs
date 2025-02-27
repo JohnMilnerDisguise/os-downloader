@@ -559,7 +559,7 @@ namespace SGet
         {
             // Start the first download in the queue, if it exists
             OSListEntry osRecord = (OSListEntry)sender;
-            dataGrid_osList.Items.Refresh();
+            //dataGrid_osList.Items.Refresh();
             /*
             if (dl.Status == DownloadStatus.Paused || dl.Status == DownloadStatus.Completed
                 || dl.Status == DownloadStatus.Deleted || dl.HasError)
@@ -1251,7 +1251,6 @@ namespace SGet
                 }
                 //MainWindow mw = this.mainWindow;
                 string downloadsFolder = Settings.Default.DownloadLocation;
-                int i = 1;
                 foreach( Model model in apiContentsObject.models )
                 {
                     foreach( Redisguis os in model.redisguises )
@@ -1261,16 +1260,15 @@ namespace SGet
                             model.name,
                             os.redisguise_name,
                             os.aws_url_os_wim,
+                            os.os_wim_file_name,
                             os.aws_url_boot_wim,
+                            os.boot_wim_file_name,
                             os.release_notes,
                             os.public_version_table,
                             (SGet.MainWindow)this.mainWindow,
                             downloadsFolder
                         );
-                        if (i > 5) break;
-                        i++;
                     }
-                    if (i > 5) break;
                 }
 
                 //refresh button text now api sync has finished
