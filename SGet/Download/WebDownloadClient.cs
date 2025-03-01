@@ -434,65 +434,72 @@ namespace SGet
         // Check URL to get file size, set login and/or proxy server information, check if the server supports the Range header
         public void CheckUrl()
         {
-            try
+            if (Settings.Default.CheckURLsOnCheckForUpdates)
             {
-                var webRequest = (HttpWebRequest)WebRequest.Create(this.Url);
-                webRequest.Method = "HEAD";
-                webRequest.Timeout = 5000;
+                try
+                {
+                    var webRequest = (HttpWebRequest)WebRequest.Create(this.Url);
+                    webRequest.Method = "HEAD";
+                    webRequest.Timeout = 5000;
 
-                if (this.ServerLogin != null)
-                {
-                    webRequest.PreAuthenticate = true;
-                    webRequest.Credentials = this.ServerLogin;
-                }
-                else
-                {
-                    webRequest.Credentials = CredentialCache.DefaultCredentials;
-                }
-
-                if (Settings.Default.ManualProxyConfig && Settings.Default.HttpProxy != String.Empty)
-                {
-                    this.Proxy = new WebProxy();
-                    this.Proxy.Address = new Uri("http://" + Settings.Default.HttpProxy + ":" + Settings.Default.ProxyPort);
-                    this.Proxy.BypassProxyOnLocal = false;
-                    if (Settings.Default.ProxyUsername != String.Empty && Settings.Default.ProxyPassword != String.Empty)
+                    if (this.ServerLogin != null)
                     {
-                        this.Proxy.Credentials = new NetworkCredential(Settings.Default.ProxyUsername, Settings.Default.ProxyPassword);
+                        webRequest.PreAuthenticate = true;
+                        webRequest.Credentials = this.ServerLogin;
                     }
-                }
-                if (this.Proxy != null)
-                {
-                    webRequest.Proxy = this.Proxy;
-                }
-                else
-                {
-                    webRequest.Proxy = WebRequest.DefaultWebProxy;
-                }
-
-                using (WebResponse response = webRequest.GetResponse())
-                {
-                    foreach (var header in response.Headers.AllKeys)
+                    else
                     {
-                        if (header.Equals("Accept-Ranges", StringComparison.OrdinalIgnoreCase))
+                        webRequest.Credentials = CredentialCache.DefaultCredentials;
+                    }
+
+                    if (Settings.Default.ManualProxyConfig && Settings.Default.HttpProxy != String.Empty)
+                    {
+                        this.Proxy = new WebProxy();
+                        this.Proxy.Address = new Uri("http://" + Settings.Default.HttpProxy + ":" + Settings.Default.ProxyPort);
+                        this.Proxy.BypassProxyOnLocal = false;
+                        if (Settings.Default.ProxyUsername != String.Empty && Settings.Default.ProxyPassword != String.Empty)
                         {
-                            this.SupportsRange = true;
+                            this.Proxy.Credentials = new NetworkCredential(Settings.Default.ProxyUsername, Settings.Default.ProxyPassword);
                         }
                     }
-
-                    this.FileSize = response.ContentLength;
-
-                    if (this.FileSize <= 0)
+                    if (this.Proxy != null)
                     {
-                        Xceed.Wpf.Toolkit.MessageBox.Show("The requested file does not exist!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        this.HasError = true;
+                        webRequest.Proxy = this.Proxy;
+                    }
+                    else
+                    {
+                        webRequest.Proxy = WebRequest.DefaultWebProxy;
+                    }
+
+                    using (WebResponse response = webRequest.GetResponse())
+                    {
+                        foreach (var header in response.Headers.AllKeys)
+                        {
+                            if (header.Equals("Accept-Ranges", StringComparison.OrdinalIgnoreCase))
+                            {
+                                this.SupportsRange = true;
+                            }
+                        }
+
+                        this.FileSize = response.ContentLength;
+
+                        if (this.FileSize <= 0)
+                        {
+                            Xceed.Wpf.Toolkit.MessageBox.Show("The requested file does not exist!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            this.HasError = true;
+                        }
                     }
                 }
+                catch (Exception)
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show($"There was an error while getting the [{this.FileName}] file information using the following download URL:\n\n{this.Url}\n\nPlease make sure the URL is accessible.",
+                                                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    this.HasError = true;
+                }
             }
-            catch (Exception)
+            else
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show($"There was an error while getting the [{this.FileName}] file information using the following download URL:\n\n{this.Url}\n\nPlease make sure the URL is accessible.",
-                                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.HasError = true;
+                this.SupportsRange = true;
             }
         }
 

@@ -9,6 +9,8 @@ using System.Windows.Documents;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using System.ComponentModel;
+//using static System.Net.WebRequestMethods;
+
 namespace SGet
 {
     public class OSListManager
@@ -28,7 +30,7 @@ namespace SGet
 
         // Collection which contains all download clients, bound to the DataGrid control
         //public ObservableCollection<OSListEntry> OSList = new ObservableCollection<OSListEntry>();
-        public BindingList<OSListEntry> OSList = new BindingList<OSListEntry>();
+        public ObservableCollection<OSListEntry> OSList = new ObservableCollection<OSListEntry>();
 
         #region Properties
 
@@ -38,11 +40,19 @@ namespace SGet
             get
             {
                 int active = 0;
-                foreach (OSListEntry d in OSList)
+                foreach (OSListEntry os in OSList)
                 {
-                    if (!d.HasError)
-                        if (d.Status == OSListRecordStatus.Waiting || d.Status == OSListRecordStatus.Downloading)
+                    if (!os.HasError)
+                    {
+                        if (os.Status == OSListRecordStatus.Active && (
+                                os.DownloadClient_BootWim.Status == DownloadStatus.Waiting || os.DownloadClient_BootWim.Status == DownloadStatus.Downloading
+                           ))
                             active++;
+                        if (os.Status == OSListRecordStatus.Active && (
+                                os.DownloadClient_OSWim.Status == DownloadStatus.Waiting || os.DownloadClient_OSWim.Status == DownloadStatus.Downloading
+                           ))
+                            active++;
+                    }
                 }
                 return active;
             }
@@ -233,13 +243,19 @@ namespace SGet
             }
 
             //Set Status Depending On Whether OS in library
-            osListEntry.Status = osListEntry.HasError ? OSListRecordStatus.FAILED_VALIDATION : OSListRecordStatus.Not_In_Library;
+            osListEntry.Status = osListEntry.HasError ? OSListRecordStatus.NOT_VALID : OSListRecordStatus.Not_In_Library;
 
 
             //osListEntry.ReleaseNotes = $"Hello\nThese are the Release Notes for {name}";
 
             // Add the download to the downloads list
             OSListManager.Instance.OSList.Add(osListEntry);
+        }
+
+        public ObservableCollection<OSListEntry> getSelectedOSRecords()
+        {
+            ObservableCollection<OSListEntry> selectedOSRecords = new ObservableCollection<OSListEntry>( OSList.Where((osRecord) => osRecord.Status == OSListRecordStatus.To_Be_Added || osRecord.Status == OSListRecordStatus.Paused) );
+            return selectedOSRecords;
         }
 
     }

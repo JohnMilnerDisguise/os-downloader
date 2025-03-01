@@ -30,8 +30,7 @@ namespace SGet
         private bool trayExit;
         private string[] args;
 
-        //////////// JOHNS STATE VARS ////////////
-        private static bool SETTING_USE_FAKE_API_FILE = false;
+        //////////// JOHNS STATE VARS ////////////;
         private static string API_URL = "https://d3packages.s3.amazonaws.com/pkg/api/redisguises_by_model.json";
         private static string FAKE_API_PATH = "Y:\\Repos\\OSDownloader\\redisguises_by_model.json";
 
@@ -133,8 +132,8 @@ namespace SGet
 
             // Bind OSListManager to dataGrid_osList
             dataGrid_osList.ItemsSource = OSListManager.Instance.OSList;
-            //OSListManager.Instance.OSList.CollectionChanged += new NotifyCollectionChangedEventHandler(OSList_CollectionChanged);
-            OSListManager.Instance.OSList.ListChanged += new ListChangedEventHandler(OSList_CollectionChanged);
+            OSListManager.Instance.OSList.CollectionChanged += new NotifyCollectionChangedEventHandler(OSList_CollectionChanged);
+            //OSListManager.Instance.OSList.ListChanged += new ListChangedEventHandler(OSList_CollectionChanged);
         }
 
         #endregion
@@ -636,8 +635,8 @@ namespace SGet
                 dataGrid_os_version_table.ItemsSource = selectedOSRecord.PublicVersionTable;
 
                 //enable/disable add/remove buttons
-                btnAddToLibrary.IsEnabled = selectedOSRecord.Status == OSListRecordStatus.Not_In_Library;
-                btnRemoveFromLibrary.IsEnabled = selectedOSRecord.Status == OSListRecordStatus.To_Be_Added;
+                btnAddToLibrary.IsEnabled = selectedOSRecord.AllowUserToAddToLibrary;
+                btnRemoveFromLibrary.IsEnabled = selectedOSRecord.AllowUserToRemoveFromLibrary;
 
                 /*
                 if (propertyValues.Count > 0)
@@ -752,13 +751,13 @@ namespace SGet
 
         #region Click Event Handlers
 
-        private void btnAddToLibrary_Click(object sender, RoutedEventArgs e)
+        private void btnOldAddDownloadButton_Click(object sender, RoutedEventArgs e)
         {
             NewDownload newDownloadDialog = new NewDownload(this);
             newDownloadDialog.ShowDialog();
         }
 
-        private void btnRemoveFromLibrary_Click(object sender, RoutedEventArgs e)
+        private void btnOldBatchAddButton_Click(object sender, RoutedEventArgs e)
         {
             BatchDownload batchDownloadDialog = new BatchDownload(this);
             batchDownloadDialog.ShowDialog();
@@ -1035,8 +1034,25 @@ namespace SGet
 
         ///JOHNS CODE /////////////////////
 
+        private void btnAddToLibrary_Click(object sender, RoutedEventArgs e)
+        {
+            OSListEntry selectedOSRecord = (OSListEntry)dataGrid_osList.SelectedItem;
+            selectedOSRecord.SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum( OSListRecordAction.Add_To_Library );
+            //enable/disable add/remove buttons
+            btnAddToLibrary.IsEnabled = selectedOSRecord.AllowUserToAddToLibrary;
+            btnRemoveFromLibrary.IsEnabled = selectedOSRecord.AllowUserToRemoveFromLibrary;
+        }
+
+        private void btnRemoveFromLibrary_Click(object sender, RoutedEventArgs e)
+        {
+            OSListEntry selectedOSRecord = (OSListEntry)dataGrid_osList.SelectedItem;
+            selectedOSRecord.SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Do_Not_Add);
+            btnAddToLibrary.IsEnabled = selectedOSRecord.AllowUserToAddToLibrary;
+            btnRemoveFromLibrary.IsEnabled = selectedOSRecord.AllowUserToRemoveFromLibrary;
+        }
+
         //private void OSList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        private void OSList_CollectionChanged(object sender, ListChangedEventArgs e)
+        private void OSList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (OSListManager.Instance.TotalDownloads == 1)
             {
@@ -1057,17 +1073,12 @@ namespace SGet
 
         private void btn_osList_start_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGrid_osList.SelectedItems.Count > 0)
+            foreach (OSListEntry osDownload in OSListManager.Instance.getSelectedOSRecords() )
             {
-                var selectedOSDownloads = dataGrid_osList.SelectedItems.Cast<OSListEntry>();
-
-                foreach (OSListEntry osDownload in selectedOSDownloads)
-                {
-                    if (osDownload.Status == OSListRecordStatus.Paused || osDownload.HasError)
-                    {
-                        //osDownload.Start();
-                    }
-                }
+                //if (osDownload.Status == OSListRecordStatus.Paused || osDownload.HasError)
+                //{
+                    osDownload.Start();
+                //}
             }
         }
 
@@ -1229,7 +1240,7 @@ namespace SGet
                 btnCheckForUpdates.Label = "Checking for Updates";
 
                 //run long running task 
-                if (SETTING_USE_FAKE_API_FILE)
+                if (Settings.Default.UseFakeAPILocation)
                 {
                     apiContentsObject = await Task.Run(() =>
                     {

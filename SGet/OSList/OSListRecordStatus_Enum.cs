@@ -5,6 +5,9 @@ namespace SGet
 {
     public enum OSListRecordStatus
     {
+        //constructor called but nothing else done to it yet
+        Initialized,
+
         //JM: OS not in library and not required
         Not_In_Library,
 
@@ -12,13 +15,10 @@ namespace SGet
         To_Be_Added,
 
         //JM: Failed Validation so should be excluded from all download functionality
-        FAILED_VALIDATION,
+        NOT_VALID,
 
-        // Client object is created and set to default values
-        Initialized,
-
-        // Client is waiting for the file to begin downloading
-        Waiting,
+        //User has started downloads for this OS
+        Active,
 
         // Client is downloading data from the server
         Downloading,

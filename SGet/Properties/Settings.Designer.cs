@@ -157,18 +157,6 @@ namespace SGet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\DeleteMe\\OSDownloads")]
-        public string DownloadLocation {
-            get {
-                return ((string)(this["DownloadLocation"]));
-            }
-            set {
-                this["DownloadLocation"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
         public int MaxDownloads {
             get {
@@ -284,6 +272,36 @@ namespace SGet.Properties {
             }
             set {
                 this["ConfirmCancellation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Y:\\Repos\\os-downloader\\OSDownloads")]
+        public string DownloadLocation {
+            get {
+                return ((string)(this["DownloadLocation"]));
+            }
+            set {
+                this["DownloadLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseFakeAPILocation {
+            get {
+                return ((bool)(this["UseFakeAPILocation"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CheckURLsOnCheckForUpdates {
+            get {
+                return ((bool)(this["CheckURLsOnCheckForUpdates"]));
             }
         }
     }

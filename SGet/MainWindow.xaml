@@ -27,7 +27,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             </Style.Setters>
         </Style>
@@ -43,7 +43,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Foreground" Value="Black" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             </Style.Setters>
@@ -66,7 +66,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             </Style.Setters>
         </Style>
@@ -82,15 +82,84 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             </Style.Setters>
         </Style>
         <Style TargetType="DataGridRow">
+
             <Style.Triggers>
-                <DataTrigger Binding="{Binding StatusString}" Value="Not In Library">
-                    <Setter Property="Foreground" Value="Gray" />
-                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding StatusString}" Value="To Be Added"/>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="False"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="Foreground" Value="#776630" />
+                        <Setter Property="Background" Value="#ffd080" />
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding StatusString}" Value="To Be Added"/>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="Foreground" Value="#5f5226" />
+                        <Setter Property="Background" Value="#ffb433" />
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding StatusString}" Value="Not In Library"/>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="False"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="Foreground" Value="#777777" />
+                        <Setter Property="Background" Value="#E0E0E0" />
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding StatusString}" Value="Not In Library"/>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="Foreground" Value="#363636" />
+                        <Setter Property="Background" Value="#b3b3b3" />
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding StatusString}" Value="NOT VALID"/>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="False"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="Foreground" Value="#979191" />
+                        <Setter Property="Background" Value="#FFDDDD" />
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding StatusString}" Value="NOT VALID"/>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="Foreground" Value="#7a7373" />
+                        <Setter Property="Background" Value="#ff7e7e" />
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{x:Null}" />
+                    <Setter Property="BorderBrush" Value="{x:Null}" />
+                </Trigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
@@ -126,8 +195,8 @@
                     <ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" Click="btnRemoveFromLibrary_Click" LargeImageSource="/SGet;component/Resources/removefromcollection.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Download OSses" Name="ProcessGroup">
-                    <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btnStart_Click" LargeImageSource="/SGet;component/Resources/start.png" />
-                    <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btnPause_Click" LargeImageSource="/SGet;component/Resources/stop.png" />
+                    <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btn_osList_start_Click" LargeImageSource="/SGet;component/Resources/start.png" />
+                    <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btn_osList_pause_Click" LargeImageSource="/SGet;component/Resources/stop.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Settings" Name="SettingsGroup">
                     <ribbon:RibbonButton Label="Set Limits" Name="btnSetLimits" Click="btnSetLimits_Click" LargeImageSource="/SGet;component/Resources/limits.png" />
@@ -141,6 +210,10 @@
                 <ribbon:RibbonGroup Header="Info" Name="InfoGroup" Margin="1">
                     <ribbon:RibbonButton Label="About" Name="btnAbout" Click="btnAbout_Click" LargeImageSource="/SGet;component/Resources/about.png" />
                 </ribbon:RibbonGroup>
+                <ribbon:RibbonGroup Header="DEBUG Old Buttons" Name="OldButtonGroup">
+                    <ribbon:RibbonButton IsEnabled="False" Label="Add Download" Name="btnOldAddDownloadButton" Click="btnOldAddDownloadButton_Click" LargeImageSource="/SGet;component/Resources/new.png" />
+                    <ribbon:RibbonButton IsEnabled="False" Label="Batch Add" Name="btnOldBatchAddButton" Click="btnOldBatchAddButton_Click" LargeImageSource="/SGet;component/Resources/batch.png" />
+                </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
         </ribbon:Ribbon>
 
@@ -153,10 +226,22 @@
         <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="OSListPanel">
             <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" Name="scrollViewer_oslist">
                 <DataGrid AutoGenerateColumns="False" Name="dataGrid_osList" VerticalAlignment="Top" HorizontalContentAlignment="Center" DockPanel.Dock="Left" 
-                            BorderThickness="0" IsReadOnly="False" GridLinesVisibility="None" MinRowHeight="22" RowBackground="#FFF9F9F9"
+                            BorderThickness="0" IsReadOnly="False" GridLinesVisibility="None" MinRowHeight="22"
                             MouseDoubleClick="cmOpenFile_Click" SelectionChanged="dataGrid_osList_SelectionChanged" PreviewMouseWheel="dataGrid_osList_PreviewMouseWheel" 
                             Background="#FFF9F9F9" HorizontalGridLinesBrush="#FFCBCBCB" VerticalGridLinesBrush="#FFCBCBCB" KeyUp="dataGrid_osList_KeyUp" 
-                            ContextMenuOpening="dataGrid_osList_ContextMenuOpening" CanUserResizeRows="False">
+                            ContextMenuOpening="dataGrid_osList_ContextMenuOpening" CanUserResizeRows="False" SelectionMode="Single">
+                    <DataGrid.Resources>
+                        <!--
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#5599D2F8"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#CC2F5EA5"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#5599D2F8"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#CC2F5EA5"/>
+                        -->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#353535"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#353535"/>
+                    </DataGrid.Resources>
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Start" Name="menuItem_osList_start" Click="btn_osList_start_Click"  />
@@ -170,15 +255,10 @@
                             <MenuItem Header="Select All" Name="menuItem_osList_SelectAll" Click="btn_osList_selectAll_Click" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
-                    <DataGrid.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="BorderThickness" Value="0"/>
-                        </Style>
-                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Models" CellStyle="{StaticResource LeftCellStyle}" MinWidth="150" Width="150" x:Name="textColumn_osList_Models" Binding="{Binding Models, Mode=OneWay}" />
                         <DataGridTextColumn Header="Name" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Name" Binding="{Binding Name, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Status" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Status" Binding="{Binding StatusString, Mode=OneWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, BindsDirectlyToSource=True, UpdateSourceTrigger=PropertyChanged}" />
+                        <DataGridTextColumn Header="Status" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Status" Binding="{Binding StatusString, Mode=OneWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, BindsDirectlyToSource=True, UpdateSourceTrigger=PropertyChanged}" />
                         <!--
                         <DataGridComboBoxColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Action"  ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItemBinding="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         -->
@@ -186,7 +266,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
-                                        <ComboBox ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItem="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <ComboBox Visibility="{Binding ActionDropDownVisibility, Mode=OneWay}" ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItem="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="1 1 1 1" Padding="3 1 0 0"/>
                                     </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -195,8 +275,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
-                                        <ProgressBar Visibility="{Binding ProgressBarVisibility, Mode=OneWay}" Name="progressBar_osList_Progress" Value="{Binding Progress, Mode=OneWay}" VerticalAlignment="Center" Height="16" MinHeight="16" />
-                                        <TextBlock Visibility="{Binding ProgressBarVisibility, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PercentString, Mode=OneWay}" Foreground="DarkSlateGray"/>
+                                        <ProgressBar Visibility="{Binding ProgressBarVisibility, Mode=OneWay}" Name="progressBar_osList_Progress" Value="{Binding Progress, Mode=OneWay}" VerticalAlignment="Center" Height="18" MinHeight="16" Margin="1 1 1 1" />
+                                        <TextBlock Visibility="{Binding ProgressBarVisibility, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PercentString, Mode=OneWay}" Foreground="#888888"/>
                                     </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

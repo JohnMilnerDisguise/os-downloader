@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using SGet.Properties;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace SGet
@@ -115,6 +117,8 @@ namespace SGet
             set
             {
                 _selected_action = OSListRecordEnumUtils.getActionEnumFromActionDescription(value);
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("SelectedActionString"));
                 //update status if the action requires it
                 OSListRecordStatus? newstatus = OSListRecordEnumUtils.getNewOSListRecordStatusFromActionOption(_selected_action, status);
                 if (newstatus != null && newstatus != status)
@@ -122,8 +126,11 @@ namespace SGet
                     Status = (OSListRecordStatus)newstatus;
                     RaiseStatusChanged();
                     if (PropertyChanged != null)
+                    {
                         PropertyChanged(this, new PropertyChangedEventArgs("StatusString"));
                         PropertyChanged(this, new PropertyChangedEventArgs("ProgressBarVisibility"));
+                        //PropertyChanged(this, new PropertyChangedEventArgs("ActionDropDownVisibility"));
+                    }
                 }
             }
         }
@@ -132,9 +139,22 @@ namespace SGet
         {
             get
             {
-                return status == OSListRecordStatus.Not_In_Library ? Visibility.Hidden : Visibility.Visible;
+                return status == OSListRecordStatus.To_Be_Added ? Visibility.Visible : Visibility.Hidden;
             }
         }
+
+        public Visibility ActionDropDownVisibility
+        {
+            get
+            {
+               // if (ActionOptions.Count != 2)
+                //{
+                    return ActionOptions.Count == 0 || ( ActionOptions.Count == 1 && ActionOptions[0].Length == 0 ) ? Visibility.Hidden : Visibility.Visible;
+                //}
+                //return Visibility.Visible;
+            }
+        }
+        
 
         // Download status
         private OSListRecordStatus status;
@@ -152,6 +172,10 @@ namespace SGet
                 ActionOptions = new ObservableCollection<string>(Array.ConvertAll(
                     OSListRecordEnumUtils.getActionOptionsFromOSListRecordStatus(status), x => OSListRecordEnumUtils.getActionDescriptionFromActionEnum(x)
                 ));
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("ActionDropDownVisibility"));
+                }
                 if (oldSelectedAction != null && !oldSelectedAction.Equals("") && ActionOptions.Contains(oldSelectedAction, StringComparer.CurrentCultureIgnoreCase))
                 {
                     SelectedActionString = oldSelectedAction;
@@ -163,24 +187,73 @@ namespace SGet
             }
         }
 
-        // Status text in the DataGrid
-        public string StatusText;
         public string StatusString
         {
             get
             {
-                if (DownloadClient_BootWim.HasError)
-                    return DownloadClient_BootWim.StatusText;
-                else if (DownloadClient_OSWim.HasError)
-                    return DownloadClient_OSWim.StatusText;
-                else
-                    return Status.ToString().Replace('_', ' ');
+                if ( Status == OSListRecordStatus.Active )
+                {
+                    DownloadStatus overallStatus = DownloadStatus.Initialized;
+
+                    //if both downloads are completed then return completed
+                    if( DownloadClient_BootWim.Status == DownloadStatus.Completed && DownloadClient_OSWim.Status == DownloadStatus.Completed )
+                    {
+                        return DownloadStatus.Completed.ToString().Replace('_', ' ');
+                    }
+
+                    ////////////////////////////////////////
+
+                    //if one is Paused then updated overallstatus to Paused then carry on checking
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Paused || DownloadClient_OSWim.Status == DownloadStatus.Paused)
+                    {
+                        overallStatus = DownloadStatus.Paused;
+                    }
+                    //if one is Deleted then updated overallstatus to Deleted then carry on checking
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Deleted || DownloadClient_OSWim.Status == DownloadStatus.Deleted)
+                    {
+                        overallStatus = DownloadStatus.Deleted;
+                    }
+
+                    //if one is queued then updated overallstatus to Queued then carry on checking
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Queued || DownloadClient_OSWim.Status == DownloadStatus.Queued)
+                    {
+                        overallStatus = DownloadStatus.Queued;
+                    }
+
+                    //if one is Waiting then updated overallstatus to Waiting then carry on checking
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Waiting || DownloadClient_OSWim.Status == DownloadStatus.Waiting)
+                    {
+                        overallStatus = DownloadStatus.Waiting;
+                    }
+
+                    //if one is Downloading then updated overallstatus to Downloading then carry on checking
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Downloading || DownloadClient_OSWim.Status == DownloadStatus.Downloading)
+                    {
+                        overallStatus = DownloadStatus.Downloading;
+                    }
+
+                    //if one is Error then updated overallstatus to Error then carry on checking
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Error || DownloadClient_OSWim.Status == DownloadStatus.Error)
+                    {
+                        overallStatus = DownloadStatus.Error;
+                    }
+
+                    //pausing or deleting should only be brief so they should overwride the main downloading and error status
+                    //if one is Deleting then updated overallstatus to Deleting then carry on checking
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Deleting || DownloadClient_OSWim.Status == DownloadStatus.Deleting)
+                    {
+                        overallStatus = DownloadStatus.Deleting;
+                    }
+                    //if one is Pausing then updated overallstatus to Pausing then carry on checking
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Pausing || DownloadClient_OSWim.Status == DownloadStatus.Pausing)
+                    {
+                        overallStatus = DownloadStatus.Pausing;
+                    }
+                    return overallStatus.ToString().Replace('_', ' ');
+                    
+                }
+                return Status.ToString().Replace('_', ' ');
             }
-            //set
-            //{
-            //    StatusText = value;
-            //RaiseStatusChanged();
-            //}
         }
 
         // There was an error during download
@@ -189,6 +262,40 @@ namespace SGet
             get
             {
                 return DownloadClient_BootWim.HasError || DownloadClient_OSWim.HasError;
+            }
+        }
+
+        public bool AllowUserToAddToLibrary
+        {
+            get
+            {
+                if (SelectedActionString == OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Add_To_Library) )
+                {
+                    return false;
+                }
+                if (SelectedActionString == OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Do_Not_Add))
+                {
+                    return true;
+                }
+
+                return status == OSListRecordStatus.Not_In_Library;
+            }
+        }
+
+        public bool AllowUserToRemoveFromLibrary
+        {
+            get
+            {
+                if (SelectedActionString == OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Do_Not_Add))
+                {
+                    return false;
+                }
+                if (SelectedActionString == OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Add_To_Library))
+                {
+                    return true;
+                }
+
+                return status == OSListRecordStatus.To_Be_Added;
             }
         }
 
@@ -286,6 +393,10 @@ namespace SGet
             {
                 DownloadClient_OSWim.IsSelected = value;
                 DownloadClient_BootWim.IsSelected = value;
+/*                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("IsSelected"));
+                }*/
             }
         }
 
@@ -339,7 +450,15 @@ namespace SGet
             this.Name = name;
             this.ReleaseNotes = releaseNotes;
             this.DownloadClient_OSWim = new WebDownloadClient(osWimURL);
-            
+            //this.DownloadClient_OSWim.FileSize = 999999;
+
+            this.DownloadClient_OSWim.DownloadProgressChanged += this.DownloadClient_OSWim.DownloadProgressChangedHandler;
+            this.DownloadClient_OSWim.DownloadCompleted += this.DownloadClient_OSWim.DownloadCompletedHandler;
+            //this.DownloadClient_OSWim.StatusChanged += this.StatusChangedHandler;
+            //this.DownloadClient_OSWim.DownloadCompleted += this.DownloadCompletedHandler;
+            this.DownloadClient_OSWim.PropertyChanged += HandleDownloadClientPropertyChanged;
+
+
             if (osWimFileName == null || osWimFileName.Trim().Length == 0)
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show($"The OS .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -348,6 +467,7 @@ namespace SGet
             this.DownloadClient_OSWim.FileName = osWimFileName;
           
             this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
+            //this.DownloadClient_BootWim.FileSize = 999999;
             if (bootWimFileName == null || bootWimFileName.Trim().Length == 0)
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show($"The Boot .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -365,7 +485,6 @@ namespace SGet
                 this.PublicVersionTable = new ObservableCollection<Public_Version_Table>(publicVersionTable);
             }
 
-            this.StatusText = String.Empty;
             this.Status = OSListRecordStatus.Initialized;
 
             this.PropertyChanged += mainWindow.OSListPropertyChangedHandler;
@@ -383,6 +502,7 @@ namespace SGet
         #endregion
 
         #region Event Handlers
+                */
 
         // Generate PropertyChanged event to update the UI
         protected void RaisePropertyChanged(string name)
@@ -393,7 +513,7 @@ namespace SGet
                 handler(this, new PropertyChangedEventArgs(name));
             }
         }
-        */
+
         // Generate StatusChanged event
         protected virtual void RaiseStatusChanged()
         {
@@ -402,7 +522,29 @@ namespace SGet
                 StatusChanged(this, EventArgs.Empty);
             }
         }
+
+        public void HandleDownloadClientPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            WebDownloadClient downloadClient = (WebDownloadClient)sender;
+            string propertyName = e.PropertyName;
+
+            if( propertyName == "StatusString" )
+            {
+                RaisePropertyChanged(propertyName);
+            }
+            else
+            {
+                RaisePropertyChanged(propertyName);
+            }
+
+            //if (e.PropertyName == "Status" )
+            //{
+            //    this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
+            //}
+        }
         /*
+
+
 
         // Generate DownloadProgressChanged event
         protected virtual void RaiseDownloadProgressChanged()
@@ -471,9 +613,16 @@ namespace SGet
 
         #region Methods
 
+        */
+        // Start or continue download
+        public void Start()
+        {
+            Status = OSListRecordStatus.Active;
+            DownloadClient_BootWim.Start();
+            DownloadClient_OSWim.Start();
+        }
 
-
-
+        /*
 
         // Calculate download speed
         private void CalculateDownloadSpeed()
@@ -552,37 +701,7 @@ namespace SGet
             CompletedOn = DateTime.MinValue;
         }
 
-        // Start or continue download
-        public void Start()
-        {
-            if (this.Status == DownloadStatus.Initialized || this.Status == DownloadStatus.Paused
-                || this.Status == DownloadStatus.Queued || this.HasError)
-            {
-                if (!this.SupportsRange && this.DownloadedSize > 0)
-                {
-                    this.StatusString = "Error: Server does not support resume";
-                    this.HasError = true;
-                    this.RaiseDownloadCompleted();
-                    return;
-                }
 
-                this.HasError = false;
-                this.Status = DownloadStatus.Waiting;
-                RaisePropertyChanged("StatusString");
-
-                if (DownloadManager.Instance.ActiveDownloads > Settings.Default.MaxDownloads)
-                {
-                    this.Status = DownloadStatus.Queued;
-                    RaisePropertyChanged("StatusString");
-                    return;
-                }
-
-                // Start the download thread
-                DownloadThread = new Thread(new ThreadStart(DownloadFile));
-                DownloadThread.IsBackground = true;
-                DownloadThread.Start();
-            }
-        }
 
         // Pause download
         public void Pause()
