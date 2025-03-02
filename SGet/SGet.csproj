@@ -215,6 +215,8 @@
     <Content Include="Libraries\Microsoft.Windows.Shell.dll" />
     <Content Include="Libraries\RibbonControlsLibrary.dll" />
     <Content Include="Libraries\WPFToolkit.Extended.dll" />
+    <Resource Include="Resources\viewdownloads.png" />
+    <Resource Include="Resources\viewosses.png" />
     <Resource Include="Resources\stop.png" />
     <Resource Include="Resources\addtocollection.png" />
     <Resource Include="Resources\removefromcollection.png" />

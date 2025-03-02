@@ -416,7 +416,7 @@ namespace SGet
 
         private void downloadsGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            dgScrollViewer.ScrollToVerticalOffset(dgScrollViewer.VerticalOffset - e.Delta / 3);
+            dgDownloadsGridScrollViewer.ScrollToVerticalOffset(dgDownloadsGridScrollViewer.VerticalOffset - e.Delta / 3);
         }
 
         private void propertiesGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -1294,5 +1294,27 @@ namespace SGet
         }
 
         #endregion
+
+        private void btn_view_OSsesPage_Click(object sender, RoutedEventArgs e)
+        {
+            PagePanel_OSses.Visibility = Visibility.Visible;
+            PagePanel_Downloads.Visibility = Visibility.Collapsed;
+            btnViewDownloads.IsEnabled = true;
+            System.Windows.Style pressedButtonStyle = btnViewDownloads.Style;
+            btnViewOSses.Style = pressedButtonStyle;
+            btnViewDownloads.Style = null;
+            btnViewOSses.IsEnabled = false;
+        }
+
+        private void btn_view_DownloadsPage_Click(object sender, RoutedEventArgs e)
+        {
+            PagePanel_OSses.Visibility = Visibility.Collapsed;
+            PagePanel_Downloads.Visibility = Visibility.Visible;
+            btnViewOSses.IsEnabled = true;
+            System.Windows.Style pressedButtonStyle = btnViewOSses.Style;
+            btnViewOSses.Style = null;
+            btnViewDownloads.Style = pressedButtonStyle;
+            btnViewDownloads.IsEnabled = false;
+        }
     }
 }
