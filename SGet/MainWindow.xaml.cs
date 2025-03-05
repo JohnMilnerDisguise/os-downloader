@@ -42,6 +42,8 @@ namespace SGet
         private bool apiCallInProgress;
         private APIContentsRootObject apiContentsObject;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         #region Constructor
 
         public MainWindow()
@@ -118,6 +120,8 @@ namespace SGet
             #region Constructor_john
 
             //START OF JOHN CODE
+            this.IsPaused = true;
+
             checkForUpdatesIcon_Connected = new BitmapImage(new Uri("pack://application:,,,/SGet;component/Resources/connected.png"));
             checkForUpdatesIcon_Connecting = new BitmapImage(new Uri("pack://application:,,,/SGet;component/Resources/connecting.png"));
             checkForUpdatesIcon_Syncing = new BitmapImage(new Uri("pack://application:,,,/SGet;component/Resources/apisync.png"));
@@ -308,6 +312,15 @@ namespace SGet
 
         #region Main Window Event Handlers
 
+        protected void RaisePropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
         private async void mainWindow_ContentRendered(object sender, EventArgs e)
         {
             // In case the application was started from a web browser and receives command-line arguments
@@ -416,7 +429,7 @@ namespace SGet
 
         private void downloadsGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            dgDownloadsGridScrollViewer.ScrollToVerticalOffset(dgDownloadsGridScrollViewer.VerticalOffset - e.Delta / 3);
+        //    dgDownloadsGridScrollViewer.ScrollToVerticalOffset(dgDownloadsGridScrollViewer.VerticalOffset - e.Delta / 3);
         }
 
         private void propertiesGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -677,7 +690,7 @@ namespace SGet
 
         private void dataGrid_osList_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            scrollViewer_oslist.ScrollToVerticalOffset(scrollViewer_oslist.VerticalOffset - e.Delta / 3);
+            //scrollViewer_oslist.ScrollToVerticalOffset(scrollViewer_oslist.VerticalOffset - e.Delta / 3);
         }
 
         private void dataGrid_osList_ContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -1080,6 +1093,7 @@ namespace SGet
                     osDownload.Start();
                 //}
             }
+            this.IsUnPaused = true;
         }
 
         private void btn_osList_pause_Click(object sender, RoutedEventArgs e)
@@ -1093,6 +1107,7 @@ namespace SGet
                     //osDownload.Pause();
                 }
             }
+            this.IsPaused = true;
         }
 
         private void btn_osList_restart_Click(object sender, RoutedEventArgs e)

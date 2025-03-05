@@ -135,6 +135,34 @@ namespace SGet
             return String.Format("{0}:{1}:{2}", hours, minutes, seconds);
         }
 
+        private bool _isPaused;
+        public bool IsPaused
+        {
+            get
+            {
+                return _isPaused;
+            }
+            set
+            {
+                _isPaused = value;
+                //RaisePropertyChanged("IsPaused");
+                //RaisePropertyChanged("IsUnPaused");
+            }
+        }
+        public bool IsUnPaused
+        {
+            get
+            {
+                return !_isPaused;
+            }
+            set
+            {
+                _isPaused = !value;
+                //RaisePropertyChanged("IsPaused");
+                //RaisePropertyChanged("IsUnPaused");
+            }
+        }
+
         #endregion
 
         public static void AddOS(string uniqueIdentifier, string model, string name,
@@ -164,6 +192,7 @@ namespace SGet
             string releaseNotes, Public_Version_Table[] publicVersionTable, SGet.MainWindow mainWindow, string downloadsFolder
         )
         {
+
             OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, 
                 osWimURL, osWimFileName, 
                 bootWimURL, bootWimFileName,

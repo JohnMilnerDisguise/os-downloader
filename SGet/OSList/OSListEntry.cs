@@ -172,10 +172,12 @@ namespace SGet
                 ActionOptions = new ObservableCollection<string>(Array.ConvertAll(
                     OSListRecordEnumUtils.getActionOptionsFromOSListRecordStatus(status), x => OSListRecordEnumUtils.getActionDescriptionFromActionEnum(x)
                 ));
+                
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("ActionDropDownVisibility"));
                 }
+
                 if (oldSelectedAction != null && !oldSelectedAction.Equals("") && ActionOptions.Contains(oldSelectedAction, StringComparer.CurrentCultureIgnoreCase))
                 {
                     SelectedActionString = oldSelectedAction;
@@ -449,36 +451,64 @@ namespace SGet
             this.ModelArray = models;
             this.Name = name;
             this.ReleaseNotes = releaseNotes;
-            this.DownloadClient_OSWim = new WebDownloadClient(osWimURL);
-            //this.DownloadClient_OSWim.FileSize = 999999;
 
-            this.DownloadClient_OSWim.DownloadProgressChanged += this.DownloadClient_OSWim.DownloadProgressChangedHandler;
-            this.DownloadClient_OSWim.DownloadCompleted += this.DownloadClient_OSWim.DownloadCompletedHandler;
-            //this.DownloadClient_OSWim.StatusChanged += this.StatusChangedHandler;
-            //this.DownloadClient_OSWim.DownloadCompleted += this.DownloadCompletedHandler;
-            this.DownloadClient_OSWim.PropertyChanged += HandleDownloadClientPropertyChanged;
-
-
-            if (osWimFileName == null || osWimFileName.Trim().Length == 0)
+            //get existing or make new WebDownloadClient for OS Wim URL
+            WebDownloadClient existingOSWimDownloadClient = DownloadManager.findDownloadInstanceByURLFromAllDownloadClientStore(osWimURL);
+            if (existingOSWimDownloadClient == null)
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show($"The OS .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.DownloadClient_OSWim.HasError = true;
+                this.DownloadClient_OSWim = new WebDownloadClient(osWimURL);
+                //this.DownloadClient_OSWim.FileSize = 999999;
+                this.DownloadClient_OSWim.DownloadProgressChanged += this.DownloadClient_OSWim.DownloadProgressChangedHandler;
+                this.DownloadClient_OSWim.DownloadCompleted += this.DownloadClient_OSWim.DownloadCompletedHandler;
+                //this.DownloadClient_OSWim.StatusChanged += this.StatusChangedHandler;
+                //this.DownloadClient_OSWim.DownloadCompleted += this.DownloadCompletedHandler;
+                this.DownloadClient_OSWim.PropertyChanged += HandleDownloadClientPropertyChanged;
+
+                if (osWimFileName == null || osWimFileName.Trim().Length == 0)
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show($"The OS .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    this.DownloadClient_OSWim.HasError = true;
+                }
+                this.DownloadClient_OSWim.FileName = osWimFileName;
+                DownloadManager.Instance.AllDownloadClientStore.Add(this.DownloadClient_OSWim);
             }
-            this.DownloadClient_OSWim.FileName = osWimFileName;
-          
-            this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
-            //this.DownloadClient_BootWim.FileSize = 999999;
-            if (bootWimFileName == null || bootWimFileName.Trim().Length == 0)
+            else
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show($"The Boot .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.DownloadClient_BootWim.HasError = true;
+                this.DownloadClient_OSWim = existingOSWimDownloadClient;
             }
-            this.DownloadClient_BootWim.FileName = bootWimFileName;
+
+
+
+            //get existing or make new WebDownloadClient for Boot Wim URL
+            WebDownloadClient existingBootWimDownloadClient = DownloadManager.findDownloadInstanceByURLFromAllDownloadClientStore(bootWimURL);
+            if (existingBootWimDownloadClient == null)
+            {
+                this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
+                //this.DownloadClient_BootWim.FileSize = 999999;
+                this.DownloadClient_BootWim.DownloadProgressChanged += this.DownloadClient_BootWim.DownloadProgressChangedHandler;
+                this.DownloadClient_BootWim.DownloadCompleted += this.DownloadClient_BootWim.DownloadCompletedHandler;
+                //this.DownloadClient_BootWim.StatusChanged += this.StatusChangedHandler;
+                //this.DownloadClient_BootWim.DownloadCompleted += this.DownloadCompletedHandler;
+                this.DownloadClient_BootWim.PropertyChanged += HandleDownloadClientPropertyChanged;
+
+                if (bootWimFileName == null || bootWimFileName.Trim().Length == 0)
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show($"The Boot .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    this.DownloadClient_BootWim.HasError = true;
+                }
+                this.DownloadClient_BootWim.FileName = bootWimFileName;
+                DownloadManager.Instance.AllDownloadClientStore.Add(this.DownloadClient_BootWim);
+            }
+            else
+            {
+                this.DownloadClient_BootWim = existingBootWimDownloadClient;
+            }
 
             if (publicVersionTable == null)
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show($"The Public Version Table for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.PublicVersionTable = new ObservableCollection<Public_Version_Table>();
+                this.DownloadClient_OSWim.HasError = true;
             }
             else
             {
@@ -489,6 +519,7 @@ namespace SGet
 
             this.PropertyChanged += mainWindow.OSListPropertyChangedHandler;
             this.StatusChanged += mainWindow.OSListEntryStatusChanged;
+            this.StatusChanged += DownloadManager.OSListEntryStatusChanged;
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -618,8 +649,8 @@ namespace SGet
         public void Start()
         {
             Status = OSListRecordStatus.Active;
-            DownloadClient_BootWim.Start();
-            DownloadClient_OSWim.Start();
+            this.DownloadClient_BootWim.Start();
+            this.DownloadClient_OSWim.Start();
         }
 
         /*

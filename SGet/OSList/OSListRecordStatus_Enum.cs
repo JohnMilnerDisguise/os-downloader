@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Windows.Forms;
 
 namespace SGet
 {
@@ -58,6 +59,13 @@ namespace SGet
 
     public static class OSListRecordEnumUtils
     {
+        public static bool shouldOSListFilesAppearInDownloadList(OSListRecordStatus status)
+        {
+            return status != OSListRecordStatus.Initialized &&
+                   status != OSListRecordStatus.Not_In_Library &&
+                   status != OSListRecordStatus.NOT_VALID;
+        }
+
         public static OSListRecordAction getDefaultActionFromOSListRecordStatus(OSListRecordStatus status)
         {
             if (status == OSListRecordStatus.Not_In_Library)

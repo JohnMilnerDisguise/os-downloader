@@ -312,7 +312,7 @@ namespace SGet
 
             try
             {
-                this.Url = new Uri(url, UriKind.Absolute);
+                this.Url = new Uri(url.Trim(), UriKind.Absolute);
             } catch( System.UriFormatException ex )
             {
                 this.Url = null;
