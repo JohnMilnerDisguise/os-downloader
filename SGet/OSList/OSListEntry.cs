@@ -568,10 +568,10 @@ namespace SGet
                 RaisePropertyChanged(propertyName);
             }
 
-            //if (e.PropertyName == "Status" )
-            //{
-            //    this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
-            //}
+            if (e.PropertyName == "Status" )
+            {
+                this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
+            }
         }
         /*
 
@@ -653,6 +653,13 @@ namespace SGet
             this.DownloadClient_OSWim.Start();
         }
 
+        public void Pause()
+        {
+            //Status = OSListRecordStatus.Active;
+            this.DownloadClient_BootWim.Pause();
+            this.DownloadClient_OSWim.Pause();
+        }
+
         /*
 
         // Calculate download speed
@@ -690,7 +697,7 @@ namespace SGet
             }
         }
 
-        // Update download display (on downloadsGrid and propertiesGrid controls)
+        // Update download display (on downloadsGrid and dataGrid_DownloadProperties controls)
         private void UpdateDownloadDisplay()
         {
             RaisePropertyChanged("DownloadedSizeString");

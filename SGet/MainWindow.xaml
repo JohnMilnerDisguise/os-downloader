@@ -194,7 +194,7 @@
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
 
-        <ribbon:Ribbon DockPanel.Dock="Top" ShowQuickAccessToolBarOnTop="False" Name="mainRibbon" Margin="0,-22,0,0">
+        <ribbon:Ribbon DockPanel.Dock="Top" ShowQuickAccessToolBarOnTop="False" Name="mainRibbon" Margin="0,0,0,0">
             <ribbon:Ribbon.ApplicationMenu>
                 <ribbon:RibbonApplicationMenu Visibility="Collapsed" IsMainMenu="True" Name="ribbonMenu"></ribbon:RibbonApplicationMenu>
             </ribbon:Ribbon.ApplicationMenu>
@@ -207,8 +207,8 @@
                     <ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" Click="btnRemoveFromLibrary_Click" LargeImageSource="/SGet;component/Resources/removefromcollection.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Downloads" Name="ProcessGroup">
-                    <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btn_osList_start_Click" IsEnabled="{Binding IsPaused, Mode=OneWay}" LargeImageSource="/SGet;component/Resources/start.png" />
-                    <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btn_osList_pause_Click" IsEnabled="{Binding IsUnPaused, Mode=OneWay}" LargeImageSource="/SGet;component/Resources/stop.png" />
+                    <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btn_osList_start_Click" IsEnabled="True" LargeImageSource="/SGet;component/Resources/start.png" />
+                    <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btn_osList_pause_Click" IsEnabled="False" LargeImageSource="/SGet;component/Resources/stop.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="View Mode" Name="ViewMode">
                     <ribbon:RibbonButton Style="{DynamicResource RibbonButtonStylePressed}" IsEnabled="False" Label="OSses" Name="btnViewOSses" Click="btn_view_OSsesPage_Click" LargeImageSource="/SGet;component/Resources/viewosses.png" />
@@ -307,7 +307,7 @@
                 </StatusBar>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Name="versionTableScrollViewer">
                     <DataGrid Name="dataGrid_os_version_table" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
-                        VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="propertiesGrid_PreviewMouseWheel" Background="#FFF9F9F9">
+                        VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="dataGrid_DownloadProperties_PreviewMouseWheel" Background="#FFF9F9F9">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay}" MinWidth="110" Width="110" x:Name="textColumn_PublicVersionTable_Package" />
                             <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay}" MinWidth="450" Width="450" x:Name="textColumn_PublicVersionTable_Version" />

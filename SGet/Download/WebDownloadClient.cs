@@ -634,7 +634,7 @@ namespace SGet
             }
         }
 
-        // Update download display (on downloadsGrid and propertiesGrid controls)
+        // Update download display (on downloadsGrid and dataGrid_DownloadProperties controls)
         private void UpdateDownloadDisplay()
         {
             RaisePropertyChanged("DownloadedSizeString");

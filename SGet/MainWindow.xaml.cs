@@ -28,6 +28,10 @@ namespace SGet
 {
     public partial class MainWindow : RibbonWindow
     {
+        private List<string> propertyNames;
+        private List<string> propertyValues;
+        private List<PropertyModel> propertiesList;
+
         private bool trayExit;
         private string[] args;
 
@@ -65,6 +69,19 @@ namespace SGet
             // In case of computer shutdown or restart, save current list of downloads to an XML file
             SystemEvents.SessionEnding += new SessionEndingEventHandler(SystemEvents_SessionEnding);
 
+            propertyNames = new List<string>();
+            propertyNames.Add("URL");
+            propertyNames.Add("Supports Resume");
+            propertyNames.Add("File Type");
+            propertyNames.Add("Download Folder");
+            propertyNames.Add("Average Speed");
+            propertyNames.Add("Total Time");
+
+            propertyValues = new List<string>();
+            propertiesList = new List<PropertyModel>();
+            SetEmptyPropertiesGrid();
+            dataGrid_DownloadProperties.ItemsSource = propertiesList;
+
             // Load downloads from the XML file
             LoadDownloadsFromXml();
 
@@ -90,11 +107,16 @@ namespace SGet
 
             if (this.cbShowGrid.IsChecked.Value)
             {
+                this.dataGrid_DownloadProperties.GridLinesVisibility = DataGridGridLinesVisibility.All;
                 this.dataGrid_osList.GridLinesVisibility = DataGridGridLinesVisibility.All;
                 this.dataGrid_os_version_table.GridLinesVisibility = DataGridGridLinesVisibility.All;
+                this.downloadsGrid.GridLinesVisibility = DataGridGridLinesVisibility.All;
             }
             else
             {
+                this.dataGrid_DownloadProperties.GridLinesVisibility = DataGridGridLinesVisibility.None;
+                this.dataGrid_osList.GridLinesVisibility = DataGridGridLinesVisibility.None;
+                this.dataGrid_os_version_table.GridLinesVisibility = DataGridGridLinesVisibility.None;
                 this.downloadsGrid.GridLinesVisibility = DataGridGridLinesVisibility.None;
             }
             if (this.cbShowProperties.IsChecked.Value)
@@ -145,6 +167,17 @@ namespace SGet
         #endregion
 
         #region Methods
+        private void SetEmptyPropertiesGrid()
+        {
+            if (propertiesList.Count > 0)
+                propertiesList.Clear();
+            for (int i = 0; i < 6; i++)
+            {
+                propertiesList.Add(new PropertyModel(propertyNames[i], String.Empty));
+            }
+
+            dataGrid_DownloadProperties.Items.Refresh();
+        }
 
         private void PauseAllDownloads()
         {
@@ -290,8 +323,8 @@ namespace SGet
         {
             btnAddToLibrary.IsEnabled = enabled;
             btnRemoveFromLibrary.IsEnabled = enabled;
-            btnStart.IsEnabled = enabled;
-            btnPause.IsEnabled = enabled;
+            btnStart.IsEnabled = enabled && OSListManager.Instance.IsPaused;
+            btnPause.IsEnabled = enabled && OSListManager.Instance.IsUnPaused;
             tcmStartAll.IsEnabled = enabled;
             tcmPauseAll.IsEnabled = enabled;
         }
@@ -400,6 +433,29 @@ namespace SGet
                 }
 
                 var download = (WebDownloadClient)downloadsGrid.SelectedItem;
+
+                if (propertyValues.Count > 0)
+                    propertyValues.Clear();
+
+                propertyValues.Add(download.Url.ToString());
+                string resumeSupported = "No";
+                if (download.SupportsRange)
+                    resumeSupported = "Yes";
+                propertyValues.Add(resumeSupported);
+                propertyValues.Add(download.FileType);
+                propertyValues.Add(download.DownloadFolder);
+                propertyValues.Add(download.AverageDownloadSpeed);
+                propertyValues.Add(download.TotalElapsedTimeString);
+
+                if (propertiesList.Count > 0)
+                    propertiesList.Clear();
+
+                for (int i = 0; i < 6; i++)
+                {
+                    propertiesList.Add(new PropertyModel(propertyNames[i], propertyValues[i]));
+                }
+
+                dataGrid_DownloadProperties.Items.Refresh();
                 download.IsSelected = true;
             }
             else
@@ -414,14 +470,32 @@ namespace SGet
             }
         }
 
+
         public void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             WebDownloadClient download = (WebDownloadClient)sender;
+            if (e.PropertyName == "AverageSpeedAndTotalTime" && download.Status != DownloadStatus.Deleting)
+            {
+                this.Dispatcher.Invoke(new PropertyChangedEventHandler(UpdatePropertiesList), sender, e);
+            }
+        }
+
+        private void UpdatePropertiesList(object sender, PropertyChangedEventArgs e)
+        {
+            propertyValues.RemoveRange(4, 2);
+            var download = (WebDownloadClient)downloadsGrid.SelectedItem;
+            propertyValues.Add(download.AverageDownloadSpeed);
+            propertyValues.Add(download.TotalElapsedTimeString);
+
+            propertiesList.RemoveRange(4, 2);
+            propertiesList.Add(new PropertyModel(propertyNames[4], propertyValues[4]));
+            propertiesList.Add(new PropertyModel(propertyNames[5], propertyValues[5]));
+            dataGrid_DownloadProperties.Items.Refresh();
         }
 
         private void downloadsGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-        //    dgDownloadsGridScrollViewer.ScrollToVerticalOffset(dgDownloadsGridScrollViewer.VerticalOffset - e.Delta / 3);
+            propertiesScrollViewer.ScrollToVerticalOffset(propertiesScrollViewer.VerticalOffset - e.Delta / 3);
         }
 
         private void propertiesGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -553,10 +627,10 @@ namespace SGet
         public void OSListPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
             OSListEntry osRecord = (OSListEntry)sender;
-            //if (e.PropertyName == "Status" )
-            //{
-            //    this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
-            //}
+            if (e.PropertyName == "Status" )
+            {
+                this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
+            }
         }
 
         public void OSListEntryStatusChanged(object sender, EventArgs e)
@@ -642,7 +716,6 @@ namespace SGet
                 //enable/disable add/remove buttons
                 btnAddToLibrary.IsEnabled = selectedOSRecord.AllowUserToAddToLibrary;
                 btnRemoveFromLibrary.IsEnabled = selectedOSRecord.AllowUserToRemoveFromLibrary;
-
                 /*
                 if (propertyValues.Count > 0)
                     propertyValues.Clear();
@@ -665,8 +738,7 @@ namespace SGet
                     propertiesList.Add(new PropertyModel(propertyNames[i], propertyValues[i]));
                 }
 
-                propertiesGrid.Items.Refresh();
-                download.IsSelected = true;
+                dataGrid_DownloadProperties.Items.Refresh();
                 */
             }
             else
@@ -1078,30 +1150,30 @@ namespace SGet
 
         private void btn_osList_start_Click(object sender, RoutedEventArgs e)
         {
-            var dataContext = btnStart.DataContext;
-            System.Diagnostics.Debug.WriteLine($"btnStart DataContext: {dataContext?.GetType().Name}");
             foreach (OSListEntry osDownload in OSListManager.Instance.getSelectedOSRecords() )
             {
-                //if (osDownload.Status == OSListRecordStatus.Paused || osDownload.HasError)
-                //{
-                    //osDownload.Start();
-                //}
+                if (osDownload.Status == OSListRecordStatus.Paused || osDownload.Status == OSListRecordStatus.To_Be_Added || osDownload.HasError)
+                {
+                    osDownload.Start();
+                }
             }
             OSListManager.Instance.IsUnPaused = true;
+            btnStart.IsEnabled = OSListManager.Instance.IsPaused;
+            btnPause.IsEnabled = OSListManager.Instance.IsUnPaused;
         }
 
         private void btn_osList_pause_Click(object sender, RoutedEventArgs e)
         {
-            if (dataGrid_osList.SelectedItems.Count > 0)
+            foreach (OSListEntry osDownload in OSListManager.Instance.getSelectedOSRecords())
             {
-                var selectedOSDownloads = dataGrid_osList.SelectedItems.Cast<OSListEntry>();
-
-                foreach (OSListEntry osDownload in selectedOSDownloads)
+                if (osDownload.Status != OSListRecordStatus.Paused )
                 {
-                    //osDownload.Pause();
+                    osDownload.Pause();
                 }
             }
             OSListManager.Instance.IsPaused = true;
+            btnStart.IsEnabled = OSListManager.Instance.IsPaused;
+            btnPause.IsEnabled = OSListManager.Instance.IsUnPaused;
         }
 
         private void btn_osList_restart_Click(object sender, RoutedEventArgs e)
