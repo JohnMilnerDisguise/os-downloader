@@ -69,7 +69,7 @@ namespace SGet
 
         public ObservableCollection<WebDownloadClient> AllDownloadClientStore = new ObservableCollection<WebDownloadClient>(); //all of them for all osses even unselected ones
         public Dictionary<string, WebDownloadClient> AllDownloadClientStoreByURL = new Dictionary<string, WebDownloadClient>();
-        
+
         #region Properties
 
         // Number of currently active downloads

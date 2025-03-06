@@ -12,6 +12,11 @@ namespace SGet
 
         #region Methods
 
+        public App()
+        {
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.All;
+        }
+
         // Catch exceptions which occur outside try-catch blocks
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {

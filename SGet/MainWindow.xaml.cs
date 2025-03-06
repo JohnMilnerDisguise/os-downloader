@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Ribbon;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,11 +22,11 @@ using System.Xml.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+//using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SGet
 {
-    public partial class MainWindow
+    public partial class MainWindow : RibbonWindow
     {
         private bool trayExit;
         private string[] args;
@@ -120,7 +121,6 @@ namespace SGet
             #region Constructor_john
 
             //START OF JOHN CODE
-            this.IsPaused = true;
 
             checkForUpdatesIcon_Connected = new BitmapImage(new Uri("pack://application:,,,/SGet;component/Resources/connected.png"));
             checkForUpdatesIcon_Connecting = new BitmapImage(new Uri("pack://application:,,,/SGet;component/Resources/connecting.png"));
@@ -134,6 +134,8 @@ namespace SGet
             //setup event handler for internet connection status monitor
             NetworkChange.NetworkAvailabilityChanged += OnNetworkAvailabilityChanged;
 
+            //ser Data COntexts and Data Binding
+            //this.DataContext = OSListManager.Instance;
             // Bind OSListManager to dataGrid_osList
             dataGrid_osList.ItemsSource = OSListManager.Instance.OSList;
             OSListManager.Instance.OSList.CollectionChanged += new NotifyCollectionChangedEventHandler(OSList_CollectionChanged);
@@ -311,16 +313,6 @@ namespace SGet
         #endregion
 
         #region Main Window Event Handlers
-
-        protected void RaisePropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
         private async void mainWindow_ContentRendered(object sender, EventArgs e)
         {
             // In case the application was started from a web browser and receives command-line arguments
@@ -1086,14 +1078,16 @@ namespace SGet
 
         private void btn_osList_start_Click(object sender, RoutedEventArgs e)
         {
+            var dataContext = btnStart.DataContext;
+            System.Diagnostics.Debug.WriteLine($"btnStart DataContext: {dataContext?.GetType().Name}");
             foreach (OSListEntry osDownload in OSListManager.Instance.getSelectedOSRecords() )
             {
                 //if (osDownload.Status == OSListRecordStatus.Paused || osDownload.HasError)
                 //{
-                    osDownload.Start();
+                    //osDownload.Start();
                 //}
             }
-            this.IsUnPaused = true;
+            OSListManager.Instance.IsUnPaused = true;
         }
 
         private void btn_osList_pause_Click(object sender, RoutedEventArgs e)
@@ -1107,7 +1101,7 @@ namespace SGet
                     //osDownload.Pause();
                 }
             }
-            this.IsPaused = true;
+            OSListManager.Instance.IsPaused = true;
         }
 
         private void btn_osList_restart_Click(object sender, RoutedEventArgs e)

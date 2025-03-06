@@ -9,12 +9,16 @@ using System.Windows.Documents;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using System.ComponentModel;
+using System.Windows.Input;
 //using static System.Net.WebRequestMethods;
 
 namespace SGet
 {
-    public class OSListManager
+    public class OSListManager : INotifyPropertyChanged
     {
+        //event handlers instances
+        public event PropertyChangedEventHandler PropertyChanged;
+
         // Class instance, used to access non-static members
         private static OSListManager instance = new OSListManager();
 
@@ -33,6 +37,8 @@ namespace SGet
         public ObservableCollection<OSListEntry> OSList = new ObservableCollection<OSListEntry>();
 
         #region Properties
+
+
 
         // Number of currently active downloads
         public int ActiveDownloads
@@ -135,7 +141,7 @@ namespace SGet
             return String.Format("{0}:{1}:{2}", hours, minutes, seconds);
         }
 
-        private bool _isPaused;
+        private bool _isPaused = true;
         public bool IsPaused
         {
             get
@@ -145,8 +151,8 @@ namespace SGet
             set
             {
                 _isPaused = value;
-                //RaisePropertyChanged("IsPaused");
-                //RaisePropertyChanged("IsUnPaused");
+                RaisePropertyChanged("IsPaused");
+                RaisePropertyChanged("IsUnPaused");
             }
         }
         public bool IsUnPaused
@@ -158,8 +164,8 @@ namespace SGet
             set
             {
                 _isPaused = !value;
-                //RaisePropertyChanged("IsPaused");
-                //RaisePropertyChanged("IsUnPaused");
+                RaisePropertyChanged("IsPaused");
+                RaisePropertyChanged("IsUnPaused");
             }
         }
 
@@ -286,6 +292,22 @@ namespace SGet
             ObservableCollection<OSListEntry> selectedOSRecords = new ObservableCollection<OSListEntry>( OSList.Where((osRecord) => osRecord.Status == OSListRecordStatus.To_Be_Added || osRecord.Status == OSListRecordStatus.Paused) );
             return selectedOSRecords;
         }
+        /*
+        protected void RaisePropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+        */
+
+        protected void RaisePropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
 
     }
 }

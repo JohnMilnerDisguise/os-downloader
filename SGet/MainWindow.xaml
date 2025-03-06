@@ -1,17 +1,22 @@
-﻿<Window x:Class="SGet.MainWindow"
+﻿<ribbon:RibbonWindow x:Class="SGet.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:osc="clr-namespace:OpenSourceControls"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary" xmlns:sget="clr-namespace:SGet" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon" xmlns:sget="clr-namespace:SGet" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:SGet"
+        DataContext="{Binding Source={x:Static local:OSListManager.Instance}}"
         Title="SGet" Height="700" Width="1270" MinWidth="770" MinHeight="500" Name="mainWindow" WindowStartupLocation="CenterScreen"
         Icon="/SGet;component/Resources/download_icon.ico" Background="#FFF9F9F9" KeyDown="mainWindow_KeyDown" 
         Closing="mainWindow_Closing" StateChanged="mainWindow_StateChanged" ContentRendered="mainWindow_ContentRendered"
     xmlns:shell="clr-namespace:Microsoft.Windows.Shell;assembly=Microsoft.Windows.Shell"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
-
-    <Window.Resources>
+    <!--<ribbon:RibbonWindow.DataContext>
+        <local:OSListManager /> 
+        <x:Static Member="local:OSListManager.Instance" />
+    </ribbon:RibbonWindow.DataContext>
+    -->
+    <ribbon:RibbonWindow.Resources>
         <Style x:Key="RightHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Right"/>
         </Style>
@@ -169,7 +174,7 @@
             <Setter Property="Background" Value="{Binding Ribbon.PressedBackground, RelativeSource={RelativeSource Self}}"/>
             <Setter Property="BorderBrush" Value="{Binding Ribbon.PressedBorderBrush, RelativeSource={RelativeSource Self}}"/>
         </Style>
-    </Window.Resources>
+    </ribbon:RibbonWindow.Resources>
 
     <DockPanel Name="dockPanel">
         <tb:TaskbarIcon x:Name="XNotifyIcon" IconSource="/SGet;component/Resources/download_icon.ico" ToolTipText="SGet" TrayLeftMouseUp="tcmShowMainWindow_Click">
@@ -394,4 +399,4 @@
         </DockPanel>
 
     </DockPanel>
-</Window>
+</ribbon:RibbonWindow>
