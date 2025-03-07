@@ -570,7 +570,9 @@ namespace SGet
 
             if (e.PropertyName == "Status" )
             {
-                this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
+                RaisePropertyChanged("StatusString");
+                RaisePropertyChanged("Status");
+                //this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
             }
         }
         /*

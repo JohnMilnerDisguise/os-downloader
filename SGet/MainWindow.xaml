@@ -5,7 +5,6 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon" xmlns:sget="clr-namespace:SGet" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:SGet"
-        DataContext="{Binding Source={x:Static local:OSListManager.Instance}}"
         Title="SGet" Height="700" Width="1270" MinWidth="770" MinHeight="500" Name="mainWindow" WindowStartupLocation="CenterScreen"
         Icon="/SGet;component/Resources/download_icon.ico" Background="#FFF9F9F9" KeyDown="mainWindow_KeyDown" 
         Closing="mainWindow_Closing" StateChanged="mainWindow_StateChanged" ContentRendered="mainWindow_ContentRendered"
@@ -240,7 +239,7 @@
             <StatusBarItem Name="statusBarCompleted" Padding="0,3" />
         </StatusBar>
         
-        <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="PagePanel_OSses" Visibility="Visible">
+        <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="PagePanel_OSses" Visibility="Visible" HorizontalAlignment="Stretch" Width="Auto">
             <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="OSListPanel" Visibility="Visible">
                 <!--<ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" Name="scrollViewer_oslist">-->
                 <DataGrid AutoGenerateColumns="False" Name="dataGrid_osList" VerticalAlignment="Top" HorizontalContentAlignment="Center" DockPanel.Dock="Left" 
@@ -309,8 +308,8 @@
                     <DataGrid Name="dataGrid_os_version_table" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
                         VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="dataGrid_DownloadProperties_PreviewMouseWheel" Background="#FFF9F9F9">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay}" MinWidth="110" Width="110" x:Name="textColumn_PublicVersionTable_Package" />
-                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay}" MinWidth="450" Width="450" x:Name="textColumn_PublicVersionTable_Version" />
+                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay, UpdateSourceTrigger=Explicit}" MinWidth="110" Width="110" x:Name="textColumn_PublicVersionTable_Package" />
+                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay, UpdateSourceTrigger=Explicit}" MinWidth="450" Width="450" x:Name="textColumn_PublicVersionTable_Version" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </ScrollViewer>
@@ -330,16 +329,16 @@
 
 
         <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="PagePanel_Downloads" Visibility="Collapsed">
-            <DockPanel DockPanel.Dock="Bottom" Background="#FFF9F9F9" Name="propertiesPanel" Height="140">
+            <DockPanel DockPanel.Dock="Bottom" Background="#FFF9F9F9" Name="propertiesPanel" Height="200">
                 <StatusBar Height="26" Name="propertiesBar" DockPanel.Dock="Top" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
                     <StatusBarItem  Name="propertiesItem" Content="Properties" Margin="0" Padding="10,3,3,3" />
                 </StatusBar>
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Name="propertiesScrollViewer">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Name="propertiesScrollViewer" HorizontalAlignment="Stretch">
                     <DataGrid Name="dataGrid_DownloadProperties" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
-                        VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="propertiesGrid_PreviewMouseWheel" Background="#FFF9F9F9">
+                        VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="propertiesGrid_PreviewMouseWheel" CanUserResizeColumns="True" Background="#FFF9F9F9" HorizontalAlignment="Stretch">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay}" MinWidth="110" Width="110" x:Name="textColumn_Properties_Name" />
-                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay}" MinWidth="450" Width="450" x:Name="textColumn_Properties_Value" />
+                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Name, Mode=OneWay}" MinWidth="110" Width="200" x:Name="textColumn_Properties_Name" />
+                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Value, Mode=OneWay}" MinWidth="450" Width="*" x:Name="textColumn_Properties_Value" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </ScrollViewer>

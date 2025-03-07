@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Microsoft.Shell;
 //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SGet
@@ -629,7 +630,7 @@ namespace SGet
             OSListEntry osRecord = (OSListEntry)sender;
             if (e.PropertyName == "Status" )
             {
-                this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
+                this.Dispatcher.Invoke(new PropertyChangedEventHandler(UpdatePropertiesList), sender, e);
             }
         }
 
@@ -756,6 +757,13 @@ namespace SGet
         {
             //scrollViewer_oslist.ScrollToVerticalOffset(scrollViewer_oslist.VerticalOffset - e.Delta / 3);
         }
+
+        private void dataGrid_DownloadProperties_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            //scrollViewer_oslist.ScrollToVerticalOffset(scrollViewer_oslist.VerticalOffset - e.Delta / 3);
+        }
+
+        
 
         private void dataGrid_osList_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
