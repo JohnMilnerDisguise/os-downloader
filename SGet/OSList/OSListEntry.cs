@@ -441,8 +441,8 @@ namespace SGet
         #region Constructor and Events
 
         public OSListEntry(string uniqueIdentifier, List<string> models, string name,
-            string osWimURL, string osWimFileName,
-            string bootWimURL, string bootWimFileName,
+            string osWimURL, string osWimFileName, long osWimFileSize,
+            string bootWimURL, string bootWimFileName, long bootWimFileSize,
             string releaseNotes, Public_Version_Table[] publicVersionTable, SGet.MainWindow mainWindow
         )
         {
@@ -457,7 +457,7 @@ namespace SGet
             if (existingOSWimDownloadClient == null)
             {
                 this.DownloadClient_OSWim = new WebDownloadClient(osWimURL);
-                //this.DownloadClient_OSWim.FileSize = 999999;
+                this.DownloadClient_OSWim.FileSize = osWimFileSize;
                 this.DownloadClient_OSWim.DownloadProgressChanged += this.DownloadClient_OSWim.DownloadProgressChangedHandler;
                 this.DownloadClient_OSWim.DownloadCompleted += this.DownloadClient_OSWim.DownloadCompletedHandler;
                 //this.DownloadClient_OSWim.StatusChanged += this.StatusChangedHandler;
@@ -484,7 +484,7 @@ namespace SGet
             if (existingBootWimDownloadClient == null)
             {
                 this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
-                //this.DownloadClient_BootWim.FileSize = 999999;
+                this.DownloadClient_BootWim.FileSize = bootWimFileSize;
                 this.DownloadClient_BootWim.DownloadProgressChanged += this.DownloadClient_BootWim.DownloadProgressChangedHandler;
                 this.DownloadClient_BootWim.DownloadCompleted += this.DownloadClient_BootWim.DownloadCompletedHandler;
                 //this.DownloadClient_BootWim.StatusChanged += this.StatusChangedHandler;

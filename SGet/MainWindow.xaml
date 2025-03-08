@@ -215,8 +215,8 @@
                     <ribbon:RibbonButton Label="Files" Name="btnViewDownloads" Click="btn_view_DownloadsPage_Click" LargeImageSource="/SGet;component/Resources/viewdownloads.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Settings" Name="SettingsGroup">
-                    <ribbon:RibbonButton Label="Set Limits" Name="btnSetLimits" Click="btnSetLimits_Click" LargeImageSource="/SGet;component/Resources/limits.png" />
-                    <ribbon:RibbonButton Label="Preferences" Name="btnPreferences" Click="btnPreferences_Click" LargeImageSource="/SGet;component/Resources/preferences.png" />
+                    <ribbon:RibbonButton Label="Set Limits" Name="btnSetLimits" Click="btnSetLimits_Click" LargeImageSource="/SGet;component/Resources/downloadspeed.png" />
+                    <ribbon:RibbonButton Label="Edit Settings" Name="btnPreferences" Click="btnPreferences_Click" LargeImageSource="/SGet;component/Resources/settings.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Show" Name="ShowGroup">
                     <ribbon:RibbonCheckBox Label="Grid" Name="cbShowGrid" VerticalContentAlignment="Center" Margin="0,2,0,0" Click="cbShowGrid_Click" Height="Auto" />
@@ -308,8 +308,8 @@
                     <DataGrid Name="dataGrid_os_version_table" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
                         VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="dataGrid_DownloadProperties_PreviewMouseWheel" Background="#FFF9F9F9">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay, UpdateSourceTrigger=Explicit}" MinWidth="110" Width="110" x:Name="textColumn_PublicVersionTable_Package" />
-                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay, UpdateSourceTrigger=Explicit}" MinWidth="450" Width="450" x:Name="textColumn_PublicVersionTable_Version" />
+                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay}" MinWidth="110" Width="110" x:Name="textColumn_PublicVersionTable_Package" />
+                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay}" MinWidth="450" Width="450" x:Name="textColumn_PublicVersionTable_Version" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </ScrollViewer>
@@ -337,8 +337,8 @@
                     <DataGrid Name="dataGrid_DownloadProperties" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
                         VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="propertiesGrid_PreviewMouseWheel" CanUserResizeColumns="True" Background="#FFF9F9F9" HorizontalAlignment="Stretch">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Name, Mode=OneWay}" MinWidth="110" Width="200" x:Name="textColumn_Properties_Name" />
-                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Value, Mode=OneWay}" MinWidth="450" Width="*" x:Name="textColumn_Properties_Value" />
+                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Name, Mode=OneWay, UpdateSourceTrigger=Explicit}" MinWidth="110" Width="200" x:Name="textColumn_Properties_Name" />
+                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Value, Mode=OneWay, UpdateSourceTrigger=Explicit}" MinWidth="450" Width="*" x:Name="textColumn_Properties_Value" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </ScrollViewer>

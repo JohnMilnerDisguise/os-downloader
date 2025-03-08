@@ -172,8 +172,8 @@ namespace SGet
         #endregion
 
         public static void AddOS(string uniqueIdentifier, string model, string name,
-            string osWimURL, string osWimFileName,
-            string bootWimURL, string bootWimFileName,
+            string osWimURL, string osWimFileName, long osWimFileSize,
+            string bootWimURL, string bootWimFileName, long bootWimFileSize,
             string releaseNotes, Public_Version_Table[] publicVersionTable, SGet.MainWindow mainWindow, string downloadsFolder
         )
         {
@@ -181,8 +181,8 @@ namespace SGet
             if( preExistingOSRecordInList == null )
             {
                 AddOS( uniqueIdentifier, new List<string> { model }, name,
-                    osWimURL, osWimFileName,
-                    bootWimURL, bootWimFileName,
+                    osWimURL, osWimFileName, osWimFileSize,
+                    bootWimURL, bootWimFileName, bootWimFileSize,
                     releaseNotes, publicVersionTable, mainWindow, downloadsFolder );
             }
             else if (!preExistingOSRecordInList.ModelArray.Contains(model) )
@@ -193,15 +193,15 @@ namespace SGet
         }
 
         private static void AddOS(string uniqueIdentifier, List<string> models, string name, 
-            string osWimURL, string osWimFileName,
-            string bootWimURL, string bootWimFileName,
+            string osWimURL, string osWimFileName, long osWimFileSize,
+            string bootWimURL, string bootWimFileName, long bootWimFileSize,
             string releaseNotes, Public_Version_Table[] publicVersionTable, SGet.MainWindow mainWindow, string downloadsFolder
         )
         {
 
             OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, 
-                osWimURL, osWimFileName, 
-                bootWimURL, bootWimFileName,
+                osWimURL, osWimFileName, osWimFileSize,
+                bootWimURL, bootWimFileName, bootWimFileSize,
                 releaseNotes, publicVersionTable, mainWindow
             );
 

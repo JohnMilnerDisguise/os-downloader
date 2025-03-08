@@ -481,9 +481,27 @@ namespace SGet
                             }
                         }
 
-                        this.FileSize = response.ContentLength;
+                        if (response.ContentLength <= 0 && this.FileSize <= 0 )
+                        {
+                            Xceed.Wpf.Toolkit.MessageBox.Show($"No file exists at url [{this.Url}]\n\nWas expecting a file called [{this.FileName}] of Unknown Size", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            this.HasError = true;
+                        }
+                        else if (response.ContentLength <= 0 && this.FileSize > 0 )
+                        {
+                            Xceed.Wpf.Toolkit.MessageBox.Show($"No file exists at url [{this.Url}].\n\nWas expecting a file called [{this.FileName}] of Size [{this.FileSize}]", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            this.HasError = true;
+                        }
+                        else if( response.ContentLength > 0 && this.FileSize > 0 && response.ContentLength != this.FileSize)
+                        {
+                            Xceed.Wpf.Toolkit.MessageBox.Show($"A recoverable API Error occured:\n\nThe file called [{this.FileName}] is of Size [{this.FileSize}] according to the API\n\nHowever the actual Download Size is [{response.ContentLength}]\n\nThe Download URL was:\n{this.Url}", "Recoverable API Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
 
-                        if (this.FileSize <= 0)
+                        if (response.ContentLength > 0)
+                        {
+                            this.FileSize = response.ContentLength;
+                        }
+
+                        if (response.ContentLength <= 0 && this.FileSize <= 0)
                         {
                             Xceed.Wpf.Toolkit.MessageBox.Show("The requested file does not exist!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             this.HasError = true;
@@ -499,7 +517,7 @@ namespace SGet
             }
             else
             {
-                this.SupportsRange = true;
+                this.SupportsRange = Settings.Default.URLSupportsRangeDefaultValue;
             }
         }
 
