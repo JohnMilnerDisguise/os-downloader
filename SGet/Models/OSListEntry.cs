@@ -16,7 +16,7 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace SGet
+namespace SGet.Models
 {
     public class OSListEntry : INotifyPropertyChanged
     {
@@ -35,8 +35,8 @@ namespace SGet
 
         //OS's Model Names Friendly String
         public string Models {
-            get { 
-                return "[" + string.Join( "], [", this.ModelArray ) + "]";
+            get {
+                return "[" + string.Join("], [", this.ModelArray) + "]";
             }
         }
 
@@ -55,7 +55,7 @@ namespace SGet
         {
             get
             {
-                return ( ( DownloadClient_OSWim.Percent * (float)DownloadClient_OSWim.FileSize ) + (DownloadClient_BootWim.Percent * (float)DownloadClient_BootWim.FileSize)) / ( (float)DownloadClient_OSWim.FileSize + (float)DownloadClient_OSWim.FileSize );
+                return ((DownloadClient_OSWim.Percent * (float)DownloadClient_OSWim.FileSize) + (DownloadClient_BootWim.Percent * (float)DownloadClient_BootWim.FileSize)) / ((float)DownloadClient_OSWim.FileSize + (float)DownloadClient_OSWim.FileSize);
             }
         }
 
@@ -97,7 +97,7 @@ namespace SGet
                     combinedDownloadSpeed += DownloadClient_OSWim.downloadSpeed;
                 }
 
-                if ( combinedDownloadSpeed > 0 )
+                if (combinedDownloadSpeed > 0)
                 {
                     return DownloadManager.FormatSpeedString(combinedDownloadSpeed);
                 }
@@ -147,14 +147,14 @@ namespace SGet
         {
             get
             {
-               // if (ActionOptions.Count != 2)
+                // if (ActionOptions.Count != 2)
                 //{
-                    return ActionOptions.Count == 0 || ( ActionOptions.Count == 1 && ActionOptions[0].Length == 0 ) ? Visibility.Hidden : Visibility.Visible;
+                return ActionOptions.Count == 0 || (ActionOptions.Count == 1 && ActionOptions[0].Length == 0) ? Visibility.Hidden : Visibility.Visible;
                 //}
                 //return Visibility.Visible;
             }
         }
-        
+
 
         // Download status
         private OSListRecordStatus status;
@@ -172,7 +172,7 @@ namespace SGet
                 ActionOptions = new ObservableCollection<string>(Array.ConvertAll(
                     OSListRecordEnumUtils.getActionOptionsFromOSListRecordStatus(status), x => OSListRecordEnumUtils.getActionDescriptionFromActionEnum(x)
                 ));
-                
+
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("ActionDropDownVisibility"));
@@ -193,12 +193,12 @@ namespace SGet
         {
             get
             {
-                if ( Status == OSListRecordStatus.Active )
+                if (Status == OSListRecordStatus.Active)
                 {
                     DownloadStatus overallStatus = DownloadStatus.Initialized;
 
                     //if both downloads are completed then return completed
-                    if( DownloadClient_BootWim.Status == DownloadStatus.Completed && DownloadClient_OSWim.Status == DownloadStatus.Completed )
+                    if (DownloadClient_BootWim.Status == DownloadStatus.Completed && DownloadClient_OSWim.Status == DownloadStatus.Completed)
                     {
                         return DownloadStatus.Completed.ToString().Replace('_', ' ');
                     }
@@ -252,7 +252,7 @@ namespace SGet
                         overallStatus = DownloadStatus.Pausing;
                     }
                     return overallStatus.ToString().Replace('_', ' ');
-                    
+
                 }
                 return Status.ToString().Replace('_', ' ');
             }
@@ -271,7 +271,7 @@ namespace SGet
         {
             get
             {
-                if (SelectedActionString == OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Add_To_Library) )
+                if (SelectedActionString == OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Add_To_Library))
                 {
                     return false;
                 }
@@ -322,15 +322,15 @@ namespace SGet
             get
             {
                 return "NOT IMPLEMENTED";
-/*                if (recentAverageRate > 0 && this.Status == DownloadStatus.Downloading && !this.HasError)
-                {
-                    double secondsLeft = (FileSize - DownloadedSize + CachedSize) / recentAverageRate;
+                /*                if (recentAverageRate > 0 && this.Status == DownloadStatus.Downloading && !this.HasError)
+                                {
+                                    double secondsLeft = (FileSize - DownloadedSize + CachedSize) / recentAverageRate;
 
-                    TimeSpan span = TimeSpan.FromSeconds(secondsLeft);
+                                    TimeSpan span = TimeSpan.FromSeconds(secondsLeft);
 
-                    return DownloadManager.FormatTimeSpanString(span);
-                }
-                return String.Empty;*/
+                                    return DownloadManager.FormatTimeSpanString(span);
+                                }
+                                return String.Empty;*/
             }
         }
 
@@ -386,7 +386,7 @@ namespace SGet
         }
 
         // OS is selected in the DataGrid
-        public bool IsSelected { 
+        public bool IsSelected {
             get
             {
                 return DownloadClient_BootWim.IsSelected && DownloadClient_OSWim.IsSelected;
@@ -395,15 +395,15 @@ namespace SGet
             {
                 DownloadClient_OSWim.IsSelected = value;
                 DownloadClient_BootWim.IsSelected = value;
-/*                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("IsSelected"));
-                }*/
+                /*                if (PropertyChanged != null)
+                                {
+                                    PropertyChanged(this, new PropertyChangedEventArgs("IsSelected"));
+                                }*/
             }
         }
 
         // Download is part of a batch
-        public bool IsBatch 
+        public bool IsBatch
         {
             get
             {
@@ -517,23 +517,26 @@ namespace SGet
 
             this.Status = OSListRecordStatus.Initialized;
 
-            this.PropertyChanged += mainWindow.OSListPropertyChangedHandler;
-            this.StatusChanged += mainWindow.OSListEntryStatusChanged;
+            if (mainWindow != null)
+            {
+                this.PropertyChanged += mainWindow.OSListPropertyChangedHandler;
+                this.StatusChanged += mainWindow.OSListEntryStatusChanged;
+            }
             this.StatusChanged += DownloadManager.OSListEntryStatusChanged;
         }
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
-    
+
         public event EventHandler StatusChanged;
         /*
         public event EventHandler DownloadProgressChanged;
 
         public event EventHandler DownloadCompleted;
-
+        */
         #endregion
 
         #region Event Handlers
-                */
+
 
         // Generate PropertyChanged event to update the UI
         protected void RaisePropertyChanged(string name)
@@ -559,7 +562,7 @@ namespace SGet
             WebDownloadClient downloadClient = (WebDownloadClient)sender;
             string propertyName = e.PropertyName;
 
-            if( propertyName == "StatusString" )
+            if (propertyName == "StatusString")
             {
                 RaisePropertyChanged(propertyName);
             }
@@ -568,85 +571,14 @@ namespace SGet
                 RaisePropertyChanged(propertyName);
             }
 
-            if (e.PropertyName == "Status" )
+            if (e.PropertyName == "Status")
             {
                 RaisePropertyChanged("StatusString");
                 RaisePropertyChanged("Status");
                 //this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
             }
         }
-        /*
 
-
-
-        // Generate DownloadProgressChanged event
-        protected virtual void RaiseDownloadProgressChanged()
-        {
-            if (DownloadProgressChanged != null)
-            {
-                DownloadProgressChanged(this, EventArgs.Empty);
-            }
-        }
-
-        // Generate DownloadCompleted event
-        protected virtual void RaiseDownloadCompleted()
-        {
-            if (DownloadCompleted != null)
-            {
-                DownloadCompleted(this, EventArgs.Empty);
-            }
-        }
-
-        // DownloadProgressChanged event handler
-        public void DownloadProgressChangedHandler(object sender, EventArgs e)
-        {
-            // Update the UI every second
-            if (DateTime.UtcNow > this.LastUpdateTime.AddSeconds(1))
-            {
-                CalculateDownloadSpeed();
-                CalculateAverageRate();
-                UpdateDownloadDisplay();
-                this.LastUpdateTime = DateTime.UtcNow;
-            }
-        }
-
-        // DownloadCompleted event handler
-        public void DownloadCompletedHandler(object sender, EventArgs e)
-        {
-            if (!this.HasError)
-            {
-                // If the file already exists, delete it
-                if (File.Exists(this.DownloadPath))
-                {
-                    File.Delete(this.DownloadPath);
-                }
-
-                // Convert the temporary (.tmp) file to the actual (requested) file
-                if (File.Exists(this.TempDownloadPath))
-                {
-                    File.Move(this.TempDownloadPath, this.DownloadPath);
-                }
-
-                this.Status = DownloadStatus.Completed;
-                UpdateDownloadDisplay();
-
-                if (this.OpenFileOnCompletion && File.Exists(this.DownloadPath))
-                {
-                    Process.Start(@DownloadPath);
-                }
-            }
-            else
-            {
-                this.Status = DownloadStatus.Error;
-                UpdateDownloadDisplay();
-            }
-        }
-
-        #endregion
-
-        #region Methods
-
-        */
         // Start or continue download
         public void Start()
         {
@@ -661,393 +593,7 @@ namespace SGet
             this.DownloadClient_BootWim.Pause();
             this.DownloadClient_OSWim.Pause();
         }
-
-        /*
-
-        // Calculate download speed
-        private void CalculateDownloadSpeed()
-        {
-            DateTime now = DateTime.UtcNow;
-            TimeSpan interval = now - lastNotificationTime;
-            double timeDiff = interval.TotalSeconds;
-            double sizeDiff = (double)(DownloadedSize + CachedSize - lastNotificationDownloadedSize);
-
-            downloadSpeed = (int)Math.Floor(sizeDiff / timeDiff);
-
-            downloadRates.Add(downloadSpeed);
-
-            lastNotificationDownloadedSize = DownloadedSize + CachedSize;
-            lastNotificationTime = now;
-        }
-
-        // Calculate average download speed in the last 10 seconds
-        private void CalculateAverageRate()
-        {
-            if (downloadRates.Count > 0)
-            {
-                if (downloadRates.Count > 10)
-                    downloadRates.RemoveAt(0);
-
-                int rateSum = 0;
-                recentAverageRate = 0;
-                foreach (int rate in downloadRates)
-                {
-                    rateSum += rate;
-                }
-
-                recentAverageRate = rateSum / downloadRates.Count;
-            }
-        }
-
-        // Update download display (on downloadsGrid and dataGrid_DownloadProperties controls)
-        private void UpdateDownloadDisplay()
-        {
-            RaisePropertyChanged("DownloadedSizeString");
-            RaisePropertyChanged("PercentString");
-            RaisePropertyChanged("Progress");
-
-            // New download speed update every 4 seconds
-            TimeSpan startInterval = DateTime.UtcNow - lastStartTime;
-            if (speedUpdateCount == 0 || startInterval.TotalSeconds < 4 || this.HasError || this.Status == DownloadStatus.Paused
-                || this.Status == DownloadStatus.Queued || this.Status == DownloadStatus.Completed)
-            {
-                RaisePropertyChanged("DownloadSpeed");
-            }
-            speedUpdateCount++;
-            if (speedUpdateCount == 4)
-                speedUpdateCount = 0;
-
-            RaisePropertyChanged("TimeLeft");
-            RaisePropertyChanged("StatusString");
-            RaisePropertyChanged("CompletedOnString");
-
-            if (this.IsSelected)
-            {
-                RaisePropertyChanged("AverageSpeedAndTotalTime");
-            }
-        }
-
-        // Reset download properties to default values
-        private void ResetProperties()
-        {
-            HasError = false;
-            TempFileCreated = false;
-            DownloadedSize = 0;
-            CachedSize = 0;
-            speedUpdateCount = 0;
-            recentAverageRate = 0;
-            downloadRates.Clear();
-            ElapsedTime = new TimeSpan();
-            CompletedOn = DateTime.MinValue;
-        }
-
-
-
-        // Pause download
-        public void Pause()
-        {
-            if (this.Status == DownloadStatus.Waiting || this.Status == DownloadStatus.Downloading)
-            {
-                this.Status = DownloadStatus.Pausing;
-            }
-            if (this.Status == DownloadStatus.Queued)
-            {
-                this.Status = DownloadStatus.Paused;
-                RaisePropertyChanged("StatusString");
-            }
-        }
-
-        // Restart download
-        public void Restart()
-        {
-            if (this.HasError || this.Status == DownloadStatus.Completed)
-            {
-                if (File.Exists(this.TempDownloadPath))
-                {
-                    File.Delete(this.TempDownloadPath);
-                }
-                if (File.Exists(this.DownloadPath))
-                {
-                    File.Delete(this.DownloadPath);
-                }
-
-                ResetProperties();
-                this.Status = DownloadStatus.Waiting;
-                UpdateDownloadDisplay();
-
-                if (DownloadManager.Instance.ActiveDownloads > Settings.Default.MaxDownloads)
-                {
-                    this.Status = DownloadStatus.Queued;
-                    RaisePropertyChanged("StatusString");
-                    return;
-                }
-
-                DownloadThread = new Thread(new ThreadStart(DownloadFile));
-                DownloadThread.IsBackground = true;
-                DownloadThread.Start();
-            }
-        }
-
-        // Download file bytes from the HTTP response stream
-        private void DownloadFile()
-        {
-            HttpWebRequest webRequest = null;
-            HttpWebResponse webResponse = null;
-            Stream responseStream = null;
-            ThrottledStream throttledStream = null;
-            MemoryStream downloadCache = null;
-            speedUpdateCount = 0;
-            recentAverageRate = 0;
-            if (downloadRates.Count > 0)
-                downloadRates.Clear();
-
-            try
-            {
-                if (this.IsBatch && !this.BatchUrlChecked)
-                {
-                    CheckBatchUrl();
-                    if (this.HasError)
-                    {
-                        this.RaiseDownloadCompleted();
-                        return;
-                    }
-                    this.BatchUrlChecked = true;
-                }
-
-                if (!TempFileCreated)
-                {
-                    // Reserve local disk space for the file
-                    CreateTempFile();
-                    this.TempFileCreated = true;
-                }
-
-                this.lastStartTime = DateTime.UtcNow;
-
-                if (this.Status == DownloadStatus.Waiting)
-                    this.Status = DownloadStatus.Downloading;
-
-                // Create request to the server to download the file
-                webRequest = (HttpWebRequest)WebRequest.Create(this.Url);
-                webRequest.Method = "GET";
-
-                if (this.ServerLogin != null)
-                {
-                    webRequest.PreAuthenticate = true;
-                    webRequest.Credentials = this.ServerLogin;
-                }
-                else
-                {
-                    webRequest.Credentials = CredentialCache.DefaultCredentials;
-                }
-
-                if (this.Proxy != null)
-                {
-                    webRequest.Proxy = this.Proxy;
-                }
-                else
-                {
-                    webRequest.Proxy = WebRequest.DefaultWebProxy;
-                }
-
-                // Set download starting point
-                webRequest.AddRange(DownloadedSize);
-
-                // Get response from the server and the response stream
-                webResponse = (HttpWebResponse)webRequest.GetResponse();
-                responseStream = webResponse.GetResponseStream();
-
-                // Set a 5 second timeout, in case of internet connection break
-                responseStream.ReadTimeout = 5000;
-
-                // Set speed limit
-                long maxBytesPerSecond = 0;
-                if (Settings.Default.EnableSpeedLimit)
-                {
-                    maxBytesPerSecond = (long)((Settings.Default.SpeedLimit * 1024) / DownloadManager.Instance.ActiveDownloads);
-                }
-                else
-                {
-                    maxBytesPerSecond = ThrottledStream.Infinite;
-                }
-                throttledStream = new ThrottledStream(responseStream, maxBytesPerSecond);
-
-                // Create memory cache with the specified size
-                downloadCache = new MemoryStream(this.MaxCacheSize);
-
-                // Create 1KB buffer
-                byte[] downloadBuffer = new byte[this.BufferSize];
-
-                int bytesSize = 0;
-                CachedSize = 0;
-                int receivedBufferCount = 0;
-
-                // Download file bytes until the download is paused or completed
-                while (true)
-                {
-                    if (SpeedLimitChanged)
-                    {
-                        if (Settings.Default.EnableSpeedLimit)
-                        {
-                            maxBytesPerSecond = (long)((Settings.Default.SpeedLimit * 1024) / DownloadManager.Instance.ActiveDownloads);
-                        }
-                        else
-                        {
-                            maxBytesPerSecond = ThrottledStream.Infinite;
-                        }
-                        throttledStream.MaximumBytesPerSecond = maxBytesPerSecond;
-                        SpeedLimitChanged = false;
-                    }
-
-                    // Read data from the response stream and write it to the buffer
-                    bytesSize = throttledStream.Read(downloadBuffer, 0, downloadBuffer.Length);
-
-                    // If the cache is full or the download is paused or completed, write data from the cache to the temporary file
-                    if (this.Status != DownloadStatus.Downloading || bytesSize == 0 || this.MaxCacheSize < CachedSize + bytesSize)
-                    {
-                        // Write data from the cache to the temporary file
-                        WriteCacheToFile(downloadCache, CachedSize);
-
-                        this.DownloadedSize += CachedSize;
-
-                        // Reset the cache
-                        downloadCache.Seek(0, SeekOrigin.Begin);
-                        CachedSize = 0;
-
-                        // Stop downloading the file if the download is paused or completed
-                        if (this.Status != DownloadStatus.Downloading || bytesSize == 0)
-                        {
-                            break;
-                        }
-                    }
-
-                    // Write data from the buffer to the cache
-                    downloadCache.Write(downloadBuffer, 0, bytesSize);
-                    CachedSize += bytesSize;
-
-                    receivedBufferCount++;
-                    if (receivedBufferCount == this.BufferCountPerNotification)
-                    {
-                        this.RaiseDownloadProgressChanged();
-                        receivedBufferCount = 0;
-                    }
-                }
-
-                // Update elapsed time when the download is paused or completed
-                ElapsedTime = ElapsedTime.Add(DateTime.UtcNow - lastStartTime);
-
-                // Change status
-                if (this.Status != DownloadStatus.Deleting)
-                {
-                    if (this.Status == DownloadStatus.Pausing)
-                    {
-                        this.Status = DownloadStatus.Paused;
-                        UpdateDownloadDisplay();
-                    }
-                    else if (this.Status == DownloadStatus.Queued)
-                    {
-                        UpdateDownloadDisplay();
-                    }
-                    else
-                    {
-                        this.CompletedOn = DateTime.UtcNow;
-                        this.RaiseDownloadCompleted();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Show error in the status
-                this.StatusString = "Error: " + ex.Message;
-                this.HasError = true;
-                this.RaiseDownloadCompleted();
-            }
-            finally
-            {
-                // Close the response stream and cache, stop the thread
-                if (responseStream != null)
-                {
-                    responseStream.Close();
-                }
-                if (throttledStream != null)
-                {
-                    throttledStream.Close();
-                }
-                if (webResponse != null)
-                {
-                    webResponse.Close();
-                }
-                if (downloadCache != null)
-                {
-                    downloadCache.Close();
-                }
-                if (DownloadThread != null)
-                {
-                    DownloadThread.Abort();
-                }
-            }
-        }
-
-        
-        */
         #endregion
-
-        /* 
-         * 
-         * MOVED TO ENUM FILE
-        public static OSListRecordAction getDefaultActionFromOSListRecordStatus(OSListRecordStatus status)
-        {
-            if (status == OSListRecordStatus.Not_In_Library)
-            {
-                return OSListRecordAction.None;
-            }
-            return OSListRecordAction.None;
-        }
-
-        public static OSListRecordStatus? getNewOSListRecordStatusFromActionOption(OSListRecordAction action, OSListRecordStatus status)
-        {
-            if (action == OSListRecordAction.Add_To_Library && status == OSListRecordStatus.Not_In_Library)
-            {
-                return OSListRecordStatus.To_Be_Added;
-            }
-            if (action == OSListRecordAction.None && status == OSListRecordStatus.To_Be_Added )
-            {
-                return OSListRecordStatus.Not_In_Library;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-
-        public static string getActionDescriptionFromActionEnum(OSListRecordAction actionEnum)
-        {
-            if (actionEnum == OSListRecordAction.None)
-            {
-                return "";
-            }
-            else
-            {
-                return actionEnum.ToString().Replace('_', ' ');
-            }
-        }
-
-        public static OSListRecordAction getActionEnumFromActionDescription(string actionDescription)
-        {
-            if (actionDescription == null || actionDescription.Equals(""))
-            {
-                return OSListRecordAction.None;
-            }
-            else
-            {
-                return (OSListRecordAction)Enum.Parse(typeof(OSListRecordAction), actionDescription.Replace(' ', '_'), true);
-            }
-        }
-
-        */
-
-
     }
 
 }

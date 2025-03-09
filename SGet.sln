@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGet", "SGet\SGet.csproj", "{B9A5135E-F0E0-4D7C-A424-F98A1225F18F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSDownloader", "SGet\OSDownloader.csproj", "{B9A5135E-F0E0-4D7C-A424-F98A1225F18F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {76D5BC9F-15FE-49FA-A81C-EC510E0F2696}
 	EndGlobalSection
 EndGlobal

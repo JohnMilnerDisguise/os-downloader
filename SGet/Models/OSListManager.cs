@@ -12,7 +12,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 //using static System.Net.WebRequestMethods;
 
-namespace SGet
+namespace SGet.Models
 {
     public class OSListManager : INotifyPropertyChanged
     {

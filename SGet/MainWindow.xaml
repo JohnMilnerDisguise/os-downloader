@@ -3,8 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:osc="clr-namespace:OpenSourceControls"
         xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
         xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon" xmlns:sget="clr-namespace:SGet" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:SGet"
+        xmlns:viewmodels="clr-namespace:SGet.ViewModels"
+        xmlns:views="clr-namespace:SGet.Views"
         Title="SGet" Height="700" Width="1270" MinWidth="770" MinHeight="500" Name="mainWindow" WindowStartupLocation="CenterScreen"
         Icon="/SGet;component/Resources/download_icon.ico" Background="#FFF9F9F9" KeyDown="mainWindow_KeyDown" 
         Closing="mainWindow_Closing" StateChanged="mainWindow_StateChanged" ContentRendered="mainWindow_ContentRendered"
@@ -15,7 +18,18 @@
         <x:Static Member="local:OSListManager.Instance" />
     </ribbon:RibbonWindow.DataContext>
     -->
+    <ribbon:RibbonWindow.DataContext>
+        <viewmodels:MainViewModel/>
+    </ribbon:RibbonWindow.DataContext>
+  
+
     <ribbon:RibbonWindow.Resources>
+
+        <!-- Declare Static Resources to be used to pass Boolean values as CommandParameters instead of just a string value-->
+        <s:Boolean x:Key="True">True</s:Boolean>
+        <s:Boolean x:Key="False">False</s:Boolean>
+
+        <!-- ########################## STYLE DEFINITIONS ########################## -->
         <Style x:Key="RightHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Right"/>
         </Style>
@@ -93,74 +107,7 @@
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             </Style.Setters>
         </Style>
-        <Style TargetType="DataGridRow">
-
-            <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding StatusString}" Value="To Be Added"/>
-                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="False"/>
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.Setters>
-                        <Setter Property="Foreground" Value="#776630" />
-                        <Setter Property="Background" Value="#ffd080" />
-                    </MultiDataTrigger.Setters>
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding StatusString}" Value="To Be Added"/>
-                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.Setters>
-                        <Setter Property="Foreground" Value="#5f5226" />
-                        <Setter Property="Background" Value="#ffb433" />
-                    </MultiDataTrigger.Setters>
-                </MultiDataTrigger>
-
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding StatusString}" Value="Not In Library"/>
-                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="False"/>
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.Setters>
-                        <Setter Property="Foreground" Value="#777777" />
-                        <Setter Property="Background" Value="#E0E0E0" />
-                    </MultiDataTrigger.Setters>
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding StatusString}" Value="Not In Library"/>
-                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.Setters>
-                        <Setter Property="Foreground" Value="#363636" />
-                        <Setter Property="Background" Value="#b3b3b3" />
-                    </MultiDataTrigger.Setters>
-                </MultiDataTrigger>
-
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding StatusString}" Value="NOT VALID"/>
-                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="False"/>
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.Setters>
-                        <Setter Property="Foreground" Value="#979191" />
-                        <Setter Property="Background" Value="#FFDDDD" />
-                    </MultiDataTrigger.Setters>
-                </MultiDataTrigger>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding StatusString}" Value="NOT VALID"/>
-                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.Setters>
-                        <Setter Property="Foreground" Value="#7a7373" />
-                        <Setter Property="Background" Value="#ff7e7e" />
-                    </MultiDataTrigger.Setters>
-                </MultiDataTrigger>
-
-            </Style.Triggers>
-        </Style>
+ 
         <Style TargetType="{x:Type DataGridCell}">
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
@@ -169,14 +116,39 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="RibbonButtonStylePressed" TargetType="{x:Type ribbon:RibbonButton}">
+        <Style x:Key="RibbonButtonStylePressedWhenDisabled" TargetType="{x:Type ribbon:RibbonButton}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{Binding Ribbon.PressedBackground, RelativeSource={RelativeSource Self}}"/>
+                    <Setter Property="BorderBrush" Value="{Binding Ribbon.PressedBorderBrush, RelativeSource={RelativeSource Self}}"/>
+                </Trigger>
+            </Style.Triggers>
+            <!--
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding StatusString}" Value="NOT VALID"/>
+                    <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsSelected}" Value="False"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="Foreground" Value="#979191" />
+                    <Setter Property="Background" Value="#FFDDDD" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
             <Setter Property="Background" Value="{Binding Ribbon.PressedBackground, RelativeSource={RelativeSource Self}}"/>
             <Setter Property="BorderBrush" Value="{Binding Ribbon.PressedBorderBrush, RelativeSource={RelativeSource Self}}"/>
+            -->
         </Style>
+
+        <DataTemplate x:Name="OSViewTemplate" DataType="{x:Type viewmodels:OSViewModel}">
+            <views:OSView DataContext="{Binding}" />
+        </DataTemplate>
     </ribbon:RibbonWindow.Resources>
 
     <DockPanel Name="dockPanel">
-        <tb:TaskbarIcon x:Name="XNotifyIcon" IconSource="/SGet;component/Resources/download_icon.ico" ToolTipText="SGet" TrayLeftMouseUp="tcmShowMainWindow_Click">
+
+        <!-- ########################## TITLE BAR BEHAVIOUR: ICON AND MENU ########################## -->
+<!--
+        <tb:TaskbarIcon x:Name="XNotifyIcon" IconSource="/SGet;component/Resources/download_icon.ico" ToolTipText="Disguise OS downloader" TrayLeftMouseUp="tcmShowMainWindow_Click">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Show Main Window" Name="tcmShowMainWindow" Click="tcmShowMainWindow_Click" />
@@ -192,210 +164,74 @@
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
+-->
+        <!-- ########################## TOP: RIBBON MENU HEADER ########################## -->
 
         <ribbon:Ribbon DockPanel.Dock="Top" ShowQuickAccessToolBarOnTop="False" Name="mainRibbon" Margin="0,0,0,0">
             <ribbon:Ribbon.ApplicationMenu>
                 <ribbon:RibbonApplicationMenu Visibility="Collapsed" IsMainMenu="True" Name="ribbonMenu"></ribbon:RibbonApplicationMenu>
             </ribbon:Ribbon.ApplicationMenu>
-            <ribbon:RibbonTab Header="OSses" Name="ribbonTabMain">
+            <ribbon:RibbonTab Header="Controls" Name="ribbonTabMain">
                 <ribbon:RibbonGroup Header="Online Update" Name="APIGroup" Width="Auto">
-                    <ribbon:RibbonButton Width ="80" Label="No Internet" Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" IsEnabled="False" LargeImageSource="/SGet;component/Resources/connecting.png" />
+                    <!--<ribbon:RibbonButton Width ="80" Label="No Internet"  Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" IsEnabled="False" LargeImageSource="/SGet;component/Resources/connecting.png" /> -->
+                    <ribbon:RibbonButton Width ="80" Label="{Binding ApiUpdateButtonText}" Name="btnCheckForUpdates" Command="{Binding CheckForUpdatesCommand}" LargeImageSource="{Binding ApiUpdateButtonImage}" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Add/Remove OS" Name="AddRemoveGroup">
-                    <ribbon:RibbonButton IsEnabled="False" Label="Add to Library" Name="btnAddToLibrary" Click="btnAddToLibrary_Click" LargeImageSource="/SGet;component/Resources/addtocollection.png"/>
-                    <ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" Click="btnRemoveFromLibrary_Click" LargeImageSource="/SGet;component/Resources/removefromcollection.png" />
+                    <!--<ribbon:RibbonButton IsEnabled="False" Label="Add to Library" Name="btnAddToLibrary" Click="btnAddToLibrary_Click" LargeImageSource="/SGet;component/Resources/addtocollection.png"/> -->
+                    <ribbon:RibbonButton IsEnabled="False" Label="Add to Library" Name="btnAddToLibrary" LargeImageSource="/SGet;component/Resources/addtocollection.png"/>
+                    <!--<ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" Click="btnRemoveFromLibrary_Click" LargeImageSource="/SGet;component/Resources/removefromcollection.png" /> -->
+                    <ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" LargeImageSource="/SGet;component/Resources/removefromcollection.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Downloads" Name="ProcessGroup">
-                    <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btn_osList_start_Click" IsEnabled="True" LargeImageSource="/SGet;component/Resources/start.png" />
-                    <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btn_osList_pause_Click" IsEnabled="False" LargeImageSource="/SGet;component/Resources/stop.png" />
+                    <!-- <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btn_osList_start_Click" IsEnabled="True" LargeImageSource="/SGet;component/Resources/start.png" /> -->
+                    <ribbon:RibbonButton Label="Start" Name="btnStart" IsEnabled="True" LargeImageSource="/SGet;component/Resources/start.png" />
+                    <!-- <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btn_osList_pause_Click" IsEnabled="False" LargeImageSource="/SGet;component/Resources/stop.png" /> -->
+                    <ribbon:RibbonButton Label="Pause" Name="btnPause" IsEnabled="False" LargeImageSource="/SGet;component/Resources/stop.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="View Mode" Name="ViewMode">
-                    <ribbon:RibbonButton Style="{DynamicResource RibbonButtonStylePressed}" IsEnabled="False" Label="OSses" Name="btnViewOSses" Click="btn_view_OSsesPage_Click" LargeImageSource="/SGet;component/Resources/viewosses.png" />
-                    <!--<ribbon:RibbonButton Label="OSses" Name="btnViewOSses" Click="btn_view_OSsesPage_Click" LargeImageSource="/SGet;component/Resources/viewosses.png" />-->
-                    <ribbon:RibbonButton Label="Files" Name="btnViewDownloads" Click="btn_view_DownloadsPage_Click" LargeImageSource="/SGet;component/Resources/viewdownloads.png" />
+                    <!-- <ribbon:RibbonButton Style="{DynamicResource RibbonButtonStylePressed}" IsEnabled="False" Label="OSses" Name="btnViewOSses" Click="btn_view_OSsesPage_Click" LargeImageSource="/SGet;component/Resources/viewosses.png" /> -->
+                    <ribbon:RibbonButton Label="OSses" Name="btnViewOSses" Style="{DynamicResource RibbonButtonStylePressedWhenDisabled}" Command="{Binding ToggleToDownloadsViewModeCommand}" CommandParameter="{StaticResource False}" LargeImageSource="/SGet;component/Resources/viewosses.png" />
+                    <!-- <ribbon:RibbonButton Label="Files" Name="btnViewDownloads" Click="btn_view_DownloadsPage_Click" LargeImageSource="/SGet;component/Resources/viewdownloads.png" /> -->
+                    <ribbon:RibbonButton Label="Files" Name="btnViewDownloads" Style="{DynamicResource RibbonButtonStylePressedWhenDisabled}"  Command="{Binding ToggleToDownloadsViewModeCommand}" CommandParameter="{StaticResource True}" LargeImageSource="/SGet;component/Resources/viewdownloads.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Settings" Name="SettingsGroup">
-                    <ribbon:RibbonButton Label="Set Limits" Name="btnSetLimits" Click="btnSetLimits_Click" LargeImageSource="/SGet;component/Resources/downloadspeed.png" />
-                    <ribbon:RibbonButton Label="Edit Settings" Name="btnPreferences" Click="btnPreferences_Click" LargeImageSource="/SGet;component/Resources/settings.png" />
+                    <ribbon:RibbonButton Label="Limit Bandwidth" Name="btnSetLimits" Command="{Binding ShowSettingsWindowCommand}" CommandParameter="{StaticResource True}" FontSize="11" Margin="-3 0 -3 0" Padding="0" LargeImageSource="/SGet;component/Resources/downloadspeed.png" />
+                    <ribbon:RibbonButton Label="General Settings" Name="btnPreferences" Command="{Binding ShowSettingsWindowCommand}"  CommandParameter="{StaticResource False}" LargeImageSource="/SGet;component/Resources/settings.png" />
                 </ribbon:RibbonGroup>
+                <!--
                 <ribbon:RibbonGroup Header="Show" Name="ShowGroup">
                     <ribbon:RibbonCheckBox Label="Grid" Name="cbShowGrid" VerticalContentAlignment="Center" Margin="0,2,0,0" Click="cbShowGrid_Click" Height="Auto" />
                     <ribbon:RibbonCheckBox Label="Properties" Name="cbShowProperties" VerticalContentAlignment="Center" Margin="0,2,0,0" IsChecked="True" Click="cbShowProperties_Click" Height="Auto" />
                     <ribbon:RibbonCheckBox Label="Status Bar" Name="cbShowStatusBar" VerticalContentAlignment="Center" Margin="0,2,0,0" IsChecked="True" Click="cbShowStatusBar_Click" Height="Auto" />
                 </ribbon:RibbonGroup>
+                -->
                 <ribbon:RibbonGroup Header="Info" Name="InfoGroup" Margin="1">
-                    <ribbon:RibbonButton Label="About" Name="btnAbout" Click="btnAbout_Click" LargeImageSource="/SGet;component/Resources/about.png" />
+                    <ribbon:RibbonButton Label="About" Name="btnAbout" Command="{Binding ShowAboutWindowCommand}" LargeImageSource="/SGet;component/Resources/about.png" />
                 </ribbon:RibbonGroup>
+                <!--
                 <ribbon:RibbonGroup Header="DEBUG Old Buttons" Name="OldButtonGroup">
                     <ribbon:RibbonButton IsEnabled="False" Label="Add Download" Name="btnOldAddDownloadButton" Click="btnOldAddDownloadButton_Click" LargeImageSource="/SGet;component/Resources/new.png" />
                     <ribbon:RibbonButton IsEnabled="False" Label="Batch Add" Name="btnOldBatchAddButton" Click="btnOldBatchAddButton_Click" LargeImageSource="/SGet;component/Resources/batch.png" />
                 </ribbon:RibbonGroup>
+                -->
             </ribbon:RibbonTab>
         </ribbon:Ribbon>
 
-        <StatusBar Height="26" Name="statusBar" DockPanel.Dock="Bottom" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
-            <StatusBarItem Name="statusBarDownloads" Content="Ready" Padding="10,3,0,3" />
-            <StatusBarItem Name="statusBarActive" Padding="0,3" />
-            <StatusBarItem Name="statusBarCompleted" Padding="0,3" />
+        <!-- ########################## BOTTOM: STATUS BAR ########################## -->
+
+        <StatusBar Height="26" DockPanel.Dock="Bottom" Name="statusBar" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
+            <StatusBarItem Name="statusBarDownloads" Content="Ready" Padding="8,3,8,3" Width="60"/>
+            <Separator/>
+            <StatusBarItem Name="statusBarActive" Content="X Active Downloads" Padding="8,3,8,3" Width="130" />
+            <Separator/>
+            <StatusBarItem Name="statusBarCompleted" Content="X Completed Downloads" Padding="8,3,8,3" Width="157" />
+            <Separator/>
+            <StatusBarItem />
         </StatusBar>
-        
-        <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="PagePanel_OSses" Visibility="Visible" HorizontalAlignment="Stretch" Width="Auto">
-            <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="OSListPanel" Visibility="Visible">
-                <!--<ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" Name="scrollViewer_oslist">-->
-                <DataGrid AutoGenerateColumns="False" Name="dataGrid_osList" VerticalAlignment="Top" HorizontalContentAlignment="Center" DockPanel.Dock="Left" 
-                    BorderThickness="0" IsReadOnly="False" GridLinesVisibility="None" MinRowHeight="22"
-                    MouseDoubleClick="cmOpenFile_Click" SelectionChanged="dataGrid_osList_SelectionChanged" PreviewMouseWheel="dataGrid_osList_PreviewMouseWheel" 
-                    Background="#FFF9F9F9" HorizontalGridLinesBrush="#FFCBCBCB" VerticalGridLinesBrush="#FFCBCBCB" KeyUp="dataGrid_osList_KeyUp" 
-                    ContextMenuOpening="dataGrid_osList_ContextMenuOpening" CanUserResizeRows="False" SelectionMode="Single">
-                    <DataGrid.Resources>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#353535"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#353535"/>
-                    </DataGrid.Resources>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Start" Name="menuItem_osList_start" Click="btn_osList_start_Click"  />
-                            <MenuItem Header="Pause" Name="menuItem_osList_pause" Click="btn_osList_pause_Click" />
-                            <Separator />
-                            <MenuItem Header="Cancel" Name="menuItem_osList_cancel" Click="btn_osList_cancel_Click" />
-                            <MenuItem Header="Restart" Name="menuItem_osList_restart" Click="btn_osList_restart_Click"  />
-                            <Separator />
-                            <MenuItem Header="Start All" Name="menuItem_osList_StartAll" Click="btn_osList_startAll_Click" />
-                            <MenuItem Header="Pause All" Name="menuItem_osList_PauseAll" Click="btn_osList_pauseAll_Click" />
-                            <MenuItem Header="Select All" Name="menuItem_osList_SelectAll" Click="btn_osList_selectAll_Click" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Models" CellStyle="{StaticResource LeftCellStyle}" MinWidth="150" Width="150" x:Name="textColumn_osList_Models" Binding="{Binding Models, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Name" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Name" Binding="{Binding Name, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Status" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="80" Width="80" x:Name="textColumn_osList_Status" Binding="{Binding StatusString, Mode=OneWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, BindsDirectlyToSource=True, UpdateSourceTrigger=PropertyChanged}" />
-                        <!--
-                <DataGridComboBoxColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Action"  ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItemBinding="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                -->
-                        <DataGridTemplateColumn Header="Action" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="105" Width="105" x:Name="templateColumn_osList_Action">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <ComboBox Visibility="{Binding ActionDropDownVisibility, Mode=OneWay}" ItemsSource="{Binding ActionOptions, Mode=OneWay}" SelectedItem="{Binding SelectedActionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="1 1 1 1" Padding="3 1 0 0"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Progress" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="templateColumn_osList_Progress">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <ProgressBar Visibility="{Binding ProgressBarVisibility, Mode=OneWay}" Name="progressBar_osList_Progress" Value="{Binding Progress, Mode=OneWay}" VerticalAlignment="Center" Height="18" MinHeight="16" Margin="1 1 1 1" />
-                                        <TextBlock Visibility="{Binding ProgressBarVisibility, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PercentString, Mode=OneWay}" Foreground="#888888"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Time Left" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="70" Width="70" x:Name="textColumn_osList_TimeLeft" Binding="{Binding TimeLeft, Mode=OneWay}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-                <!--</ScrollViewer>-->
-            </DockPanel>
 
-            <osc:DockPanelSplitter x:Name="splitter_GridVsReleaseNotes" DockPanel.Dock="Left" Background="#FFB9C9DA" BorderThickness="2" BorderBrush="#FFDFE9F5" Thickness="6" />
-
-            <DockPanel DockPanel.Dock="Bottom" Background="#FFF9F9F9" Name="versionTablePanel" Height="140">
-                <StatusBar Height="26" Name="versionTableBar" DockPanel.Dock="Top" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
-                    <StatusBarItem  Name="versionTableItem" Content="Version Table" Margin="0" Padding="10,3,3,3" />
-                </StatusBar>
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Name="versionTableScrollViewer">
-                    <DataGrid Name="dataGrid_os_version_table" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
-                        VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="dataGrid_DownloadProperties_PreviewMouseWheel" Background="#FFF9F9F9">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay}" MinWidth="110" Width="110" x:Name="textColumn_PublicVersionTable_Package" />
-                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay}" MinWidth="450" Width="450" x:Name="textColumn_PublicVersionTable_Version" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
-            </DockPanel>
-
-            <osc:DockPanelSplitter x:Name="releaseNotesSplitter" DockPanel.Dock="Bottom" Background="#FFB9C9DA" BorderThickness="2" BorderBrush="#FFDFE9F5" Height="6" Thickness="6" />
-
-            <DockPanel DockPanel.Dock="Top" Name="releaseNotesPanel" Background="#FFF9F9F9">
-                <StatusBar Height="26" Name="statusBar_ReleaseNotesTitle" DockPanel.Dock="Top" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
-                    <StatusBarItem  Name="statusBarItem_ReleaseNotesTitle" Content="Release Notes" Margin="0" Padding="10,3,3,3" FontWeight="Bold"/>
-                </StatusBar>
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Name="scrollViewer_ReleaseNotes">
-                    <TextBlock Name="textBlock_ReleaseNotes" Text="Select an OS from the grid on the left to view its Release Notes" TextWrapping="Wrap"/>
-                </ScrollViewer>
-            </DockPanel>
+        <!-- ########################## MIDDLE : MAIN CONTENT ########################## -->
+        <DockPanel DockPanel.Dock="Left" Name="PagePanel_OSses" Visibility="Visible" Margin="0" Background="Yellow">
+            <ContentControl DataContext="{Binding CenralPanelControlDataContext}"  Content="{Binding }" />
         </DockPanel>
-
-
-        <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="PagePanel_Downloads" Visibility="Collapsed">
-            <DockPanel DockPanel.Dock="Bottom" Background="#FFF9F9F9" Name="propertiesPanel" Height="200">
-                <StatusBar Height="26" Name="propertiesBar" DockPanel.Dock="Top" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
-                    <StatusBarItem  Name="propertiesItem" Content="Properties" Margin="0" Padding="10,3,3,3" />
-                </StatusBar>
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Name="propertiesScrollViewer" HorizontalAlignment="Stretch">
-                    <DataGrid Name="dataGrid_DownloadProperties" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
-                        VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" PreviewMouseWheel="propertiesGrid_PreviewMouseWheel" CanUserResizeColumns="True" Background="#FFF9F9F9" HorizontalAlignment="Stretch">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Name, Mode=OneWay, UpdateSourceTrigger=Explicit}" MinWidth="110" Width="200" x:Name="textColumn_Properties_Name" />
-                            <DataGridTextColumn Header="Value" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Value, Mode=OneWay, UpdateSourceTrigger=Explicit}" MinWidth="450" Width="*" x:Name="textColumn_Properties_Value" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
-            </DockPanel>
-
-            <osc:DockPanelSplitter x:Name="propertiesSplitter" DockPanel.Dock="Bottom" Background="#FFB9C9DA" BorderThickness="2" BorderBrush="#FFDFE9F5" Height="6" Thickness="6" />
-
-            <DockPanel DockPanel.Dock="Top" Name="downloadsPanel" Background="#FFF9F9F9">
-                <DataGrid AutoGenerateColumns="False" Name="downloadsGrid" VerticalContentAlignment="Center" DockPanel.Dock="Top" 
-                                    BorderThickness="0" IsReadOnly="True" GridLinesVisibility="None" MinRowHeight="22" RowBackground="#FFF9F9F9"
-                                    MouseDoubleClick="cmOpenFile_Click" SelectionChanged="downloadsGrid_SelectionChanged" PreviewMouseWheel="downloadsGrid_PreviewMouseWheel" 
-                                    Background="#FFF9F9F9" HorizontalGridLinesBrush="#FFCBCBCB" VerticalGridLinesBrush="#FFCBCBCB" KeyUp="downloadsGrid_KeyUp" 
-                                    ContextMenuOpening="downloadsGrid_ContextMenuOpening" CanUserResizeRows="False">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Start" Name="cmStart" Click="btnStart_Click"  />
-                            <MenuItem Header="Pause" Name="cmPause" Click="btnPause_Click" />
-                            <Separator />
-                            <MenuItem Header="Delete" Name="cmDelete" Click="btnDelete_Click" />
-                            <MenuItem Header="Restart" Name="cmRestart" Click="cmRestart_Click"  />
-                            <Separator />
-                            <MenuItem Header="Open File" Name="cmOpenFile" Click="cmOpenFile_Click" />
-                            <MenuItem Header="Open Download Folder" Name="cmOpenDownloadFolder" Click="cmOpenDownloadFolder_Click" />
-                            <Separator />
-                            <MenuItem Header="Start All" Name="cmStartAll" Click="cmStartAll_Click" />
-                            <MenuItem Header="Pause All" Name="cmPauseAll" Click="cmPauseAll_Click" />
-                            <MenuItem Header="Select All" Name="cmSelectAll" Click="cmSelectAll_Click" />
-                            <Separator />
-                            <MenuItem Header="Copy URL to Clipboard" Name="cmCopyURLtoClipboard" Click="cmCopyURLtoClipboard_Click" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                    <DataGrid.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="BorderThickness" Value="0"/>
-                        </Style>
-                    </DataGrid.CellStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="File Name" CellStyle="{StaticResource LeftCellStyle}" MinWidth="150" Width="150" x:Name="tcFileName" Binding="{Binding FileName, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Size" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="tcSize" Binding="{Binding FileSizeString, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Downloaded" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="80" Width="80" x:Name="tcDownloaded" Binding="{Binding DownloadedSizeString, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Percent" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="55" Width="55" x:Name="tcPercent" Binding="{Binding PercentString, Mode=OneWay}" />
-                        <DataGridTemplateColumn Header="Progress" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="tcProgress">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ProgressBar Name="progressBar" Value="{Binding Progress, Mode=OneWay}" VerticalAlignment="Center" Height="16" MinHeight="16" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Speed" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="85" Width="85" x:Name="tcSpeed" Binding="{Binding DownloadSpeed, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Time Left" HeaderStyle="{StaticResource RightHeaderStyle}" CellStyle="{StaticResource RightCellStyle}" MinWidth="70" Width="70" x:Name="tcTimeLeft" Binding="{Binding TimeLeft, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Status" CellStyle="{StaticResource LeftCellStyle}" MinWidth="95" Width="95" x:Name="tcStatus" Binding="{Binding StatusString, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Added On" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="tcAddedOn" Binding="{Binding AddedOnString, Mode=OneWay}" />
-                        <DataGridTextColumn Header="Completed On" HeaderStyle="{StaticResource CenterHeaderStyle}" CellStyle="{StaticResource CenterCellStyle}" MinWidth="130" Width="130" x:Name="tcCompletedOn" Binding="{Binding CompletedOnString, Mode=OneWay}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </DockPanel>
-        </DockPanel>
-
     </DockPanel>
 </ribbon:RibbonWindow>

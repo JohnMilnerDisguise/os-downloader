@@ -5,6 +5,8 @@ using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.Linq;
 
+using SGet.Models;
+
 namespace SGet
 {
     public class DownloadManager

@@ -277,7 +277,7 @@ namespace SGet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Y:\\Repos\\os-downloader\\OSDownloads")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\Mac\\disguise\\Repos\\os-downloader\\OSDownloads")]
         public string DownloadLocation {
             get {
                 return ((string)(this["DownloadLocation"]));
@@ -289,7 +289,7 @@ namespace SGet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool CheckURLsOnCheckForUpdates {
             get {
                 return ((bool)(this["CheckURLsOnCheckForUpdates"]));
@@ -320,6 +320,30 @@ namespace SGet.Properties {
             }
             set {
                 this["URLSupportsRangeDefaultValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\Mac\\disguise\\Repos\\os-downloader\\os-downloader\\redisguises_by_model.json")]
+        public string FakeAPIFilePath {
+            get {
+                return ((string)(this["FakeAPIFilePath"]));
+            }
+            set {
+                this["FakeAPIFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://d3packages.s3.amazonaws.com/pkg/api/redisguises_by_model.json")]
+        public string APIURL {
+            get {
+                return ((string)(this["APIURL"]));
+            }
+            set {
+                this["APIURL"] = value;
             }
         }
     }

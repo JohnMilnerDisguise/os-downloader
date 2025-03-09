@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace SGet
+namespace SGet.Models
 {
     public enum OSListRecordStatus
     {

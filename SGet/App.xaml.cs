@@ -14,7 +14,7 @@ namespace SGet
 
         public App()
         {
-            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.All;
+            //System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.All;
         }
 
         // Catch exceptions which occur outside try-catch blocks
@@ -47,7 +47,7 @@ namespace SGet
                 Clipboard.SetText(args[1].ToString());
 
                 // Open the Add New Download window and ensure it's on the top
-                NewDownload newDownloadDialog = new NewDownload((MainWindow)Application.Current.MainWindow);
+                NewDownload newDownloadDialog = new NewDownload((MainWindow)(Application.Current.MainWindow));
                 newDownloadDialog.Topmost = true;
                 newDownloadDialog.ShowDialog();
             }
