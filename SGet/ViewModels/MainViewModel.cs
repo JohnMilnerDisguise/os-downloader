@@ -5,6 +5,7 @@ using SGet.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -62,7 +63,7 @@ namespace SGet.ViewModels
                 {
                     _windowInDownloadsViewMode = value;
                     CenralPanelControlDataContext = _windowInDownloadsViewMode ? _downloadsControlDataContext : _osViewControlDataContext;
-                    CommandManager.InvalidateRequerySuggested(); //this causes ALL commands to re-evaluate their CanExecute Method, but thats the done thing apparantly\
+                    ((RelayCommand)ToggleToDownloadsViewModeCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
                 }
             }
         }
@@ -112,6 +113,7 @@ namespace SGet.ViewModels
                 {
                     _apiUpdateButtonisAvailable = value;
                     RaisePropertyChanged(nameof(ApiUpdateButtonisAvailable));
+                    ((RelayCommand)CheckForUpdatesCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
                 }
             }
         }
@@ -237,6 +239,7 @@ namespace SGet.ViewModels
 
         public bool CanCheckForUpdates(object obj)
         {
+            System.Diagnostics.Debug.WriteLine("Evaluating CanCheckForUpdates");
             return ApiUpdateButtonisAvailable && !_apiCallIsInProgress;
         }
 
@@ -245,11 +248,12 @@ namespace SGet.ViewModels
             if (!_apiCallIsInProgress)
             {
                 _apiCallIsInProgress = true;  //flag api as in use so as to disallow multiple simultaneous API calls
+                ((RelayCommand)CheckForUpdatesCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
 
                 //set button properties
                 ApiUpdateButtonImage = checkForUpdatesIcon_Syncing;
                 ApiUpdateButtonText = "Checking for Updates";
-                ApiUpdateButtonisAvailable = true;
+                ApiUpdateButtonisAvailable = false;
 
                 //make API call using async await so as not to mash up the main UI thread
                 _osInfoApiResponseObject = await APIHandler.getAPIResponseObjectAsync();
@@ -280,7 +284,8 @@ namespace SGet.ViewModels
                 //refresh button text now api sync has finished
                 HandleNetworkAvailabilityChanged(System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable());
 
-                _apiCallIsInProgress = true;  //flag api 'can be used' now we're finished with it
+                _apiCallIsInProgress = false;  //flag api 'can be used' now we're finished with it
+                ((RelayCommand)CheckForUpdatesCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
             }
         }
     }

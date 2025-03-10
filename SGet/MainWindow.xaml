@@ -178,7 +178,7 @@
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Add/Remove OS" Name="AddRemoveGroup">
                     <!--<ribbon:RibbonButton IsEnabled="False" Label="Add to Library" Name="btnAddToLibrary" Click="btnAddToLibrary_Click" LargeImageSource="/SGet;component/Resources/addtocollection.png"/> -->
-                    <ribbon:RibbonButton IsEnabled="False" Label="Add to Library" Name="btnAddToLibrary" LargeImageSource="/SGet;component/Resources/addtocollection.png"/>
+                    <ribbon:RibbonButton Label="Add to Library" Name="btnAddToLibrary" Command="{Binding CenralPanelControlDataContext.SetOSInclisionInLibraryCommand}" LargeImageSource="/SGet;component/Resources/addtocollection.png"/>
                     <!--<ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" Click="btnRemoveFromLibrary_Click" LargeImageSource="/SGet;component/Resources/removefromcollection.png" /> -->
                     <ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" LargeImageSource="/SGet;component/Resources/removefromcollection.png" />
                 </ribbon:RibbonGroup>

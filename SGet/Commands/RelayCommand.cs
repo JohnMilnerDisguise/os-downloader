@@ -9,11 +9,7 @@ namespace SGet.Commands
 {
     internal class RelayCommand : ICommand
     {
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
+        public event EventHandler CanExecuteChanged;
 
         public Action<object> _Execute { get; set; }
 
@@ -24,6 +20,7 @@ namespace SGet.Commands
         {
             _Execute = ExecuteMethod;
             _CanExecute = CanExecute;
+            CommandManager.RequerySuggested += CommandManager_RequerySuggested;
         }
 
         public bool CanExecute(object parameter)
@@ -34,6 +31,16 @@ namespace SGet.Commands
         public void Execute(object parameter)
         {
             _Execute(parameter);
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void CommandManager_RequerySuggested(object sender, EventArgs e)
+        {
+            RaiseCanExecuteChanged();
         }
     }
 }
