@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SGet.Models;
+using SGet.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,28 @@ namespace SGet.Views
     /// </summary>
     public partial class OSView : UserControl
     {
+
         public OSView()
         {
             InitializeComponent();
         }
+
+
+
+        #region Control Event Handlers
+
+        private void dataGrid_osList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            OSListEntry selectedOSRecord = null;
+            if (dataGrid_osList.SelectedItems.Count > 0)
+            {
+                selectedOSRecord = (OSListEntry)dataGrid_osList.SelectedItem;
+            }
+
+            OSViewModel viewModel = (OSViewModel)this.DataContext;
+            viewModel?.HandleSelectedOSChanged(selectedOSRecord);
+        }
+
+        #endregion
     }
 }

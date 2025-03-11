@@ -395,6 +395,10 @@ namespace SGet.Models
             {
                 DownloadClient_OSWim.IsSelected = value;
                 DownloadClient_BootWim.IsSelected = value;
+                if(value)
+                {
+                    RaisePropertyChanged(nameof(ReleaseNotes));
+                }
                 /*                if (PropertyChanged != null)
                                 {
                                     PropertyChanged(this, new PropertyChangedEventArgs("IsSelected"));

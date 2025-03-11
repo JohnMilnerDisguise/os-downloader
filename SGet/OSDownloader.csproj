@@ -113,10 +113,15 @@
     <Compile Include="Models\OSListManager.cs" />
     <Compile Include="Models\OSListEntry.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="ViewModels\ICentralPanelBaseViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\PleaseWaitViewModel.cs" />
     <Compile Include="ViewModels\OSViewModel.cs" />
     <Compile Include="Views\OSView.xaml.cs">
       <DependentUpon>OSView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PleaseWait.xaml.cs">
+      <DependentUpon>PleaseWait.xaml</DependentUpon>
     </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -166,6 +171,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OSView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PleaseWait.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

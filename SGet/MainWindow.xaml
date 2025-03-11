@@ -139,6 +139,11 @@
             -->
         </Style>
 
+        
+        <DataTemplate x:Name="PleaseWaitViewTemplate" DataType="{x:Type viewmodels:PleaseWaitViewModel}">
+            <views:PleaseWait DataContext="{Binding}" />
+        </DataTemplate>
+        
         <DataTemplate x:Name="OSViewTemplate" DataType="{x:Type viewmodels:OSViewModel}">
             <views:OSView DataContext="{Binding}" />
         </DataTemplate>
@@ -173,14 +178,11 @@
             </ribbon:Ribbon.ApplicationMenu>
             <ribbon:RibbonTab Header="Controls" Name="ribbonTabMain">
                 <ribbon:RibbonGroup Header="Online Update" Name="APIGroup" Width="Auto">
-                    <!--<ribbon:RibbonButton Width ="80" Label="No Internet"  Name="btnCheckForUpdates" Click="btnCheckForUpdates_Click" IsEnabled="False" LargeImageSource="/SGet;component/Resources/connecting.png" /> -->
                     <ribbon:RibbonButton Width ="80" Label="{Binding ApiUpdateButtonText}" Name="btnCheckForUpdates" Command="{Binding CheckForUpdatesCommand}" LargeImageSource="{Binding ApiUpdateButtonImage}" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Add/Remove OS" Name="AddRemoveGroup">
-                    <!--<ribbon:RibbonButton IsEnabled="False" Label="Add to Library" Name="btnAddToLibrary" Click="btnAddToLibrary_Click" LargeImageSource="/SGet;component/Resources/addtocollection.png"/> -->
-                    <ribbon:RibbonButton Label="Add to Library" Name="btnAddToLibrary" Command="{Binding CenralPanelControlDataContext.SetOSInclisionInLibraryCommand}" LargeImageSource="/SGet;component/Resources/addtocollection.png"/>
-                    <!--<ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" Click="btnRemoveFromLibrary_Click" LargeImageSource="/SGet;component/Resources/removefromcollection.png" /> -->
-                    <ribbon:RibbonButton IsEnabled="False" Label="Don't Add" Name="btnRemoveFromLibrary" LargeImageSource="/SGet;component/Resources/removefromcollection.png" />
+                    <ribbon:RibbonButton Label="Add to Library" Name="btnAddToLibrary" Command="{Binding CenralPanelControlDataContext.AddOSToLibraryCommand}" LargeImageSource="/SGet;component/Resources/addtocollection.png"/>
+                    <ribbon:RibbonButton Label="Don't Add" Name="btnRemoveFromLibrary" Command="{Binding CenralPanelControlDataContext.RemoveOSFromLibraryCommand}" LargeImageSource="/SGet;component/Resources/removefromcollection.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Downloads" Name="ProcessGroup">
                     <!-- <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btn_osList_start_Click" IsEnabled="True" LargeImageSource="/SGet;component/Resources/start.png" /> -->
@@ -189,14 +191,12 @@
                     <ribbon:RibbonButton Label="Pause" Name="btnPause" IsEnabled="False" LargeImageSource="/SGet;component/Resources/stop.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="View Mode" Name="ViewMode">
-                    <!-- <ribbon:RibbonButton Style="{DynamicResource RibbonButtonStylePressed}" IsEnabled="False" Label="OSses" Name="btnViewOSses" Click="btn_view_OSsesPage_Click" LargeImageSource="/SGet;component/Resources/viewosses.png" /> -->
                     <ribbon:RibbonButton Label="OSses" Name="btnViewOSses" Style="{DynamicResource RibbonButtonStylePressedWhenDisabled}" Command="{Binding ToggleToDownloadsViewModeCommand}" CommandParameter="{StaticResource False}" LargeImageSource="/SGet;component/Resources/viewosses.png" />
-                    <!-- <ribbon:RibbonButton Label="Files" Name="btnViewDownloads" Click="btn_view_DownloadsPage_Click" LargeImageSource="/SGet;component/Resources/viewdownloads.png" /> -->
                     <ribbon:RibbonButton Label="Files" Name="btnViewDownloads" Style="{DynamicResource RibbonButtonStylePressedWhenDisabled}"  Command="{Binding ToggleToDownloadsViewModeCommand}" CommandParameter="{StaticResource True}" LargeImageSource="/SGet;component/Resources/viewdownloads.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Settings" Name="SettingsGroup">
                     <ribbon:RibbonButton Label="Limit Bandwidth" Name="btnSetLimits" Command="{Binding ShowSettingsWindowCommand}" CommandParameter="{StaticResource True}" FontSize="11" Margin="-3 0 -3 0" Padding="0" LargeImageSource="/SGet;component/Resources/downloadspeed.png" />
-                    <ribbon:RibbonButton Label="General Settings" Name="btnPreferences" Command="{Binding ShowSettingsWindowCommand}"  CommandParameter="{StaticResource False}" LargeImageSource="/SGet;component/Resources/settings.png" />
+                    <ribbon:RibbonButton Label="General Settings" Name="btnPreferences" Command="{Binding ShowSettingsWindowCommand}" CommandParameter="{StaticResource False}" LargeImageSource="/SGet;component/Resources/settings.png" />
                 </ribbon:RibbonGroup>
                 <!--
                 <ribbon:RibbonGroup Header="Show" Name="ShowGroup">

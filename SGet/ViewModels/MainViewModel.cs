@@ -20,17 +20,21 @@ namespace SGet.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        //ViewModel Event handlers
+        public event PropertyChangedEventHandler PropertyChanged;
+
         //Static Resources for Button Controls
         private ImageSource checkForUpdatesIcon_Connected;
         private ImageSource checkForUpdatesIcon_Connecting;
         private ImageSource checkForUpdatesIcon_Syncing;
 
         //Data Contexts of Child Views/Controls
-        private object _osViewControlDataContext;
-        private object _downloadsControlDataContext;
+        private ICentralPanelBaseViewModel _pleaseWaitViewControlDataContext;
+        private ICentralPanelBaseViewModel _osViewControlDataContext;
+        private ICentralPanelBaseViewModel _downloadsControlDataContext;
 
-        private object _cenralPanelControlDataContext;
-        public object CenralPanelControlDataContext
+        private ICentralPanelBaseViewModel _cenralPanelControlDataContext;
+        public ICentralPanelBaseViewModel CenralPanelControlDataContext
         {
             get
             {
@@ -48,6 +52,23 @@ namespace SGet.ViewModels
 
         //State Properties
         private bool _apiCallIsInProgress;
+        public bool ApiCallIsInProgress
+        {
+            get
+            {
+                return _apiCallIsInProgress;
+            }
+            set
+            {
+                if (_apiCallIsInProgress != value)
+                {
+                    _apiCallIsInProgress = value;
+                    ((RelayCommand)CheckForUpdatesCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
+                }
+                CenralPanelControlDataContext = _apiCallIsInProgress ? _pleaseWaitViewControlDataContext : (_windowInDownloadsViewMode ? _downloadsControlDataContext : _osViewControlDataContext);
+            }
+        }
+
         private APIContentsRootObject _osInfoApiResponseObject;
 
         public bool DownloadsPaused { get; set; }
@@ -62,9 +83,9 @@ namespace SGet.ViewModels
                 if (_windowInDownloadsViewMode != value || _cenralPanelControlDataContext == null ) //only perform logic if it's changing or if its initializing
                 {
                     _windowInDownloadsViewMode = value;
-                    CenralPanelControlDataContext = _windowInDownloadsViewMode ? _downloadsControlDataContext : _osViewControlDataContext;
                     ((RelayCommand)ToggleToDownloadsViewModeCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
                 }
+                CenralPanelControlDataContext = _apiCallIsInProgress ? _pleaseWaitViewControlDataContext : (_windowInDownloadsViewMode ? _downloadsControlDataContext : _osViewControlDataContext);
             }
         }
 
@@ -118,10 +139,6 @@ namespace SGet.ViewModels
             }
         }
 
-
-        //Event handlers
-        public event PropertyChangedEventHandler PropertyChanged;
-
         //Command Properties
         public ICommand ShowSettingsWindowCommand { get; set; }
         public ICommand ShowAboutWindowCommand { get; set; }
@@ -146,16 +163,20 @@ namespace SGet.ViewModels
 
             //State Properties - General
             DownloadsPaused = true;
-            _osViewControlDataContext = new OSViewModel();
+            _pleaseWaitViewControlDataContext = (ICentralPanelBaseViewModel)(new PleaseWaitViewModel());
+            _osViewControlDataContext = (ICentralPanelBaseViewModel)(new OSViewModel());
             _downloadsControlDataContext = null;
             WindowIsInDownloadsViewMode = false;
+
             //State Properties - Check for updates API
-            _apiCallIsInProgress = false;
+            ApiCallIsInProgress = false;
             _osInfoApiResponseObject = null;
 
 
             //setup event handler for internet connection status monitor
             NetworkChange.NetworkAvailabilityChanged += HandleNetworkAvailabilityChanged;
+
+            CenralPanelControlDataContext = _pleaseWaitViewControlDataContext;
         }
 
         //Event Handlers
@@ -247,8 +268,7 @@ namespace SGet.ViewModels
         {
             if (!_apiCallIsInProgress)
             {
-                _apiCallIsInProgress = true;  //flag api as in use so as to disallow multiple simultaneous API calls
-                ((RelayCommand)CheckForUpdatesCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
+                ApiCallIsInProgress = true;  //flag api as in use so as to disallow multiple simultaneous API calls
 
                 //set button properties
                 ApiUpdateButtonImage = checkForUpdatesIcon_Syncing;
@@ -284,8 +304,7 @@ namespace SGet.ViewModels
                 //refresh button text now api sync has finished
                 HandleNetworkAvailabilityChanged(System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable());
 
-                _apiCallIsInProgress = false;  //flag api 'can be used' now we're finished with it
-                ((RelayCommand)CheckForUpdatesCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
+                ApiCallIsInProgress = false;  //flag api 'can be used' now we're finished with it
             }
         }
     }

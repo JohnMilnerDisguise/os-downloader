@@ -161,16 +161,17 @@
 
     <DockPanel Background="#FFF9F9F9" Name="OSListViewMainPanel">
         <DockPanel DockPanel.Dock="Left" Background="#FFF9F9F9" Name="OSListPanel" Visibility="Visible">
-            <!-- <DataGrid AutoGenerateColumns="False" RowStyle="{StaticResource OSGridStyle}" Name="dataGrid_osList" VerticalAlignment="Top" HorizontalContentAlignment="Center"
-                    BorderThickness="0" IsReadOnly="False" GridLinesVisibility="None" MinRowHeight="22"
-                    SelectionChanged="dataGrid_osList_SelectionChanged" PreviewMouseWheel="dataGrid_osList_PreviewMouseWheel" 
-                    Background="#FFF9F9F9" HorizontalGridLinesBrush="#FFCBCBCB" VerticalGridLinesBrush="#FFCBCBCB" KeyUp="dataGrid_osList_KeyUp" 
-                    ContextMenuOpening="dataGrid_osList_ContextMenuOpening" CanUserResizeRows="False" SelectionMode="Single"> -->
+            <!-- <DataGrid
+                    BorderThickness="0" GridLinesVisibility="None"
+                    PreviewMouseWheel="dataGrid_osList_PreviewMouseWheel" 
+                    KeyUp="dataGrid_osList_KeyUp" 
+                    ContextMenuOpening="dataGrid_osList_ContextMenuOpening"> -->
             <DataGrid AutoGenerateColumns="False" RowStyle="{StaticResource OSGridStyle}" Name="dataGrid_osList" 
                       VerticalAlignment="Top" HorizontalContentAlignment="Center"
-                      BorderThickness="0" IsReadOnly="False" GridLinesVisibility="None" MinRowHeight="22"
+                      BorderThickness="0" IsReadOnly="False" GridLinesVisibility="All" MinRowHeight="22"
                       Background="#FFF9F9F9" HorizontalGridLinesBrush="#FFCBCBCB" VerticalGridLinesBrush="#FFCBCBCB" 
-                      CanUserResizeRows="False" SelectionMode="Single" ItemsSource="{Binding OSList}">
+                      CanUserResizeRows="False" SelectionMode="Single" ItemsSource="{Binding OSList}"
+                      SelectionChanged="dataGrid_osList_SelectionChanged" >
                     <DataGrid.Resources>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#353535"/>
@@ -242,7 +243,7 @@
                 <StatusBarItem  Name="statusBarItem_ReleaseNotesTitle" Content="Release Notes" Margin="0" Padding="10,3,3,3" FontWeight="Bold"/>
             </StatusBar>
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Name="scrollViewer_ReleaseNotes">
-                <TextBlock Name="textBlock_ReleaseNotes" Text="Select an OS from the grid on the left to view its Release Notes" TextWrapping="Wrap"/>
+                <TextBlock Name="textBlock_ReleaseNotes" Text="{Binding SelectedOSRecord.ReleaseNotes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
             </ScrollViewer>
         </DockPanel>
     </DockPanel>
