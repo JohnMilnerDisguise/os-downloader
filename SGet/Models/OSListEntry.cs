@@ -46,7 +46,15 @@ namespace SGet.Models
         //OS's Unique Identifier
         public string UniqueIdentifier { get; }
 
-        public string ReleaseNotes { get; set; }
+        private string _releaseNotes;
+        public string ReleaseNotes { get { return _releaseNotes; } set {
+                if( _releaseNotes != value )
+                {
+                    _releaseNotes = value;
+                    RaisePropertyChanged( nameof( ReleaseNotes ) );
+                }
+            } 
+        }
 
         public ObservableCollection<Public_Version_Table> PublicVersionTable { get; set; }
 
@@ -55,6 +63,10 @@ namespace SGet.Models
         {
             get
             {
+                if( (float)DownloadClient_OSWim.FileSize + (float)DownloadClient_OSWim.FileSize  == 0f ) {
+                    //avoid divide by zero exception
+                    return 0f;
+                }
                 return ((DownloadClient_OSWim.Percent * (float)DownloadClient_OSWim.FileSize) + (DownloadClient_BootWim.Percent * (float)DownloadClient_BootWim.FileSize)) / ((float)DownloadClient_OSWim.FileSize + (float)DownloadClient_OSWim.FileSize);
             }
         }
@@ -395,14 +407,6 @@ namespace SGet.Models
             {
                 DownloadClient_OSWim.IsSelected = value;
                 DownloadClient_BootWim.IsSelected = value;
-                if(value)
-                {
-                    RaisePropertyChanged(nameof(ReleaseNotes));
-                }
-                /*                if (PropertyChanged != null)
-                                {
-                                    PropertyChanged(this, new PropertyChangedEventArgs("IsSelected"));
-                                }*/
             }
         }
 

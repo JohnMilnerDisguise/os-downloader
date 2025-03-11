@@ -2,6 +2,7 @@
 using SGet.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,5 +46,10 @@ namespace SGet.Views
         }
 
         #endregion
+
+        private void releaseNotesPanel_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Evaluating releaseNotesPanel_DataContextChanged");
+        }
     }
 }

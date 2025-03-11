@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace SGet.ViewModels
 {
-    public class OSViewModel : ICentralPanelBaseViewModel
+    public class OSViewModel : ICentralPanelBaseViewModel, INotifyPropertyChanged
     {
         //ViewModel Event handlers
         public event PropertyChangedEventHandler PropertyChanged;
@@ -42,8 +42,10 @@ namespace SGet.ViewModels
         public OSViewModel()
         {
             OSList = OSListManager.Instance.OSList;
+            //SelectedOSRecord = new OSListEntry("uid", new List<string> { "ZX Spectrum" }, "johnnyOS", "http://google.com", "johnnyOS.wim",
+            //                                   1234567, "http://google.com", "boot_1234.wim", 12345, "This is the best OS in the world man", null, null);
 
-            AddOSToLibraryCommand      = new RelayCommand(AddOSToLibrary, CanAddOSToLibrary);
+            AddOSToLibraryCommand = new RelayCommand(AddOSToLibrary, CanAddOSToLibrary);
             RemoveOSFromLibraryCommand = new RelayCommand(RemoveOSFromLibrary, CanRemoveOSFromLibrary);
             //OSList.Add(new OSListEntry("uid", new List<string> { "ZX Spectrum" }, "johnnyOS", "http://google.com", "johnnyOS.wim",
             //    1234567, "http://google.com", "boot_1234.wim", 12345, "This is the best OS in the world man", null, null));
@@ -69,8 +71,8 @@ namespace SGet.ViewModels
             }
             if(selectedOSRecord != null)
             {
-                selectedOSRecord.IsSelected = true;
                 SelectedOSRecord = selectedOSRecord;
+                selectedOSRecord.IsSelected = true;
             }
         }
 
@@ -79,7 +81,7 @@ namespace SGet.ViewModels
         private bool CanAddOSToLibrary(object obj)
         {
             System.Diagnostics.Debug.WriteLine("Evaluating CanAddOSToLibrary");
-            return true;
+            return SelectedOSRecord != null;
         }
 
         private void AddOSToLibrary(object obj)
@@ -91,7 +93,7 @@ namespace SGet.ViewModels
         private bool CanRemoveOSFromLibrary(object obj)
         {
             System.Diagnostics.Debug.WriteLine("Evaluating CanRemoveOSFromLibrary");
-            return true;
+            return SelectedOSRecord != null;
         }
 
         private void RemoveOSFromLibrary(object obj)

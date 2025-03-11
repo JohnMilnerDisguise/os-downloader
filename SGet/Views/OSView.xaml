@@ -225,13 +225,26 @@
 
         <DockPanel DockPanel.Dock="Bottom" Background="#FFF9F9F9" Name="versionTablePanel" Height="140">
             <StatusBar Height="26" Name="versionTableBar" DockPanel.Dock="Top" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
-                <StatusBarItem  Name="versionTableItem" Content="Version Table" Margin="0" Padding="10,3,3,3" />
+                <StatusBarItem Name="versionTableItem" Margin="0" Padding="8,3,3,3" FontWeight="Bold">
+                    <StatusBarItem.Content>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}Version Table for: {0}">
+                                    <Binding Path="SelectedOSRecord.UniqueIdentifier" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StatusBarItem.Content>
+                </StatusBarItem>
             </StatusBar>
-            <DataGrid Name="dataGrid_os_version_table" AutoGenerateColumns="False" GridLinesVisibility="None" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
-                            VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" Background="#FFF9F9F9">
+            <DataGrid Name="dataGrid_os_version_table" AutoGenerateColumns="False" GridLinesVisibility="All" CanUserResizeRows="False" MinRowHeight="22" RowBackground="#FFF9F9F9" 
+                            VerticalContentAlignment="Center" BorderThickness="0" IsReadOnly="True" Background="#FFF9F9F9" 
+                            ItemsSource="{Binding SelectedOSRecord.PublicVersionTable}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            HorizontalGridLinesBrush="#FFCBCBCB" VerticalGridLinesBrush="#FFCBCBCB" 
+                            CanUserReorderColumns="False" CanUserSortColumns="False" SelectionMode="Extended" SelectionUnit="Cell" ClipboardCopyMode="IncludeHeader" AlternatingRowBackground="Beige">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Package" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Package, Mode=OneWay}" MinWidth="110" Width="110" x:Name="textColumn_PublicVersionTable_Package" />
-                    <DataGridTextColumn Header="Version" CellStyle="{StaticResource LeftCellSelectionDisabledStyle}" Binding="{Binding Version, Mode=OneWay}" MinWidth="450" Width="450" x:Name="textColumn_PublicVersionTable_Version" />
+                    <DataGridTextColumn Header="Package" CellStyle="{StaticResource LeftCellStyle}" Binding="{Binding Package, Mode=OneWay}" MinWidth="110" Width="Auto" SortDirection="Ascending" x:Name="textColumn_PublicVersionTable_Package" />
+                    <DataGridTextColumn Header="Version" CellStyle="{StaticResource LeftCellStyle}" Binding="{Binding Version, Mode=OneWay}" Width="*" x:Name="textColumn_PublicVersionTable_Version" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
@@ -240,10 +253,20 @@
 
         <DockPanel DockPanel.Dock="Top" Name="releaseNotesPanel" Background="#FFF9F9F9">
             <StatusBar Height="26" Name="statusBar_ReleaseNotesTitle" DockPanel.Dock="Top" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
-                <StatusBarItem  Name="statusBarItem_ReleaseNotesTitle" Content="Release Notes" Margin="0" Padding="10,3,3,3" FontWeight="Bold"/>
+                <StatusBarItem Name="statusBarItem_ReleaseNotesTitle" Margin="0" Padding="8,5,3,3" FontWeight="Bold" >
+                    <StatusBarItem.Content>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}Release Notes for: {0}">
+                                    <Binding Path="SelectedOSRecord.UniqueIdentifier" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StatusBarItem.Content>
+                </StatusBarItem>
             </StatusBar>
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Name="scrollViewer_ReleaseNotes">
-                <TextBlock Name="textBlock_ReleaseNotes" Text="{Binding SelectedOSRecord.ReleaseNotes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
+                <TextBlock Name="textBlock_ReleaseNotes" Text="{Binding SelectedOSRecord.ReleaseNotes}" TextWrapping="Wrap" Margin="8 3 3 3"/>
             </ScrollViewer>
         </DockPanel>
     </DockPanel>
