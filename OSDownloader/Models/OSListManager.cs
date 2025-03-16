@@ -41,7 +41,9 @@ namespace OSDownloader.Models
         public static void AddOS(string uniqueIdentifier, string model, string name,
             string osWimURL, string osWimFileName, long osWimFileSize,
             string bootWimURL, string bootWimFileName, long bootWimFileSize,
-            string releaseNotes, Public_Version_Table[] publicVersionTable, OSDownloader.MainWindow mainWindow, string downloadsFolder
+            string releaseNotes, Public_Version_Table[] publicVersionTable, 
+            OSDownloader.MainWindow mainWindow,
+            string downloadsFolder
         )
         {
             OSListEntry preExistingOSRecordInList = Instance.OSList.FirstOrDefault( os => os.UniqueIdentifier != null && os.UniqueIdentifier.Equals(uniqueIdentifier) );

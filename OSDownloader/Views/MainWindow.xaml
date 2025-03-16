@@ -212,12 +212,12 @@
 
         <!-- ########################## BOTTOM: STATUS BAR ########################## -->
 
-        <StatusBar Height="26" DockPanel.Dock="Bottom" Name="statusBar" VerticalContentAlignment="Center" Background="#FFDFE9F5" BorderBrush="#FFB9C9DA" BorderThickness="1">
+        <StatusBar Height="26" DockPanel.Dock="Bottom" Name="statusBar" VerticalContentAlignment="Center" Background="#FFDFE9F5" Foreground="#555555" BorderBrush="#FFB9C9DA" BorderThickness="1">
             <StatusBarItem Name="statusBarDownloads" Content="Ready" Padding="8,3,8,3" Width="60"/>
             <Separator/>
-            <StatusBarItem Name="statusBarActive" Content="X Active Downloads" Padding="8,3,8,3" Width="130" />
+            <StatusBarItem Name="statusBarActiveDownloads" Content="{Binding StatusBarActiveDownloadsText}" Padding="8,3,8,3" Width="130" />
             <Separator/>
-            <StatusBarItem Name="statusBarCompleted" Content="X Completed Downloads" Padding="8,3,8,3" Width="157" />
+            <StatusBarItem Name="statusBarCompleted" Content="{Binding StatusBarCompletedDownloadsText}" Padding="8,3,8,3" Width="157" />
             <Separator/>
             <StatusBarItem />
         </StatusBar>

@@ -119,6 +119,10 @@ namespace OSDownloader.Models
 
         #endregion
 
+        #region Event Properties
+        public event EventHandler DownloadEntryStatusChangedHandler;
+        #endregion
+
         #region Methods
 
         // Format file size or downloaded size string
@@ -194,6 +198,38 @@ namespace OSDownloader.Models
         #endregion
 
         #region Event Handlers
+
+        
+        public static void HandleDownloadEntryStatusChanged(object sender, EventArgs e)
+        {
+            // Start the first download in the queue, if it exists
+            WebDownloadClient dl = (WebDownloadClient)sender;
+            if (dl.Status == DownloadStatus.Paused || dl.Status == DownloadStatus.Completed
+                || dl.Status == DownloadStatus.Deleted || dl.HasError)
+            {
+                foreach (WebDownloadClient d in DownloadManager.Instance.DownloadsList)
+                {
+                    if (d.Status == DownloadStatus.Queued)
+                    {
+                        d.Start();
+                        break;
+                    }
+                }
+            }
+
+            foreach (WebDownloadClient d in DownloadManager.Instance.DownloadsList)
+            {
+                if (d.Status == DownloadStatus.Downloading)
+                {
+                    d.SpeedLimitChanged = true;
+                }
+            }
+
+            if ( Instance.DownloadEntryStatusChangedHandler != null)
+            {
+                Instance.DownloadEntryStatusChangedHandler(sender, e);
+            }
+        }
         public static void OSListEntryStatusChanged(object sender, EventArgs e)
         {
             // Start the first download in the queue, if it exists

@@ -100,5 +100,7 @@ namespace OSDownloader.ViewModels
         {
             _selectedOSRecord.SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Do_Not_Add);
         }
+
+
     }
 }

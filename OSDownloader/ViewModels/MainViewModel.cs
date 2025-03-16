@@ -151,6 +151,17 @@ namespace OSDownloader.ViewModels
             }
         }
 
+        //Status Bar Bindings
+        public string StatusBarActiveDownloadsText { get { 
+                return $"{DownloadManager.Instance.ActiveDownloads} Active Downloads"; 
+        } }
+
+        public string StatusBarCompletedDownloadsText { get {
+                return $"{DownloadManager.Instance.CompletedDownloads} Completed Downloads";
+        } }
+
+        //Event Handlers
+
         //Command Properties
         public ICommand ShowSettingsWindowCommand { get; set; }
         public ICommand ShowAboutWindowCommand { get; set; }
@@ -179,10 +190,12 @@ namespace OSDownloader.ViewModels
 
             //State Properties - General
             DownloadsPaused = true;
+            WindowIsInDownloadsViewMode = false;
+
+            //State Properties Child View Models / Data Contexts
             _pleaseWaitViewControlDataContext = (ICentralPanelBaseViewModel)(new PleaseWaitViewModel());
             _osViewControlDataContext = (ICentralPanelBaseViewModel)(new OSViewModel());
             _downloadsControlDataContext = (ICentralPanelBaseViewModel)(new DownloadsViewModel());
-            WindowIsInDownloadsViewMode = false;
 
             //State Properties - Check for updates API
             ApiCallIsInProgress = false;
@@ -192,6 +205,10 @@ namespace OSDownloader.ViewModels
             //setup event handler for internet connection status monitor
             NetworkChange.NetworkAvailabilityChanged += HandleNetworkAvailabilityChanged;
 
+            //hook into Download Manager's StatusChanged Event to call HandleOneDownloadsStatusChanged whever a download's status changes
+            DownloadManager.Instance.DownloadEntryStatusChangedHandler += HandleOneDownloadsStatusChanged;
+
+            //set intitial data context for central panel
             CenralPanelControlDataContext = _pleaseWaitViewControlDataContext;
         }
 
@@ -236,7 +253,13 @@ namespace OSDownloader.ViewModels
             HandleNetworkAvailabilityChanged(System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable());
         }
 
-        //Button Commands
+        public void HandleOneDownloadsStatusChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged( nameof(StatusBarActiveDownloadsText) );
+            RaisePropertyChanged( nameof(StatusBarCompletedDownloadsText) );
+        }
+
+        #region Button Commands
         private bool CanUnPauseDownloads(object obj)
         {
             return DownloadsPaused;
@@ -412,5 +435,7 @@ namespace OSDownloader.ViewModels
                 ApiCallIsInProgress = false;  //flag api 'can be used' now we're finished with it
             }
         }
+
+        #endregion
     }
 }

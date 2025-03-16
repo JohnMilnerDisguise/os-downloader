@@ -470,7 +470,7 @@ namespace OSDownloader.Models
                 this.DownloadClient_OSWim.FileSize = osWimFileSize;
                 this.DownloadClient_OSWim.DownloadProgressChanged += this.DownloadClient_OSWim.DownloadProgressChangedHandler;
                 this.DownloadClient_OSWim.DownloadCompleted += this.DownloadClient_OSWim.DownloadCompletedHandler;
-                //this.DownloadClient_OSWim.StatusChanged += this.StatusChangedHandler;
+                this.DownloadClient_OSWim.StatusChanged += DownloadManager.HandleDownloadEntryStatusChanged;
                 //this.DownloadClient_OSWim.DownloadCompleted += this.DownloadCompletedHandler;
                 this.DownloadClient_OSWim.PropertyChanged += HandleDownloadClientPropertyChanged;
 
@@ -497,6 +497,7 @@ namespace OSDownloader.Models
                 this.DownloadClient_BootWim.FileSize = bootWimFileSize;
                 this.DownloadClient_BootWim.DownloadProgressChanged += this.DownloadClient_BootWim.DownloadProgressChangedHandler;
                 this.DownloadClient_BootWim.DownloadCompleted += this.DownloadClient_BootWim.DownloadCompletedHandler;
+                this.DownloadClient_BootWim.StatusChanged += DownloadManager.HandleDownloadEntryStatusChanged;
                 //this.DownloadClient_BootWim.StatusChanged += this.StatusChangedHandler;
                 //this.DownloadClient_BootWim.DownloadCompleted += this.DownloadCompletedHandler;
                 this.DownloadClient_BootWim.PropertyChanged += HandleDownloadClientPropertyChanged;
@@ -588,6 +589,8 @@ namespace OSDownloader.Models
                 //this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
             }
         }
+
+
 
         // Start or continue download
         public void Start()

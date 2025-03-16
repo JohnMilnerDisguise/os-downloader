@@ -1,4 +1,5 @@
-﻿using OSDownloader.Properties;
+﻿using Newtonsoft.Json.Linq;
+using OSDownloader.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -170,9 +171,13 @@ namespace OSDownloader.Models
             }
             set
             {
-                status = value;
-                if (status != DownloadStatus.Deleting)
-                    RaiseStatusChanged();
+                if (status != value)
+                {
+                    System.Diagnostics.Debug.WriteLine($"{FileName} Status --> {value}");
+                    status = value;
+                    if (status != DownloadStatus.Deleting)
+                        RaiseStatusChanged();
+                }
             }
         }
 
@@ -351,6 +356,10 @@ namespace OSDownloader.Models
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
+                if(name==nameof(StatusString))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Raising StatusString CHanged to UI");
+                }
                 handler(this, new PropertyChangedEventArgs(name));
             }
         }
@@ -362,6 +371,10 @@ namespace OSDownloader.Models
             {
                 StatusChanged(this, EventArgs.Empty);
             }
+            RaisePropertyChanged(nameof(Status));
+            RaisePropertyChanged(nameof(StatusString));
+            RaisePropertyChanged(nameof(DownloadSpeed));
+            RaisePropertyChanged(nameof(TimeLeft));
         }
 
         // Generate DownloadProgressChanged event
