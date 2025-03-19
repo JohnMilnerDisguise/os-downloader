@@ -18,32 +18,32 @@ namespace OSDownloader.Models
         //JM: Failed Validation so should be excluded from all download functionality
         NOT_VALID,
 
-        //User has started downloads for this OS
+        //JM: User has started downloads for this OS
         Active,
 
-        // Client is downloading data from the server
-        Downloading,
+        // NOT USED: Client is downloading data from the server
+        Downloading_NOT_USED,
 
-        // Client releases used resources, so the download can be paused
-        Pausing,
+        // NOT USED: Client releases used resources, so the download can be paused
+        Pausing_NOT_USED,
 
-        // Download is paused
+        //JM: Download is paused
         Paused,
 
         // Download is added to the queue
-        Queued,
+        Queued_NOT_USED,
 
         // Client releases used resources, so the download can be deleted
-        Deleting,
+        Deleting_NOT_USED,
 
         // Download is deleted
-        Deleted,
+        Deleted_NOT_USED,
 
         // Download is completed
-        Completed,
+        Completed_NOT_USED,
 
         // There was an error during download
-        Error
+        Error_NOT_USED
     }
 
     public enum OSListRecordAction

@@ -253,11 +253,20 @@ namespace OSDownloader.ViewModels
             HandleNetworkAvailabilityChanged(System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable());
         }
 
+        internal void HandleWindowClosing()
+        {
+            OSListManager.Instance.SaveDownloadsToXml();
+        }
+
+        
+
         public void HandleOneDownloadsStatusChanged(object sender, EventArgs e)
         {
             RaisePropertyChanged( nameof(StatusBarActiveDownloadsText) );
             RaisePropertyChanged( nameof(StatusBarCompletedDownloadsText) );
         }
+
+        
 
         #region Button Commands
         private bool CanUnPauseDownloads(object obj)
@@ -285,13 +294,7 @@ namespace OSDownloader.ViewModels
         private void PauseDownloads(object obj)
         {
             DownloadsPaused = true;
-            foreach (OSListEntry osDownload in OSListManager.Instance.getUnPausedOSRecords())
-            {
-                if (osDownload.Status != OSListRecordStatus.Paused)
-                {
-                    osDownload.Pause();
-                }
-            }
+            OSListManager.Instance.SetAllActiveOSRecordsToPaused();
         }
 
         private bool CanToggleToDownloadsViewMode(object param_FilesMode_OBJECT)

@@ -59,65 +59,6 @@ namespace OSDownloader.Models
 
         public ObservableCollection<Public_Version_Table> PublicVersionTable { get; set; }
 
-        // Percentage of downloaded data across both downloads (each contribution scaled by download size)
-        public float Percent
-        {
-            get
-            {
-                if( (float)DownloadClient_OSWim.FileSize + (float)DownloadClient_OSWim.FileSize  == 0f ) {
-                    //avoid divide by zero exception
-                    return 0f;
-                }
-                return ((DownloadClient_OSWim.Percent * (float)DownloadClient_OSWim.FileSize) + (DownloadClient_BootWim.Percent * (float)DownloadClient_BootWim.FileSize)) / ((float)DownloadClient_OSWim.FileSize + (float)DownloadClient_OSWim.FileSize);
-            }
-        }
-
-        public string PercentString
-        {
-            get
-            {
-                if (Percent < 0 || float.IsNaN(Percent))
-                    return "0.0%";
-                else if (Percent > 100)
-                    return "100.0%";
-                else
-                    return String.Format(numberFormat, "{0:0.0}%", Percent);
-            }
-        }
-
-        // Progress bar value
-        public float Progress
-        {
-            get
-            {
-                return Percent;
-            }
-        }
-
-        // Download speed
-        public int downloadSpeed;
-        public string DownloadSpeed
-        {
-            get
-            {
-                int combinedDownloadSpeed = 0;
-                if (DownloadClient_OSWim.Status == DownloadStatus.Downloading && !DownloadClient_OSWim.HasError)
-                {
-                    combinedDownloadSpeed += DownloadClient_OSWim.downloadSpeed;
-                }
-                if (DownloadClient_BootWim.Status == DownloadStatus.Downloading && !DownloadClient_BootWim.HasError)
-                {
-                    combinedDownloadSpeed += DownloadClient_OSWim.downloadSpeed;
-                }
-
-                if (combinedDownloadSpeed > 0)
-                {
-                    return DownloadManager.FormatSpeedString(combinedDownloadSpeed);
-                }
-                return String.Empty;
-            }
-        }
-
         public ObservableCollection<string> ActionOptions { get; set; }
 
         private OSListRecordAction _selected_action;
@@ -130,21 +71,13 @@ namespace OSDownloader.Models
             set
             {
                 _selected_action = OSListRecordEnumUtils.getActionEnumFromActionDescription(value);
-                if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs("SelectedActionString"));
+                RaisePropertyChanged(nameof(SelectedActionString));
                 //update status if the action requires it
                 OSListRecordStatus? newstatus = OSListRecordEnumUtils.getNewOSListRecordStatusFromActionOption(_selected_action, status);
                 if (newstatus != null && newstatus != status)
                 {
                     Status = (OSListRecordStatus)newstatus;
-                    RaiseStatusChanged();
-                    if (PropertyChanged != null)
-                    {
-                        PropertyChanged(this, new PropertyChangedEventArgs("StatusString"));
-                        PropertyChanged(this, new PropertyChangedEventArgs("ProgressBarVisibility"));
-                        CommandManager.InvalidateRequerySuggested();
-                        //PropertyChanged(this, new PropertyChangedEventArgs("ActionDropDownVisibility"));
-                    }
+                    CommandManager.InvalidateRequerySuggested();
                 }
             }
         }
@@ -153,7 +86,10 @@ namespace OSDownloader.Models
         {
             get
             {
-                return status == OSListRecordStatus.To_Be_Added ? Visibility.Visible : Visibility.Hidden;
+                return status == OSListRecordStatus.To_Be_Added ||
+                       status == OSListRecordStatus.Active ||
+                       status == OSListRecordStatus.Paused ? 
+                       Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -180,25 +116,28 @@ namespace OSDownloader.Models
             }
             set
             {
-                status = value;
-                //set data for the drop down box in grid to bind to based on the Status
-                string oldSelectedAction = SelectedActionString;
-                ActionOptions = new ObservableCollection<string>(Array.ConvertAll(
-                    OSListRecordEnumUtils.getActionOptionsFromOSListRecordStatus(status), x => OSListRecordEnumUtils.getActionDescriptionFromActionEnum(x)
-                ));
+                if (status != value)
+                {
+                    status = value;
+                    //set data for the drop down box in grid to bind to based on the Status
+                    string oldSelectedAction = SelectedActionString;
+                    ActionOptions = new ObservableCollection<string>(Array.ConvertAll(
+                        OSListRecordEnumUtils.getActionOptionsFromOSListRecordStatus(status), x => OSListRecordEnumUtils.getActionDescriptionFromActionEnum(x)
+                    ));
 
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("ActionDropDownVisibility"));
-                }
+                    RaisePropertyChanged(nameof(ActionDropDownVisibility));
+                    RaisePropertyChanged(nameof(ProgressBarVisibility));
+                    RaisePropertyChanged(nameof(StatusString));
+                    RaiseStatusChanged();
 
-                if (oldSelectedAction != null && !oldSelectedAction.Equals("") && ActionOptions.Contains(oldSelectedAction, StringComparer.CurrentCultureIgnoreCase))
-                {
-                    SelectedActionString = oldSelectedAction;
-                }
-                else
-                {
-                    SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordEnumUtils.getDefaultActionFromOSListRecordStatus(status));
+                    if (oldSelectedAction != null && !oldSelectedAction.Equals("") && ActionOptions.Contains(oldSelectedAction, StringComparer.CurrentCultureIgnoreCase))
+                    {
+                        SelectedActionString = oldSelectedAction;
+                    }
+                    else
+                    {
+                        SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordEnumUtils.getDefaultActionFromOSListRecordStatus(status));
+                    }
                 }
             }
         }
@@ -269,6 +208,65 @@ namespace OSDownloader.Models
 
                 }
                 return Status.ToString().Replace('_', ' ');
+            }
+        }
+
+        // Percentage of downloaded data across both downloads (each contribution scaled by download size)
+        public float Percent
+        {
+            get
+            {
+                if( (float)DownloadClient_OSWim.FileSize + (float)DownloadClient_OSWim.FileSize  == 0f ) {
+                    //avoid divide by zero exception
+                    return 0f;
+                }
+                return ((DownloadClient_OSWim.Percent * (float)DownloadClient_OSWim.FileSize) + (DownloadClient_BootWim.Percent * (float)DownloadClient_BootWim.FileSize)) / ((float)DownloadClient_OSWim.FileSize + (float)DownloadClient_BootWim.FileSize);
+            }
+        }
+
+        public string PercentString
+        {
+            get
+            {
+                if (Percent < 0 || float.IsNaN(Percent))
+                    return "0.0%";
+                else if (Percent > 100)
+                    return "100.0%";
+                else
+                    return String.Format(numberFormat, "{0:0.0}%", Percent);
+            }
+        }
+
+        // Progress bar value
+        public float Progress
+        {
+            get
+            {
+                return Percent;
+            }
+        }
+
+        // Download speed
+        public int downloadSpeed;
+        public string DownloadSpeed
+        {
+            get
+            {
+                int combinedDownloadSpeed = 0;
+                if (DownloadClient_OSWim.Status == DownloadStatus.Downloading && !DownloadClient_OSWim.HasError)
+                {
+                    combinedDownloadSpeed += DownloadClient_OSWim.downloadSpeed;
+                }
+                if (DownloadClient_BootWim.Status == DownloadStatus.Downloading && !DownloadClient_BootWim.HasError)
+                {
+                    combinedDownloadSpeed += DownloadClient_OSWim.downloadSpeed;
+                }
+
+                if (combinedDownloadSpeed > 0)
+                {
+                    return DownloadManager.FormatSpeedString(combinedDownloadSpeed);
+                }
+                return String.Empty;
             }
         }
 
@@ -448,6 +446,17 @@ namespace OSDownloader.Models
 
         #endregion
 
+        #region Event Handler Properties
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event EventHandler StatusChanged;
+        /*
+        public event EventHandler DownloadProgressChanged;
+
+        public event EventHandler DownloadCompleted;
+        */
+        #endregion
+
         #region Constructor and Events
 
         public OSListEntry(string uniqueIdentifier, List<string> models, string name,
@@ -471,6 +480,7 @@ namespace OSDownloader.Models
                 this.DownloadClient_OSWim.DownloadProgressChanged += this.DownloadClient_OSWim.DownloadProgressChangedHandler;
                 this.DownloadClient_OSWim.DownloadCompleted += this.DownloadClient_OSWim.DownloadCompletedHandler;
                 this.DownloadClient_OSWim.StatusChanged += DownloadManager.HandleDownloadEntryStatusChanged;
+                this.DownloadClient_OSWim.StatusChanged += this.HandleDownloadClientStatusChanged;
                 //this.DownloadClient_OSWim.DownloadCompleted += this.DownloadCompletedHandler;
                 this.DownloadClient_OSWim.PropertyChanged += HandleDownloadClientPropertyChanged;
 
@@ -535,16 +545,8 @@ namespace OSDownloader.Models
             }
             this.StatusChanged += DownloadManager.OSListEntryStatusChanged;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public event EventHandler StatusChanged;
-        /*
-        public event EventHandler DownloadProgressChanged;
-
-        public event EventHandler DownloadCompleted;
-        */
         #endregion
+
 
         #region Event Handlers
 
@@ -573,6 +575,8 @@ namespace OSDownloader.Models
             WebDownloadClient downloadClient = (WebDownloadClient)sender;
             string propertyName = e.PropertyName;
 
+            RaisePropertyChanged(propertyName);
+
             if (propertyName == "StatusString")
             {
                 RaisePropertyChanged(propertyName);
@@ -588,6 +592,12 @@ namespace OSDownloader.Models
                 RaisePropertyChanged("Status");
                 //this.Dispatcher.Invoke(new PropertyChangedEventHandler(OSListUpdatePropertiesList), sender, e);
             }
+        }
+
+        public void HandleDownloadClientStatusChanged(object sender, EventArgs e)
+        {
+            WebDownloadClient downloadClient = (WebDownloadClient)sender;
+            RaisePropertyChanged(nameof(StatusString));
         }
 
 

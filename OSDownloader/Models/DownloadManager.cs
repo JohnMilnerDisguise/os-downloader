@@ -4,8 +4,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Windows;
+using System.Xml.Linq;
 using Newtonsoft.Json.Serialization;
 using OSDownloader.Models;
+using OSDownloader.Properties;
 
 namespace OSDownloader.Models
 {
@@ -44,7 +48,13 @@ namespace OSDownloader.Models
             if ( ! Instance.DownloadsList.Contains(clientObjectFromStore) )
             {
                 Instance.DownloadsList.Add(clientObjectFromStore);
-                clientObjectFromStore.Status = DownloadStatus.Paused;
+
+                //set status to paused if not done already
+                if(clientObjectFromStore.Status != DownloadStatus.Completed)
+                {
+                    clientObjectFromStore.Status = DownloadStatus.Paused;
+                }
+                
                 Instance.DownloadsListByURL.Add(clientObjectFromStore.Url.OriginalString.ToUpper().Trim(), clientObjectFromStore);
                 //clientObjectFromStore.Start();
             }
@@ -198,8 +208,6 @@ namespace OSDownloader.Models
         #endregion
 
         #region Event Handlers
-
-        
         public static void HandleDownloadEntryStatusChanged(object sender, EventArgs e)
         {
             // Start the first download in the queue, if it exists

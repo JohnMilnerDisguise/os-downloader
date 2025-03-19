@@ -138,7 +138,8 @@ namespace OSDownloader
                 }
             }
 
-            //SaveDownloadsToXml();
+            MainViewModel viewModel = (MainViewModel)this.DataContext;
+            viewModel?.HandleWindowClosing();
         }
 
         #endregion

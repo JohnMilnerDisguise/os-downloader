@@ -179,9 +179,9 @@
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="Downloads" Name="ProcessGroup">
                     <!-- <ribbon:RibbonButton Label="Start" Name="btnStart" Click="btn_osList_start_Click" IsEnabled="True" LargeImageSource="/OSDownloader;component/Resources/start.png" /> -->
-                    <ribbon:RibbonButton Label="Start" Name="btnStart" Command="{Binding UnPauseDownloadsCommand}" LargeImageSource="/OSDownloader;component/Resources/start.png" />
+                    <ribbon:RibbonButton Label="Start All" Name="btnStart" Command="{Binding UnPauseDownloadsCommand}" LargeImageSource="/OSDownloader;component/Resources/start.png" />
                     <!-- <ribbon:RibbonButton Label="Pause" Name="btnPause" Click="btn_osList_pause_Click" IsEnabled="False" LargeImageSource="/OSDownloader;component/Resources/stop.png" /> -->
-                    <ribbon:RibbonButton Label="Pause" Name="btnPause" Command="{Binding PauseDownloadsCommand}" LargeImageSource="/OSDownloader;component/Resources/stop.png" />
+                    <ribbon:RibbonButton Label="Pause All" Name="btnPause" Command="{Binding PauseDownloadsCommand}" LargeImageSource="/OSDownloader;component/Resources/stop.png" />
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="View Mode" Name="ViewMode">
                     <ribbon:RibbonButton Label="OSses" Name="btnViewOSses" Style="{DynamicResource RibbonButtonStylePressedWhenDisabled}" Command="{Binding ToggleToDownloadsViewModeCommand}" CommandParameter="{StaticResource False}" LargeImageSource="/OSDownloader;component/Resources/viewosses.png" />

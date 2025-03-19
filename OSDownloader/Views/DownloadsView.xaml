@@ -200,6 +200,29 @@
 
                 <DataGrid.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Header="Start" Name="menuItem_downloadList_start" Command="{Binding StartSelectedDownloadCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/OSDownloader;component/Resources/start.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Pause" Name="menuItem_downloadList_pause" Command="{Binding PauseSelectedDownloadCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/OSDownloader;component/Resources/stop.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem Header="View in File Explorer" Name="menuItem_downloadList_openFile" Command="{Binding OpenSelectedDownloadInWindowsFileExplorerCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/OSDownloader;component/Resources/fileinfolder.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Open Downloads Folder" Name="menuItem_downloadList_openDownloadsFolder" Command="{Binding OpenDownloadsFolderInWindowsFileExplorerCommand}">
+                            <MenuItem.Icon>
+                                <Image Source="/OSDownloader;component/Resources/folder.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator />
+                        <Separator />
                         <MenuItem Header="Start" Name="cmStart"   />
                         <MenuItem Header="Pause" Name="cmPause"  />
                         <Separator />

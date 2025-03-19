@@ -245,6 +245,8 @@
     <Content Include="Libraries\Microsoft.Windows.Shell.dll" />
     <Content Include="Libraries\RibbonControlsLibrary.dll" />
     <Content Include="Libraries\WPFToolkit.Extended.dll" />
+    <Resource Include="Resources\folder.png" />
+    <Resource Include="Resources\fileinfolder.png" />
     <Resource Include="Resources\downloadspeed.png" />
     <Resource Include="Resources\settings.png" />
     <Resource Include="Resources\viewdownloads.png" />

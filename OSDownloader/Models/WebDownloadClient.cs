@@ -307,7 +307,19 @@ namespace OSDownloader.Models
 
         #endregion
 
-        #region Constructor and Events
+        #region Event Handler Properties
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event EventHandler StatusChanged;
+
+        public event EventHandler DownloadProgressChanged;
+
+        public event EventHandler DownloadCompleted;
+
+        #endregion
+
+        #region Constructor
 
         public WebDownloadClient(string url)
         {
@@ -337,15 +349,6 @@ namespace OSDownloader.Models
 
             this.Status = DownloadStatus.Initialized;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public event EventHandler StatusChanged;
-
-        public event EventHandler DownloadProgressChanged;
-
-        public event EventHandler DownloadCompleted;
-
         #endregion
 
         #region Event Handlers

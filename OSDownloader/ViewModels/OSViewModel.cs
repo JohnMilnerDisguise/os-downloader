@@ -79,8 +79,8 @@ namespace OSDownloader.ViewModels
             }
         }
 
-
-        //Command Implementations 
+        #region Command Implementations 
+        //Command Implementations Inhetited from Main ViewModel
         private bool CanAddOSToLibrary(object obj)
         {
             return _selectedOSRecord != null && _selectedOSRecord.AllowUserToAddToLibrary;
@@ -101,6 +101,7 @@ namespace OSDownloader.ViewModels
             _selectedOSRecord.SelectedActionString = OSListRecordEnumUtils.getActionDescriptionFromActionEnum(OSListRecordAction.Do_Not_Add);
         }
 
+        #endregion
 
     }
 }
