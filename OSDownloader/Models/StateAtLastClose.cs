@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 
 namespace OSDownloader.Models.JSON
 {
@@ -28,20 +26,26 @@ namespace OSDownloader.Models.JSON
         public long boot_wim_downloaded_size { get; set; }
         public string boot_wim_status { get; set; }
         public string boot_wim_status_text { get; set; }
+        [JsonConverter(typeof(TimeSpanConverter))]
         public TimeSpan boot_wim_total_time { get; set; }
+        [JsonConverter(typeof(IsoDateTimeConverter))]
         public DateTime boot_wim_added_on { get; set; }
+        [JsonConverter(typeof(IsoDateTimeConverter))]
         public DateTime boot_wim_completed_on { get; set; }
         public bool boot_wim_has_error { get; set; }
         public string os_wim_url { get; set; }
         public string os_wim_temp_path { get; set; }
-        public string os_wim_file_size { get; set; }
-        public string os_wim_downloaded_size { get; set; }
+        public long os_wim_file_size { get; set; }
+        public long os_wim_downloaded_size { get; set; }
         public string os_wim_status { get; set; }
         public string os_wim_status_text { get; set; }
-        public string os_wim_total_time { get; set; }
-        public string os_wim_added_on { get; set; }
-        public string os_wim_completed_on { get; set; }
-        public string os_wim_has_error { get; set; }
+        [JsonConverter(typeof(TimeSpanConverter))]
+        public TimeSpan os_wim_total_time { get; set; }
+        [JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime os_wim_added_on { get; set; }
+        [JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime os_wim_completed_on { get; set; }
+        public bool os_wim_has_error { get; set; }
     }
 
 }

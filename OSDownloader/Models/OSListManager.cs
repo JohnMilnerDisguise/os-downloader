@@ -14,6 +14,9 @@ using OSDownloader.Properties;
 using System.Net;
 using System.Xml.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using OSDownloader.Models.JSON;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 //using System.Windows.Shapes;
 //using static System.Net.WebRequestMethods;
 
@@ -195,16 +198,23 @@ namespace OSDownloader.Models
         }
         
 
-        public void SaveDownloadsToXml()
+        public void SaveFullStateToXml()
         {
             // Pause downloads
             SetAllActiveOSRecordsToPaused();
 
-            XElement root = new XElement("osses");
-
-            foreach (OSListEntry os in OSList)
+            StateAtLastClose stateAtLastClose = new StateAtLastClose
             {
-                if( os.DownloadClient_BootWim.Status != DownloadStatus.Paused &&
+                osses = new Osses
+                {
+                    os = new OS[OSList.Count]
+                }
+            };
+
+            for (int i = 0; i < OSList.Count; i++) 
+            {
+                OSListEntry os = OSList[i];
+                if (os.DownloadClient_BootWim.Status != DownloadStatus.Paused &&
                     os.DownloadClient_BootWim.Status != DownloadStatus.Initialized &&
                     os.DownloadClient_BootWim.Status != DownloadStatus.Error &&
                     os.DownloadClient_BootWim.Status != DownloadStatus.Completed )
@@ -220,57 +230,71 @@ namespace OSDownloader.Models
                     string message = $"The OS Wim for {os.UniqueIdentifier} has not yet fully paused, it's status is currently {os.DownloadClient_OSWim.StatusString}";
                     Xceed.Wpf.Toolkit.MessageBox.Show(message, "Download Not Paused", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                XElement xdl = new XElement("os",
-                    new XElement("unique_identifier", os.UniqueIdentifier),
-                    new XElement("selected_action_string", os.SelectedActionString),
-                    new XElement("status", os.Status),
-                    new XElement("boot_wim_url", os.DownloadClient_BootWim.Url.OriginalString),
-                    new XElement("boot_wim_temp_path", os.DownloadClient_BootWim.TempDownloadPath),
-                    new XElement("boot_wim_file_size", os.DownloadClient_BootWim.FileSize.ToString()),
-                    new XElement("boot_wim_downloaded_size", os.DownloadClient_BootWim.DownloadedSize.ToString()),
-                    new XElement("boot_wim_status", os.DownloadClient_BootWim.Status.ToString()),
-                    new XElement("boot_wim_status_text", os.DownloadClient_BootWim.StatusText),
-                    new XElement("boot_wim_total_time", os.DownloadClient_BootWim.TotalElapsedTime.ToString()),
-                    new XElement("boot_wim_added_on", os.DownloadClient_BootWim.AddedOn.ToString()),
-                    new XElement("boot_wim_completed_on", os.DownloadClient_BootWim.CompletedOn.ToString()),
-                    new XElement("boot_wim_has_error", os.DownloadClient_BootWim.HasError.ToString()),
-                    new XElement("os_wim_url", os.DownloadClient_OSWim.Url.OriginalString),
-                    new XElement("os_wim_temp_path", os.DownloadClient_OSWim.TempDownloadPath),
-                    new XElement("os_wim_file_size", os.DownloadClient_OSWim.FileSize.ToString()),
-                    new XElement("os_wim_downloaded_size", os.DownloadClient_OSWim.DownloadedSize.ToString()),
-                    new XElement("os_wim_status", os.DownloadClient_OSWim.Status.ToString()),
-                    new XElement("os_wim_status_text", os.DownloadClient_OSWim.StatusText),
-                    new XElement("os_wim_total_time", os.DownloadClient_OSWim.TotalElapsedTime.ToString()),
-                    new XElement("os_wim_added_on", os.DownloadClient_OSWim.AddedOn.ToString()),
-                    new XElement("os_wim_completed_on", os.DownloadClient_OSWim.CompletedOn.ToString()),
-                    new XElement("os_wim_has_error", os.DownloadClient_OSWim.HasError.ToString())
-                );
-                root.Add(xdl);
+
+                stateAtLastClose.osses.os[i] = new OS()
+                {
+                    unique_identifier = os.UniqueIdentifier,
+                    selected_action_string = os.SelectedActionString,
+                    status = os.Status.ToString(),
+                    boot_wim_url = os.DownloadClient_BootWim.Url.OriginalString,
+                    boot_wim_temp_path = os.DownloadClient_BootWim.TempDownloadPath,
+                    boot_wim_file_size = os.DownloadClient_BootWim.FileSize,
+                    boot_wim_downloaded_size = os.DownloadClient_BootWim.DownloadedSize,
+                    boot_wim_status = os.DownloadClient_BootWim.Status.ToString(),
+                    boot_wim_status_text = os.DownloadClient_BootWim.StatusText,
+                    boot_wim_total_time = os.DownloadClient_BootWim.TotalElapsedTime,
+                    boot_wim_added_on = os.DownloadClient_BootWim.AddedOn,
+                    boot_wim_completed_on = os.DownloadClient_BootWim.CompletedOn,
+                    boot_wim_has_error = os.DownloadClient_BootWim.HasError,
+                    os_wim_url = os.DownloadClient_OSWim.Url.OriginalString,
+                    os_wim_temp_path = os.DownloadClient_OSWim.TempDownloadPath,
+                    os_wim_file_size = os.DownloadClient_OSWim.FileSize,
+                    os_wim_downloaded_size = os.DownloadClient_OSWim.DownloadedSize,
+                    os_wim_status = os.DownloadClient_OSWim.Status.ToString(),
+                    os_wim_status_text = os.DownloadClient_OSWim.StatusText,
+                    os_wim_total_time = os.DownloadClient_OSWim.TotalElapsedTime,
+                    os_wim_added_on = os.DownloadClient_OSWim.AddedOn,
+                    os_wim_completed_on = os.DownloadClient_OSWim.CompletedOn,
+                    os_wim_has_error = os.DownloadClient_OSWim.HasError
+                };
             }
 
-            XDocument xd = new XDocument();
-            xd.Add(root);
-            // Save downloads to XML file
+            // Serialize the object to JSON
+            string json = JsonConvert.SerializeObject(stateAtLastClose, Formatting.Indented);
+
+            // Save downloads to json file
             string configDirectoryPath = GetApplicationsConfigDirectoryPath();
-            string StateAtLastCloseXMLPath = System.IO.Path.Combine(configDirectoryPath, "StateAtLastClose.xml");
-            xd.Save(StateAtLastCloseXMLPath);
+            string StateAtLastCloseJSONPath = System.IO.Path.Combine(configDirectoryPath, "stateAtLastClose.json");
+            File.WriteAllText(StateAtLastCloseJSONPath, json);
         }
-        /*
-        private void LoadDownloadsFromXml()
+        public OS[] LoadFullStateFromXml()
         {
+            string configDirectoryPath = GetApplicationsConfigDirectoryPath();
+            string StateAtLastCloseJSONPath = System.IO.Path.Combine(configDirectoryPath, "stateAtLastClose.json");
+
             try
             {
-                if (File.Exists("Downloads.xml"))
+                if (File.Exists(StateAtLastCloseJSONPath))
                 {
-                    // Load downloads from XML file
-                    XElement downloads = XElement.Load("Downloads.xml");
-                    if (downloads.HasElements)
+
+                    // Step 1: Read the JSON file into a string
+                    string json = File.ReadAllText(StateAtLastCloseJSONPath);
+
+                    // Step 2: Deserialize the JSON string into a StateAtLastClose object
+                    var stateAtLastClose = JsonConvert.DeserializeObject<StateAtLastClose>(json, new JsonSerializerSettings
                     {
-                        IEnumerable<XElement> downloadsList =
-                            from el in downloads.Elements()
-                            select el;
-                        foreach (XElement download in downloadsList)
+                        Converters = new List<JsonConverter>
                         {
+                            new JSON.TimeSpanConverter(), // Use the custom TimeSpanConverter
+                            new IsoDateTimeConverter() // Use ISO 8601 format for DateTime
+                        }
+                    });
+
+                    if (stateAtLastClose != null && stateAtLastClose.osses != null && stateAtLastClose.osses.os != null)
+                    {
+                        foreach (OS os in stateAtLastClose.osses.os)
+                        {
+                            /*
                             // Create WebDownloadClient object based on XML data
                             WebDownloadClient downloadClient = new WebDownloadClient(download.Element("url").Value);
 
@@ -321,13 +345,23 @@ namespace OSDownloader.Models
                             {
                                 downloadClient.Start();
                             }
+                            */
                         }
 
-                        // Create empty XML file
-                        XElement root = new XElement("downloads");
-                        XDocument xd = new XDocument();
-                        xd.Add(root);
-                        xd.Save("Downloads.xml");
+                        // Replace the file with an empty json file
+                        StateAtLastClose blankStateAtLastCloseObject = new StateAtLastClose
+                        {
+                            osses = new Osses
+                            {
+                                os = new OS[] { }
+                            }
+                        };
+                        // Serialize the blank state object to JSON
+                        string blankStateJson = JsonConvert.SerializeObject(stateAtLastClose, Formatting.Indented);
+                        // Save blank state JSON back to overwrite file
+                        File.WriteAllText(StateAtLastCloseJSONPath, json);
+
+                        return stateAtLastClose.osses.os;
                     }
                 }
             }
@@ -335,8 +369,9 @@ namespace OSDownloader.Models
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show("There was an error while loading the download list.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            return new OS[] { };
         }
-        */
 
 
     }

@@ -103,6 +103,8 @@
   <ItemGroup>
     <Compile Include="APIContents.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Models\JSONTimespanConverter.cs" />
+    <Compile Include="Models\StateAtLastClose.cs" />
     <Compile Include="Models\ThrottledStream.cs" />
     <Compile Include="ViewModels\DownloadsViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">

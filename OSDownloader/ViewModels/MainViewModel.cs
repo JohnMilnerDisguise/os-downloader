@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OSDownloader.Commands;
 using OSDownloader.Models;
+using OSDownloader.Models.JSON;
 using OSDownloader.Properties;
 using System;
 using System.Collections.Generic;
@@ -255,7 +256,7 @@ namespace OSDownloader.ViewModels
 
         internal void HandleWindowClosing()
         {
-            OSListManager.Instance.SaveDownloadsToXml();
+            OSListManager.Instance.SaveFullStateToXml();
         }
 
         
@@ -406,6 +407,8 @@ namespace OSDownloader.ViewModels
                         }
                     }
                 }
+
+                OS[] osStateArrayFromLastClose = OSListManager.Instance.LoadFullStateFromXml();
 
                 //make API call using async await so as not to mash up the main UI thread
                 _osInfoApiResponseObject = await APIHandler.getAPIResponseObjectAsync();
