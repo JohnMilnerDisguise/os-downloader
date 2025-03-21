@@ -429,7 +429,7 @@ namespace OSDownloader.ViewModels
                             (long)os.boot_wim_file_size,
                             os.release_notes,
                             os.public_version_table,
-                            null,
+                            osStateArrayFromLastClose,
                             downloadsFolder
                         );
                     }

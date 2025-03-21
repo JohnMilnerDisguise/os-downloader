@@ -49,9 +49,8 @@ namespace OSDownloader.Models
         public static void AddOS(string uniqueIdentifier, string model, string name,
             string osWimURL, string osWimFileName, long osWimFileSize,
             string bootWimURL, string bootWimFileName, long bootWimFileSize,
-            string releaseNotes, Public_Version_Table[] publicVersionTable, 
-            OSDownloader.MainWindow mainWindow,
-            string downloadsFolder
+            string releaseNotes, Public_Version_Table[] publicVersionTable,
+            OS[] osStateArrayFromLastClose, string downloadsFolder
         )
         {
             OSListEntry preExistingOSRecordInList = Instance.OSList.FirstOrDefault( os => os.UniqueIdentifier != null && os.UniqueIdentifier.Equals(uniqueIdentifier) );
@@ -60,7 +59,7 @@ namespace OSDownloader.Models
                 AddOS( uniqueIdentifier, new List<string> { model }, name,
                     osWimURL, osWimFileName, osWimFileSize,
                     bootWimURL, bootWimFileName, bootWimFileSize,
-                    releaseNotes, publicVersionTable, mainWindow, downloadsFolder );
+                    releaseNotes, publicVersionTable, osStateArrayFromLastClose, downloadsFolder );
             }
             else if (!preExistingOSRecordInList.ModelArray.Contains(model) )
             {
@@ -72,94 +71,145 @@ namespace OSDownloader.Models
         private static void AddOS(string uniqueIdentifier, List<string> models, string name, 
             string osWimURL, string osWimFileName, long osWimFileSize,
             string bootWimURL, string bootWimFileName, long bootWimFileSize,
-            string releaseNotes, Public_Version_Table[] publicVersionTable, OSDownloader.MainWindow mainWindow, string downloadsFolder
+            string releaseNotes, Public_Version_Table[] publicVersionTable,
+            OS[] osStateArrayFromLastClose, string downloadsFolder
         )
         {
 
             OSListEntry osListEntry = new OSListEntry(uniqueIdentifier, models, name, 
                 osWimURL, osWimFileName, osWimFileSize,
                 bootWimURL, bootWimFileName, bootWimFileSize,
-                releaseNotes, publicVersionTable, mainWindow
+                releaseNotes, publicVersionTable, null
             );
 
-            // Register WebDownloadClient events
-            //download.DownloadProgressChanged += download.DownloadProgressChangedHandler;
-            //download.DownloadCompleted += download.DownloadCompletedHandler;
-            //download.DownloadCompleted += mainWindow.DownloadCompletedHandler;
+            OS osStateFromLastClose = Array.Find( osStateArrayFromLastClose, o => o.unique_identifier == uniqueIdentifier );
+
+            //load OS Status from last saved state
+            if( osStateFromLastClose != null )
+            {
+                Enum.TryParse(osStateFromLastClose.status, out OSListRecordStatus lastStatusOnClose);
+                osListEntry.Status = lastStatusOnClose;
+                osListEntry.SelectedActionString = osStateFromLastClose.selected_action_string;
+            }
 
             //OS.Wim Download Locations
             // Validate the URL (MOVE THIS TO WHEN DOWNLOAD IS SELECTED)
             osListEntry.DownloadClient_OSWim.CheckUrl();
+
             if (!osListEntry.DownloadClient_OSWim.HasError)
             {
+                //calculate Temp File Path for OS Wim Download
                 string osWimFilePath = Path.Combine(downloadsFolder, osListEntry.DownloadClient_OSWim.FileName);
                 string osWimTempFilePath = osWimFilePath + ".tmp";
-                // Check if there is already an ongoing download on that path
                 osListEntry.DownloadClient_OSWim.TempDownloadPath = osWimTempFilePath;
+
+                bool osWimDownloadStateFromLastCloseIsStillValid = (
+                    osStateFromLastClose != null &&
+                    osListEntry.DownloadClient_OSWim.Url.OriginalString == osStateFromLastClose.os_wim_url &&
+                    osListEntry.DownloadClient_OSWim.FileSize == osStateFromLastClose.os_wim_file_size &&
+                    osListEntry.DownloadClient_OSWim.FileName + ".tmp" == osStateFromLastClose.os_wim_temp_file_name_only
+                );
+
+                // Check if there is already an ongoing download on that path
+                osListEntry.DownloadClient_OSWim.DownloadedSize = 0;
                 if (File.Exists(osWimTempFilePath))
                 {
-                    FileInfo osWimTempFileInfoObject = new System.IO.FileInfo(osWimTempFilePath);
-                    osListEntry.DownloadClient_OSWim.DownloadedSize = osWimTempFileInfoObject.Length;
+                    osListEntry.DownloadClient_OSWim.TempFileCreated = true;
+                    if (osWimDownloadStateFromLastCloseIsStillValid)
+                    {
+                        osListEntry.DownloadClient_OSWim.DownloadedSize = osStateFromLastClose.os_wim_downloaded_size;
+                    }
                     string message = $"There is already a part-completed OS .Wim download at the path [{osWimTempFilePath}]. Setting Clients DownloadedSize to {osListEntry.DownloadClient_OSWim.DownloadedSize} Bytes";
                     Xceed.Wpf.Toolkit.MessageBox.Show(message, "Part Completed Download Found", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                // Check if the actual download file already exists
+
+                //configure remaining fields to default value for a brand new downlaod
+                osListEntry.DownloadClient_OSWim.AddedOn = DateTime.UtcNow;
+                osListEntry.DownloadClient_OSWim.OpenFileOnCompletion = false;
                 osListEntry.DownloadClient_OSWim.CompletedOn = DateTime.MinValue;
                 osListEntry.DownloadClient_OSWim.Status = DownloadStatus.Paused;
+
+                // Check if the actual download file already exists and flag it as completed if so
                 if (File.Exists(osWimFilePath))
                 {
                     string message = $"The OS .Wim download is already complete: [{osWimFilePath}]";
                     MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(message, "OS Wim Already Downloaded", MessageBoxButton.OK, MessageBoxImage.Warning);
                     osListEntry.DownloadClient_OSWim.CompletedOn = DateTime.UtcNow;
                     osListEntry.DownloadClient_OSWim.Status = DownloadStatus.Completed;
+                    osListEntry.DownloadClient_OSWim.DownloadedSize = osListEntry.DownloadClient_OSWim.FileSize;
                 }
 
-                //configure remaining fields
-                osListEntry.DownloadClient_OSWim.AddedOn = DateTime.UtcNow;
-                osListEntry.DownloadClient_OSWim.OpenFileOnCompletion = false;
-                
+                //if the saved state for this object is available and saved valid, then use these values instead:
+                if (osWimDownloadStateFromLastCloseIsStillValid)
+                {
+                    osListEntry.DownloadClient_OSWim.AddedOn = osStateFromLastClose.os_wim_added_on;
+                    osListEntry.DownloadClient_OSWim.CompletedOn = osStateFromLastClose.os_wim_completed_on;
+                    osListEntry.DownloadClient_OSWim.StatusText = osStateFromLastClose.os_wim_status_text;
+                    osListEntry.DownloadClient_OSWim.ElapsedTime = osStateFromLastClose.os_wim_elapsed_time;
+                }
             }
+
+            // Validate the URL (MOVE THIS TO WHEN DOWNLOAD IS SELECTED)
+            osListEntry.DownloadClient_BootWim.CheckUrl();
 
             if (!osListEntry.DownloadClient_BootWim.HasError)
             {
-                //OS.Wim Download Locations
+                //calculate Temp File Path for Boot Wim Download
                 string bootWimFilePath = Path.Combine(downloadsFolder, osListEntry.DownloadClient_BootWim.FileName);
                 string bootWimTempFilePath = bootWimFilePath + ".tmp";
-                // Check if there is already an ongoing download on that path
                 osListEntry.DownloadClient_BootWim.TempDownloadPath = bootWimTempFilePath;
+
+                bool bootWimDownloadStateFromLastCloseIsStillValid = (
+                    osStateFromLastClose != null &&
+                    osListEntry.DownloadClient_BootWim.Url.OriginalString == osStateFromLastClose.boot_wim_url &&
+                    osListEntry.DownloadClient_BootWim.FileSize == osStateFromLastClose.boot_wim_file_size &&
+                    osListEntry.DownloadClient_BootWim.FileName + ".tmp" == osStateFromLastClose.boot_wim_temp_file_name_only
+                );
+
+                // Check if there is already an ongoing download on that path
+                osListEntry.DownloadClient_BootWim.DownloadedSize = 0;
                 if (File.Exists(bootWimTempFilePath))
                 {
-                    FileInfo osWimTempFileInfoObject = new System.IO.FileInfo(bootWimTempFilePath);
-                    osListEntry.DownloadClient_BootWim.DownloadedSize = bootWimTempFilePath.Length;
-                    string message = $"There is already a part-completed Boot .Wim download in progress at the path [{bootWimTempFilePath}]. Setting Clients DownloadedSize to {osListEntry.DownloadClient_BootWim.DownloadedSize} Bytes";
-                    Xceed.Wpf.Toolkit.MessageBox.Show(message, "File Download Location Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    osListEntry.DownloadClient_BootWim.TempFileCreated = true;
+                    if (bootWimDownloadStateFromLastCloseIsStillValid)
+                    {
+                        osListEntry.DownloadClient_BootWim.DownloadedSize = osStateFromLastClose.boot_wim_downloaded_size;
+                    }
+                    string message = $"There is already a part-completed Boot .Wim download at the path [{bootWimTempFilePath}]. Setting Clients DownloadedSize to {osListEntry.DownloadClient_BootWim.DownloadedSize} Bytes";
+                    Xceed.Wpf.Toolkit.MessageBox.Show(message, "Part Completed Download Found", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                // Check if the actual download file already exists
+
+                //configure remaining fields to default value for a brand new downlaod
+                osListEntry.DownloadClient_BootWim.AddedOn = DateTime.UtcNow;
+                osListEntry.DownloadClient_BootWim.OpenFileOnCompletion = false;
                 osListEntry.DownloadClient_BootWim.CompletedOn = DateTime.MinValue;
                 osListEntry.DownloadClient_BootWim.Status = DownloadStatus.Paused;
+
+                // Check if the actual download file already exists and flag it as completed if so
                 if (File.Exists(bootWimFilePath))
                 {
                     string message = $"The Boot .Wim download is already complete: [{bootWimFilePath}]";
                     MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(message, "Boot Wim Already Downloaded", MessageBoxButton.OK, MessageBoxImage.Warning);
                     osListEntry.DownloadClient_BootWim.CompletedOn = DateTime.UtcNow;
                     osListEntry.DownloadClient_BootWim.Status = DownloadStatus.Completed;
+                    osListEntry.DownloadClient_OSWim.DownloadedSize = osListEntry.DownloadClient_OSWim.FileSize;
+
                 }
-                // Validate the URL (MOVE THIS TO WHEN DOWNLOAD IS SELECTED)
-                osListEntry.DownloadClient_BootWim.CheckUrl();
-                if (osListEntry.DownloadClient_BootWim.HasError)
-                    return;
-                //configure remaining fields
-                osListEntry.DownloadClient_BootWim.AddedOn = DateTime.UtcNow;
-                osListEntry.DownloadClient_BootWim.OpenFileOnCompletion = false;
+
+                //if the saved state for this object is available and saved valid, then use these values instead:
+                if (bootWimDownloadStateFromLastCloseIsStillValid)
+                {
+                    osListEntry.DownloadClient_BootWim.AddedOn = osStateFromLastClose.boot_wim_added_on;
+                    osListEntry.DownloadClient_BootWim.CompletedOn = osStateFromLastClose.boot_wim_completed_on;
+                    osListEntry.DownloadClient_BootWim.StatusText = osStateFromLastClose.boot_wim_status_text;
+                    osListEntry.DownloadClient_BootWim.ElapsedTime = osStateFromLastClose.boot_wim_elapsed_time;
+                }
             }
 
             //Set Status Depending On Whether OS in library
             osListEntry.Status = osListEntry.HasError ? OSListRecordStatus.NOT_VALID : OSListRecordStatus.Not_In_Library;
 
-
-            //osListEntry.ReleaseNotes = $"Hello\nThese are the Release Notes for {name}";
-
-            // Add the download to the downloads list
+            // Add the OS and it's two download clients to the OS list
             OSListManager.Instance.OSList.Add(osListEntry);
         }
 
@@ -238,21 +288,23 @@ namespace OSDownloader.Models
                     status = os.Status.ToString(),
                     boot_wim_url = os.DownloadClient_BootWim.Url.OriginalString,
                     boot_wim_temp_path = os.DownloadClient_BootWim.TempDownloadPath,
+                    boot_wim_temp_file_name_only = System.IO.Path.GetFileName(os.DownloadClient_BootWim.TempDownloadPath),
                     boot_wim_file_size = os.DownloadClient_BootWim.FileSize,
                     boot_wim_downloaded_size = os.DownloadClient_BootWim.DownloadedSize,
                     boot_wim_status = os.DownloadClient_BootWim.Status.ToString(),
                     boot_wim_status_text = os.DownloadClient_BootWim.StatusText,
-                    boot_wim_total_time = os.DownloadClient_BootWim.TotalElapsedTime,
+                    boot_wim_elapsed_time = os.DownloadClient_BootWim.TotalElapsedTime,
                     boot_wim_added_on = os.DownloadClient_BootWim.AddedOn,
                     boot_wim_completed_on = os.DownloadClient_BootWim.CompletedOn,
                     boot_wim_has_error = os.DownloadClient_BootWim.HasError,
                     os_wim_url = os.DownloadClient_OSWim.Url.OriginalString,
                     os_wim_temp_path = os.DownloadClient_OSWim.TempDownloadPath,
+                    os_wim_temp_file_name_only = System.IO.Path.GetFileName(os.DownloadClient_OSWim.TempDownloadPath),
                     os_wim_file_size = os.DownloadClient_OSWim.FileSize,
                     os_wim_downloaded_size = os.DownloadClient_OSWim.DownloadedSize,
                     os_wim_status = os.DownloadClient_OSWim.Status.ToString(),
                     os_wim_status_text = os.DownloadClient_OSWim.StatusText,
-                    os_wim_total_time = os.DownloadClient_OSWim.TotalElapsedTime,
+                    os_wim_elapsed_time = os.DownloadClient_OSWim.TotalElapsedTime,
                     os_wim_added_on = os.DownloadClient_OSWim.AddedOn,
                     os_wim_completed_on = os.DownloadClient_OSWim.CompletedOn,
                     os_wim_has_error = os.DownloadClient_OSWim.HasError
@@ -357,9 +409,9 @@ namespace OSDownloader.Models
                             }
                         };
                         // Serialize the blank state object to JSON
-                        string blankStateJson = JsonConvert.SerializeObject(stateAtLastClose, Formatting.Indented);
+                        string blankStateJson = JsonConvert.SerializeObject(blankStateAtLastCloseObject, Formatting.Indented);
                         // Save blank state JSON back to overwrite file
-                        File.WriteAllText(StateAtLastCloseJSONPath, json);
+                        File.WriteAllText(StateAtLastCloseJSONPath, blankStateJson);
 
                         return stateAtLastClose.osses.os;
                     }
