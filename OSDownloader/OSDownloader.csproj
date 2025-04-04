@@ -113,6 +113,7 @@
     <Compile Include="Models\JSON\ExistingDeploymentShareContents.cs" />
     <Compile Include="Models\JSON\JSONTimespanConverter.cs" />
     <Compile Include="Models\JSON\StateAtLastClose.cs" />
+    <Compile Include="Models\OSListEntryFile.cs" />
     <Compile Include="Models\ThrottledStream.cs" />
     <Compile Include="ViewModels\DownloadsViewModel.cs" />
     <Compile Include="Views\FreeSpaceVisualiserControl.xaml.cs">

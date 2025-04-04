@@ -265,7 +265,7 @@ namespace OSDownloader.Models
                 {
                     combinedDownloadSpeed += DownloadClient_OSWim.downloadSpeed;
                 }
-                if (DownloadClient_BootWim.Status == DownloadStatus.Downloading && !DownloadClient_BootWim.HasError)
+                if (FileObject_BootWim.DownloadClient != null && Status == DownloadStatus.Downloading && !DownloadClient_BootWim.HasError)
                 {
                     combinedDownloadSpeed += DownloadClient_OSWim.downloadSpeed;
                 }

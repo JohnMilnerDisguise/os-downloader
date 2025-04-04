@@ -98,13 +98,6 @@ namespace OSDownloader.Models
                 osListEntry.Status = lastStatusOnClose;
                 osListEntry.SelectedActionString = osStateFromLastClose.selected_action_string;
             }
-            else
-            {
-                osListEntry.Status = OSListRecordStatus.Initialized;
-                osListEntry.SelectedActionString = osStateFromLastClose.selected_action_string;
-            }
-
-
 
             //OS.Wim Download Locations
             // Validate the URL (MOVE THIS TO WHEN DOWNLOAD IS SELECTED)
