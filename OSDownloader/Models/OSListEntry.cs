@@ -26,10 +26,10 @@ namespace OSDownloader.Models
         #region Fields and Properties_John
 
         //OS Wim Download Client
-        public WebDownloadClient DownloadClient_OSWim { get; set; }
+        public OSListEntryFile FileObject_OSWim { get; set; }
 
         //Boot Wim Download Client
-        public WebDownloadClient DownloadClient_BootWim { get; set; }
+        public OSListEntryFile FileObject_BootWim { get; set; }
 
         //OS's Model Names
         public List<string> ModelArray { get; set; }
@@ -99,7 +99,7 @@ namespace OSDownloader.Models
             {
                 // if (ActionOptions.Count != 2)
                 //{
-                return ActionOptions.Count == 0 || (ActionOptions.Count == 1 && ActionOptions[0].Length == 0) ? Visibility.Hidden : Visibility.Visible;
+                return ActionOptions == null || ActionOptions.Count == 0 || (ActionOptions.Count == 1 && ActionOptions[0].Length == 0) ? Visibility.Hidden : Visibility.Visible;
                 //}
                 //return Visibility.Visible;
             }
@@ -150,8 +150,12 @@ namespace OSDownloader.Models
                 {
                     DownloadStatus overallStatus = DownloadStatus.Initialized;
 
+                    DownloadStatus? bootWimDownloadClientStatus = FileObject_BootWim.DownloadClient == null ? null : (DownloadStatus?)FileObject_BootWim.DownloadClient.Status;
+                    DownloadStatus? osWimDownloadClientStatus = FileObject_OSWim.DownloadClient == null ? null : (DownloadStatus?)FileObject_OSWim.DownloadClient.Status;
+
                     //if both downloads are completed then return completed
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Completed && DownloadClient_OSWim.Status == DownloadStatus.Completed)
+                    if( ( bootWimDownloadClientStatus == null || bootWimDownloadClientStatus == DownloadStatus.Completed ) && 
+                        ( osWimDownloadClientStatus == null || osWimDownloadClientStatus == DownloadStatus.Completed ) )
                     {
                         return DownloadStatus.Completed.ToString().Replace('_', ' ');
                     }
@@ -159,48 +163,48 @@ namespace OSDownloader.Models
                     ////////////////////////////////////////
 
                     //if one is Paused then updated overallstatus to Paused then carry on checking
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Paused || DownloadClient_OSWim.Status == DownloadStatus.Paused)
+                    if (bootWimDownloadClientStatus == DownloadStatus.Paused || osWimDownloadClientStatus == DownloadStatus.Paused)
                     {
                         overallStatus = DownloadStatus.Paused;
                     }
                     //if one is Deleted then updated overallstatus to Deleted then carry on checking
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Deleted || DownloadClient_OSWim.Status == DownloadStatus.Deleted)
+                    if (bootWimDownloadClientStatus == DownloadStatus.Deleted || osWimDownloadClientStatus == DownloadStatus.Deleted)
                     {
                         overallStatus = DownloadStatus.Deleted;
                     }
 
                     //if one is queued then updated overallstatus to Queued then carry on checking
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Queued || DownloadClient_OSWim.Status == DownloadStatus.Queued)
+                    if (bootWimDownloadClientStatus == DownloadStatus.Queued || osWimDownloadClientStatus == DownloadStatus.Queued)
                     {
                         overallStatus = DownloadStatus.Queued;
                     }
 
                     //if one is Waiting then updated overallstatus to Waiting then carry on checking
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Waiting || DownloadClient_OSWim.Status == DownloadStatus.Waiting)
+                    if (bootWimDownloadClientStatus == DownloadStatus.Waiting || osWimDownloadClientStatus == DownloadStatus.Waiting)
                     {
                         overallStatus = DownloadStatus.Waiting;
                     }
 
                     //if one is Downloading then updated overallstatus to Downloading then carry on checking
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Downloading || DownloadClient_OSWim.Status == DownloadStatus.Downloading)
+                    if (bootWimDownloadClientStatus == DownloadStatus.Downloading || osWimDownloadClientStatus == DownloadStatus.Downloading)
                     {
                         overallStatus = DownloadStatus.Downloading;
                     }
 
                     //if one is Error then updated overallstatus to Error then carry on checking
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Error || DownloadClient_OSWim.Status == DownloadStatus.Error)
+                    if (bootWimDownloadClientStatus == DownloadStatus.Error || osWimDownloadClientStatus == DownloadStatus.Error)
                     {
                         overallStatus = DownloadStatus.Error;
                     }
 
                     //pausing or deleting should only be brief so they should overwride the main downloading and error status
                     //if one is Deleting then updated overallstatus to Deleting then carry on checking
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Deleting || DownloadClient_OSWim.Status == DownloadStatus.Deleting)
+                    if (bootWimDownloadClientStatus == DownloadStatus.Deleting || osWimDownloadClientStatus == DownloadStatus.Deleting)
                     {
                         overallStatus = DownloadStatus.Deleting;
                     }
                     //if one is Pausing then updated overallstatus to Pausing then carry on checking
-                    if (DownloadClient_BootWim.Status == DownloadStatus.Pausing || DownloadClient_OSWim.Status == DownloadStatus.Pausing)
+                    if (bootWimDownloadClientStatus == DownloadStatus.Pausing || osWimDownloadClientStatus == DownloadStatus.Pausing)
                     {
                         overallStatus = DownloadStatus.Pausing;
                     }
@@ -216,11 +220,15 @@ namespace OSDownloader.Models
         {
             get
             {
-                if( (float)DownloadClient_OSWim.FileSize + (float)DownloadClient_OSWim.FileSize  == 0f ) {
+                float bootWimDownloadSize = (float)( FileObject_BootWim.DownloadClient == null ? 0 : FileObject_BootWim.DownloadClient.FileSize );
+                float osWimDownloadSize = (float)( FileObject_OSWim.DownloadClient == null ? 0 : FileObject_OSWim.DownloadClient.FileSize );
+                float bootWimDownloadPercent = bootWimDownloadSize == 0f ? 0f : FileObject_BootWim.DownloadClient.Percent;
+                float osWimDownloadPercent = osWimDownloadSize == 0f ? 0f : FileObject_OSWim.DownloadClient.Percent;
+                if ( bootWimDownloadSize + osWimDownloadSize == 0f ) {
                     //avoid divide by zero exception
                     return 0f;
                 }
-                return ((DownloadClient_OSWim.Percent * (float)DownloadClient_OSWim.FileSize) + (DownloadClient_BootWim.Percent * (float)DownloadClient_BootWim.FileSize)) / ((float)DownloadClient_OSWim.FileSize + (float)DownloadClient_BootWim.FileSize);
+                return ( (osWimDownloadPercent * osWimDownloadSize) + (bootWimDownloadPercent * bootWimDownloadSize)) / (osWimDownloadSize + bootWimDownloadSize);
             }
         }
 
@@ -472,64 +480,16 @@ namespace OSDownloader.Models
             this.ReleaseNotes = releaseNotes;
 
             //get existing or make new WebDownloadClient for OS Wim URL
-            WebDownloadClient existingOSWimDownloadClient = DownloadManager.findDownloadInstanceByURLFromAllDownloadClientStore(osWimURL);
-            if (existingOSWimDownloadClient == null)
-            {
-                this.DownloadClient_OSWim = new WebDownloadClient(osWimURL);
-                this.DownloadClient_OSWim.FileSize = osWimFileSize;
-                this.DownloadClient_OSWim.DownloadProgressChanged += this.DownloadClient_OSWim.DownloadProgressChangedHandler;
-                this.DownloadClient_OSWim.DownloadCompleted += this.DownloadClient_OSWim.DownloadCompletedHandler;
-                this.DownloadClient_OSWim.StatusChanged += DownloadManager.HandleDownloadEntryStatusChanged;
-                this.DownloadClient_OSWim.StatusChanged += this.HandleDownloadClientStatusChanged;
-                //this.DownloadClient_OSWim.DownloadCompleted += this.DownloadCompletedHandler;
-                this.DownloadClient_OSWim.PropertyChanged += HandleDownloadClientPropertyChanged;
-
-                if (osWimFileName == null || osWimFileName.Trim().Length == 0)
-                {
-                    Xceed.Wpf.Toolkit.MessageBox.Show($"The OS .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    this.DownloadClient_OSWim.HasError = true;
-                }
-                this.DownloadClient_OSWim.FileName = osWimFileName;
-                DownloadManager.Instance.AllDownloadClientStore.Add(this.DownloadClient_OSWim);
-            }
-            else
-            {
-                this.DownloadClient_OSWim = existingOSWimDownloadClient;
-            }
-
-
+            FileObject_OSWim = new OSListEntryFile(this, "OS .Wim", osWimURL, osWimFileSize, osWimFileName);
 
             //get existing or make new WebDownloadClient for Boot Wim URL
-            WebDownloadClient existingBootWimDownloadClient = DownloadManager.findDownloadInstanceByURLFromAllDownloadClientStore(bootWimURL);
-            if (existingBootWimDownloadClient == null)
-            {
-                this.DownloadClient_BootWim = new WebDownloadClient(bootWimURL);
-                this.DownloadClient_BootWim.FileSize = bootWimFileSize;
-                this.DownloadClient_BootWim.DownloadProgressChanged += this.DownloadClient_BootWim.DownloadProgressChangedHandler;
-                this.DownloadClient_BootWim.DownloadCompleted += this.DownloadClient_BootWim.DownloadCompletedHandler;
-                this.DownloadClient_BootWim.StatusChanged += DownloadManager.HandleDownloadEntryStatusChanged;
-                //this.DownloadClient_BootWim.StatusChanged += this.StatusChangedHandler;
-                //this.DownloadClient_BootWim.DownloadCompleted += this.DownloadCompletedHandler;
-                this.DownloadClient_BootWim.PropertyChanged += HandleDownloadClientPropertyChanged;
-
-                if (bootWimFileName == null || bootWimFileName.Trim().Length == 0)
-                {
-                    Xceed.Wpf.Toolkit.MessageBox.Show($"The Boot .Wim File Name for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    this.DownloadClient_BootWim.HasError = true;
-                }
-                this.DownloadClient_BootWim.FileName = bootWimFileName;
-                DownloadManager.Instance.AllDownloadClientStore.Add(this.DownloadClient_BootWim);
-            }
-            else
-            {
-                this.DownloadClient_BootWim = existingBootWimDownloadClient;
-            }
+            FileObject_BootWim = new OSListEntryFile(this, "Boot .Wim", bootWimURL, bootWimFileSize, bootWimFileName);
 
             if (publicVersionTable == null)
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show($"The Public Version Table for the {uniqueIdentifier} OS is Missing", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.PublicVersionTable = new ObservableCollection<Public_Version_Table>();
-                this.DownloadClient_OSWim.HasError = true;
+                this.FileObject_OSWim.DownloadClient.HasError = true;
             }
             else
             {
@@ -606,16 +566,28 @@ namespace OSDownloader.Models
         public void Start()
         {
             Status = OSListRecordStatus.Active;
-            this.DownloadClient_BootWim.Start();
-            this.DownloadClient_OSWim.Start();
+            if( this.FileObject_OSWim.DownloadClient != null )
+            {
+                this.FileObject_OSWim.DownloadClient.Start();
+            }
+            if (this.FileObject_BootWim.DownloadClient != null)
+            {
+                this.FileObject_BootWim.DownloadClient.Start();
+            }
         }
 
         public void Pause()
         {
             //Status = OSListRecordStatus.Active;
             Status = OSListRecordStatus.Paused;
-            this.DownloadClient_BootWim.Pause();
-            this.DownloadClient_OSWim.Pause();
+            if (this.FileObject_OSWim.DownloadClient != null)
+            {
+                this.FileObject_OSWim.DownloadClient.Pause();
+            }
+            if (this.FileObject_BootWim.DownloadClient != null)
+            {
+                this.FileObject_BootWim.DownloadClient.Pause();
+            }
         }
         #endregion
     }

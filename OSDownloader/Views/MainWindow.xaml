@@ -4,11 +4,11 @@
         xmlns:osc="clr-namespace:OpenSourceControls"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:s="clr-namespace:System;assembly=mscorlib"
-        xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon" xmlns:OSDownloader="clr-namespace:OSDownloader" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon" 
+        xmlns:OSDownloader="clr-namespace:OSDownloader" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:OSDownloader"
         xmlns:viewmodels="clr-namespace:OSDownloader.ViewModels"
         xmlns:views="clr-namespace:OSDownloader.Views"
-
         Title="OSDownloader" Height="700" Width="1270" MinWidth="770" MinHeight="500" Name="mainWindow" WindowStartupLocation="CenterScreen"
         Icon="/OSDownloader;component/Resources/download_icon.ico" KeyDown="mainWindow_KeyDown" 
         Closing="mainWindow_Closing" StateChanged="mainWindow_StateChanged" ContentRendered="mainWindow_ContentRendered"
@@ -22,7 +22,7 @@
     <ribbon:RibbonWindow.DataContext>
         <viewmodels:MainViewModel/>
     </ribbon:RibbonWindow.DataContext>
-  
+
 
     <ribbon:RibbonWindow.Resources>
 
@@ -112,7 +112,7 @@
                 <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             </Style.Setters>
         </Style>
- 
+
         <Style TargetType="{x:Type DataGridCell}">
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
@@ -145,7 +145,7 @@
     <DockPanel Name="dockPanel">
 
         <!-- ########################## TITLE BAR BEHAVIOUR: ICON AND MENU ########################## -->
-<!--
+        <!--
         <tb:TaskbarIcon x:Name="XNotifyIcon" IconSource="/OSDownloader;component/Resources/download_icon.ico" ToolTipText="Disguise OS downloader" TrayLeftMouseUp="tcmShowMainWindow_Click">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
@@ -201,12 +201,55 @@
                 <ribbon:RibbonGroup Header="Info" Name="InfoGroup" Margin="1">
                     <ribbon:RibbonButton Label="About" Name="btnAbout" Command="{Binding ShowAboutWindowCommand}" LargeImageSource="/OSDownloader;component/Resources/about.png" />
                 </ribbon:RibbonGroup>
-                <!--
-                <ribbon:RibbonGroup Header="DEBUG Old Buttons" Name="OldButtonGroup">
-                    <ribbon:RibbonButton IsEnabled="False" Label="Add Download" Name="btnOldAddDownloadButton" Click="btnOldAddDownloadButton_Click" LargeImageSource="/OSDownloader;component/Resources/new.png" />
-                    <ribbon:RibbonButton IsEnabled="False" Label="Batch Add" Name="btnOldBatchAddButton" Click="btnOldBatchAddButton_Click" LargeImageSource="/OSDownloader;component/Resources/batch.png" />
+                <ribbon:RibbonGroup Header="Disk Space Monitor" Name="DiskSpaceGroup" Width="312">
+                    <ribbon:RibbonGroup.Style>
+                        <Style TargetType="{x:Type ribbon:RibbonGroup}">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </ribbon:RibbonGroup.Style>
+
+                    <!-- Replace RibbonControlGroup with a regular Grid -->
+                    <Grid Width="350" Height="60" Margin="0 5 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="57"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="57"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- First row -->
+                        <Label Grid.Row="0" Grid.Column="0" x:Name="ribbonLabelTempDriveName" Content="{Binding TempDiskNameLabelContent}" HorizontalAlignment="Right" Padding="0 4 4 0" Foreground="#BB000000"/>
+                        <views:FreeSpaceVisualiserControl Grid.Row="0" Grid.Column="1" 
+                            Height="25"
+                            TotalSpace="{Binding TempDiskTotalSpace}"
+                            UsedSpace="{Binding TempDiskUsedSpace}"
+                            RequiredSpace="{Binding TempDiskRequiredSpace}"
+                            IsDisabledFill="#44000000"
+                            UsedSpaceFill="#FF5722"
+                            RequiredSpaceFill="#FFC107"
+                            FreeSpaceFill="#8BC34A"
+                            Margin="0,0,0,5"
+                        />
+                        <!-- Second row -->
+                        <Label Grid.Row="1" Grid.Column="0" x:Name="ribbonLabelUSBDriveName" Content="USB Drive" HorizontalAlignment="Right" Padding="0 5 4 0" Foreground="#BB000000"/>
+                        <views:FreeSpaceVisualiserControl Grid.Row="1" Grid.Column="1"
+                            Height="25"
+                            TotalSpace="{Binding USBDiskTotalSpace}"
+                            UsedSpace="{Binding USBDiskUsedSpace}"
+                            RequiredSpace="{Binding USBDiskRequiredSpace}"
+                            IsDisabledFill="#44000000"
+                            UsedSpaceFill="#FF5722"
+                            RequiredSpaceFill="#FFC107"
+                            FreeSpaceFill="#8BC34A"
+                        />
+                    </Grid>
                 </ribbon:RibbonGroup>
-                -->
             </ribbon:RibbonTab>
         </ribbon:Ribbon>
 
@@ -214,7 +257,7 @@
 
         <StatusBar Height="26" DockPanel.Dock="Bottom" Name="statusBar" VerticalContentAlignment="Center" Background="#FFDFE9F5" Foreground="#555555" BorderBrush="#FFB9C9DA" BorderThickness="1">
             <StatusBarItem Name="statusBarDownloads" Content="Ready" Padding="8,3,8,3" Width="60"/>
-            <Separator/>
+            <Separator/> >
             <StatusBarItem Name="statusBarActiveDownloads" Content="{Binding StatusBarActiveDownloadsText}" Padding="8,3,8,3" Width="130" />
             <Separator/>
             <StatusBarItem Name="statusBarCompleted" Content="{Binding StatusBarCompletedDownloadsText}" Padding="8,3,8,3" Width="157" />

@@ -41,8 +41,15 @@ namespace OSDownloader.Models
         #region Properties
 
         // Collection which contains all download clients, bound to the DataGrid control
-        //public ObservableCollection<OSListEntry> OSList = new ObservableCollection<OSListEntry>();
         public ObservableCollection<OSListEntry> OSList = new ObservableCollection<OSListEntry>();
+
+        //array of Wims in Customer's DeplyomentShare Library saved at last application close
+        public ExistingDeploymentShareContents existingDeploymentShareContents = null;
+
+        //array of OS info saved at last application close
+        public OS[] osStateArrayFromLastClose = null;
+
+
 
         #endregion
 
@@ -50,7 +57,7 @@ namespace OSDownloader.Models
             string osWimURL, string osWimFileName, long osWimFileSize,
             string bootWimURL, string bootWimFileName, long bootWimFileSize,
             string releaseNotes, Public_Version_Table[] publicVersionTable,
-            OS[] osStateArrayFromLastClose, string downloadsFolder
+            string downloadsFolder
         )
         {
             OSListEntry preExistingOSRecordInList = Instance.OSList.FirstOrDefault( os => os.UniqueIdentifier != null && os.UniqueIdentifier.Equals(uniqueIdentifier) );
@@ -59,9 +66,9 @@ namespace OSDownloader.Models
                 AddOS( uniqueIdentifier, new List<string> { model }, name,
                     osWimURL, osWimFileName, osWimFileSize,
                     bootWimURL, bootWimFileName, bootWimFileSize,
-                    releaseNotes, publicVersionTable, osStateArrayFromLastClose, downloadsFolder );
+                    releaseNotes, publicVersionTable, downloadsFolder );
             }
-            else if (!preExistingOSRecordInList.ModelArray.Contains(model) )
+            else if ( !preExistingOSRecordInList.ModelArray.Contains(model) )
             {
                 preExistingOSRecordInList.ModelArray.Add(model);
             }
@@ -72,7 +79,7 @@ namespace OSDownloader.Models
             string osWimURL, string osWimFileName, long osWimFileSize,
             string bootWimURL, string bootWimFileName, long bootWimFileSize,
             string releaseNotes, Public_Version_Table[] publicVersionTable,
-            OS[] osStateArrayFromLastClose, string downloadsFolder
+            string downloadsFolder
         )
         {
 
@@ -82,7 +89,7 @@ namespace OSDownloader.Models
                 releaseNotes, publicVersionTable, null
             );
 
-            OS osStateFromLastClose = Array.Find( osStateArrayFromLastClose, o => o.unique_identifier == uniqueIdentifier );
+            OS osStateFromLastClose = ( Instance == null || Instance.osStateArrayFromLastClose == null) ? null : Array.Find( Instance.osStateArrayFromLastClose, o => o.unique_identifier == uniqueIdentifier );
 
             //load OS Status from last saved state
             if( osStateFromLastClose != null )
@@ -91,6 +98,13 @@ namespace OSDownloader.Models
                 osListEntry.Status = lastStatusOnClose;
                 osListEntry.SelectedActionString = osStateFromLastClose.selected_action_string;
             }
+            else
+            {
+                osListEntry.Status = OSListRecordStatus.Initialized;
+                osListEntry.SelectedActionString = osStateFromLastClose.selected_action_string;
+            }
+
+
 
             //OS.Wim Download Locations
             // Validate the URL (MOVE THIS TO WHEN DOWNLOAD IS SELECTED)
@@ -103,6 +117,7 @@ namespace OSDownloader.Models
                 string osWimTempFilePath = osWimFilePath + ".tmp";
                 osListEntry.DownloadClient_OSWim.TempDownloadPath = osWimTempFilePath;
 
+                //check if the Last Close Saved State Info for this file is available and still valid
                 bool osWimDownloadStateFromLastCloseIsStillValid = (
                     osStateFromLastClose != null &&
                     osListEntry.DownloadClient_OSWim.Url.OriginalString == osStateFromLastClose.os_wim_url &&
@@ -110,35 +125,27 @@ namespace OSDownloader.Models
                     osListEntry.DownloadClient_OSWim.FileName + ".tmp" == osStateFromLastClose.os_wim_temp_file_name_only
                 );
 
-                // Check if there is already an ongoing download on that path
-                osListEntry.DownloadClient_OSWim.DownloadedSize = 0;
-                if (File.Exists(osWimTempFilePath))
+                //check if the File is already in the Customers DeplyomentShare OS Library with correct Name and Size
+                Os_Wims preExistingOSWimInLibrary = (Instance == null || Instance.existingDeploymentShareContents == null) ? null : Array.Find<Os_Wims>( Instance.existingDeploymentShareContents.os_wims, o => o.file_name.ToUpper() == osListEntry.DownloadClient_OSWim.FileName.ToUpper() && o.file_size == osListEntry.DownloadClient_OSWim.FileSize );
+
+                //SANITY CHECKING: DO a cleanup if the file is already in the Library but with the wrong size
+                if ( preExistingOSWimInLibrary == null )
                 {
-                    osListEntry.DownloadClient_OSWim.TempFileCreated = true;
-                    if (osWimDownloadStateFromLastCloseIsStillValid)
+                    //if not check for a file name match with no file size match and warn the user
+                    Os_Wims preExistingOSWimInLibraryWithWrongSize = (Instance == null || Instance.existingDeploymentShareContents == null) ? null : Array.Find<Os_Wims>(Instance.existingDeploymentShareContents.os_wims, o => o.file_name.ToUpper() == osListEntry.DownloadClient_OSWim.FileName.ToUpper() );
+                    if (preExistingOSWimInLibraryWithWrongSize != null)
                     {
-                        osListEntry.DownloadClient_OSWim.DownloadedSize = osStateFromLastClose.os_wim_downloaded_size;
+                        string message = $"The OS .Wim file [{osWimFilePath}] is already in your Deployment Share OS Library but its file size [{preExistingOSWimInLibraryWithWrongSize.file_size}] is different to the expected file size of [{osListEntry.DownloadClient_OSWim.FileSize}].\n\nThe file will be downloaded again to ensure you have the latest copy.";
+                        Xceed.Wpf.Toolkit.MessageBox.Show(message, "OS Wim Already in Library with Different Size", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
-                    string message = $"There is already a part-completed OS .Wim download at the path [{osWimTempFilePath}]. Setting Clients DownloadedSize to {osListEntry.DownloadClient_OSWim.DownloadedSize} Bytes";
-                    Xceed.Wpf.Toolkit.MessageBox.Show(message, "Part Completed Download Found", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
 
+                //Load Previous State Data onto the OS Wim Download Client (or use default values if no state data available)
                 //configure remaining fields to default value for a brand new downlaod
                 osListEntry.DownloadClient_OSWim.AddedOn = DateTime.UtcNow;
                 osListEntry.DownloadClient_OSWim.OpenFileOnCompletion = false;
                 osListEntry.DownloadClient_OSWim.CompletedOn = DateTime.MinValue;
                 osListEntry.DownloadClient_OSWim.Status = DownloadStatus.Paused;
-
-                // Check if the actual download file already exists and flag it as completed if so
-                if (File.Exists(osWimFilePath))
-                {
-                    string message = $"The OS .Wim download is already complete: [{osWimFilePath}]";
-                    MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(message, "OS Wim Already Downloaded", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    osListEntry.DownloadClient_OSWim.CompletedOn = DateTime.UtcNow;
-                    osListEntry.DownloadClient_OSWim.Status = DownloadStatus.Completed;
-                    osListEntry.DownloadClient_OSWim.DownloadedSize = osListEntry.DownloadClient_OSWim.FileSize;
-                }
-
                 //if the saved state for this object is available and saved valid, then use these values instead:
                 if (osWimDownloadStateFromLastCloseIsStillValid)
                 {
@@ -147,6 +154,61 @@ namespace OSDownloader.Models
                     osListEntry.DownloadClient_OSWim.StatusText = osStateFromLastClose.os_wim_status_text;
                     osListEntry.DownloadClient_OSWim.ElapsedTime = osStateFromLastClose.os_wim_elapsed_time;
                 }
+
+                // Check if the final download file already exists
+                bool completedDownloadAlreadyExistsInTempFolder = File.Exists(osWimFilePath);
+                bool completedDownloadAlreadyExistsOnUSB = false;
+
+                // Check if there is already an ongoing download on that path
+                osListEntry.DownloadClient_OSWim.DownloadedSize = 0;
+                if (File.Exists(osWimTempFilePath))
+                {
+                    if (completedDownloadAlreadyExistsInTempFolder || completedDownloadAlreadyExistsOnUSB || preExistingOSWimInLibrary != null)
+                    {
+                        //if the user already has the complete file then delete the temp file
+                        try
+                        {
+                            File.Delete(osWimTempFilePath);
+                            // Show warning of temp file cleanup to user
+                            string message = $"A partially downloaded file was found at [{osWimTempFilePath}]\n\nThis file has been deleted because is not needed because you already have the complete file in your OS library.";
+                            Xceed.Wpf.Toolkit.MessageBox.Show(message, "Unneeded Partial Download Removed", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log or handle any errors that occur during deletion
+                            string errorMessage = $"A partially downloaded file was found at [{osWimTempFilePath}]\n\nThis file is no longer needed because you already have the complete file in your OS library, however the Deletion Failed with the following error:\n\n{ex.Message}";
+                            Xceed.Wpf.Toolkit.MessageBox.Show(errorMessage, "Error Cleaning Up Partial Download", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                    }
+                    else
+                    {
+                        //else keep the temp file and attempt to restart the download from where it was last left off
+                        osListEntry.DownloadClient_OSWim.TempFileCreated = true;
+                        if (osWimDownloadStateFromLastCloseIsStillValid)
+                        {
+                            osListEntry.DownloadClient_OSWim.DownloadedSize = osStateFromLastClose.os_wim_downloaded_size;
+                        }
+                        else
+                        {
+                            osListEntry.DownloadClient_OSWim.DownloadedSize = 0;
+                            string message = $"A part-downloaded Temp OS .Wim file was found [{osWimTempFilePath}] but the information for how much of the download has completed is lost. The Download will Restart again from the beginning";
+                            Xceed.Wpf.Toolkit.MessageBox.Show(message, "Part Completed Download must be Restarted", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                    }
+                }
+
+
+
+                // Check if the actual download file already exists and flag it as completed if so
+                if (completedDownloadAlreadyExistsInTempFolder || completedDownloadAlreadyExistsOnUSB || preExistingOSWimInLibrary != null)
+                {
+                    //string message = $"The OS .Wim download is already complete: [{osWimFilePath}]";
+                    //MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(message, "OS Wim Already Downloaded", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    osListEntry.DownloadClient_OSWim.CompletedOn = DateTime.UtcNow;
+                    osListEntry.DownloadClient_OSWim.Status = DownloadStatus.Completed;
+                    osListEntry.DownloadClient_OSWim.DownloadedSize = osListEntry.DownloadClient_OSWim.FileSize;
+                }
+
             }
 
             // Validate the URL (MOVE THIS TO WHEN DOWNLOAD IS SELECTED)
@@ -175,8 +237,12 @@ namespace OSDownloader.Models
                     {
                         osListEntry.DownloadClient_BootWim.DownloadedSize = osStateFromLastClose.boot_wim_downloaded_size;
                     }
-                    string message = $"There is already a part-completed Boot .Wim download at the path [{bootWimTempFilePath}]. Setting Clients DownloadedSize to {osListEntry.DownloadClient_BootWim.DownloadedSize} Bytes";
-                    Xceed.Wpf.Toolkit.MessageBox.Show(message, "Part Completed Download Found", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    else
+                    {
+                        osListEntry.DownloadClient_BootWim.DownloadedSize = 0;
+                        string message = $"A part-downloaded Temp Boot .Wim file was found [{bootWimTempFilePath}] but the information for how much of the download has completed is lost. The Download will Restart again from the beginning";
+                        Xceed.Wpf.Toolkit.MessageBox.Show(message, "Part Completed Download must be Restarted", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
 
                 //configure remaining fields to default value for a brand new downlaod
@@ -184,17 +250,6 @@ namespace OSDownloader.Models
                 osListEntry.DownloadClient_BootWim.OpenFileOnCompletion = false;
                 osListEntry.DownloadClient_BootWim.CompletedOn = DateTime.MinValue;
                 osListEntry.DownloadClient_BootWim.Status = DownloadStatus.Paused;
-
-                // Check if the actual download file already exists and flag it as completed if so
-                if (File.Exists(bootWimFilePath))
-                {
-                    string message = $"The Boot .Wim download is already complete: [{bootWimFilePath}]";
-                    MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(message, "Boot Wim Already Downloaded", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    osListEntry.DownloadClient_BootWim.CompletedOn = DateTime.UtcNow;
-                    osListEntry.DownloadClient_BootWim.Status = DownloadStatus.Completed;
-                    osListEntry.DownloadClient_OSWim.DownloadedSize = osListEntry.DownloadClient_OSWim.FileSize;
-
-                }
 
                 //if the saved state for this object is available and saved valid, then use these values instead:
                 if (bootWimDownloadStateFromLastCloseIsStillValid)
@@ -204,10 +259,24 @@ namespace OSDownloader.Models
                     osListEntry.DownloadClient_BootWim.StatusText = osStateFromLastClose.boot_wim_status_text;
                     osListEntry.DownloadClient_BootWim.ElapsedTime = osStateFromLastClose.boot_wim_elapsed_time;
                 }
+
+                // Check if the actual download file already exists and flag it as completed if so
+                if (File.Exists(bootWimFilePath))
+                {
+                    //string message = $"The Boot .Wim download is already complete: [{bootWimFilePath}]";
+                    //MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(message, "Boot Wim Already Downloaded", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    osListEntry.DownloadClient_BootWim.CompletedOn = DateTime.UtcNow;
+                    osListEntry.DownloadClient_BootWim.Status = DownloadStatus.Completed;
+                    osListEntry.DownloadClient_BootWim.DownloadedSize = osListEntry.DownloadClient_BootWim.FileSize;
+                }
+
             }
 
-            //Set Status Depending On Whether OS in library
-            osListEntry.Status = osListEntry.HasError ? OSListRecordStatus.NOT_VALID : OSListRecordStatus.Not_In_Library;
+            //Set Status to NOT Valid if there was a validation error
+            osListEntry.Status = osListEntry.HasError ? OSListRecordStatus.NOT_VALID : osListEntry.Status;
+
+            //If status is still on the default, untouched value 'Initialized' then set it to 'Not Included'
+            osListEntry.Status = osListEntry.Status == OSListRecordStatus.Initialized ? OSListRecordStatus.Not_In_Library : osListEntry.Status;
 
             // Add the OS and it's two download clients to the OS list
             OSListManager.Instance.OSList.Add(osListEntry);
@@ -248,7 +317,7 @@ namespace OSDownloader.Models
         }
         
 
-        public void SaveFullStateToXml()
+        public void SaveFullStateToJSON()
         {
             // Pause downloads
             SetAllActiveOSRecordsToPaused();
@@ -264,6 +333,7 @@ namespace OSDownloader.Models
             for (int i = 0; i < OSList.Count; i++) 
             {
                 OSListEntry os = OSList[i];
+                /*
                 if (os.DownloadClient_BootWim.Status != DownloadStatus.Paused &&
                     os.DownloadClient_BootWim.Status != DownloadStatus.Initialized &&
                     os.DownloadClient_BootWim.Status != DownloadStatus.Error &&
@@ -280,6 +350,7 @@ namespace OSDownloader.Models
                     string message = $"The OS Wim for {os.UniqueIdentifier} has not yet fully paused, it's status is currently {os.DownloadClient_OSWim.StatusString}";
                     Xceed.Wpf.Toolkit.MessageBox.Show(message, "Download Not Paused", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
+                */
 
                 stateAtLastClose.osses.os[i] = new OS()
                 {
@@ -319,14 +390,14 @@ namespace OSDownloader.Models
             string StateAtLastCloseJSONPath = System.IO.Path.Combine(configDirectoryPath, "stateAtLastClose.json");
             File.WriteAllText(StateAtLastCloseJSONPath, json);
         }
-        public OS[] LoadFullStateFromXml()
+        public void LoadFullStateFromJSON()
         {
             string configDirectoryPath = GetApplicationsConfigDirectoryPath();
             string StateAtLastCloseJSONPath = System.IO.Path.Combine(configDirectoryPath, "stateAtLastClose.json");
 
             try
             {
-                if (File.Exists(StateAtLastCloseJSONPath))
+                if (osStateArrayFromLastClose == null && File.Exists(StateAtLastCloseJSONPath))
                 {
 
                     // Step 1: Read the JSON file into a string
@@ -413,7 +484,7 @@ namespace OSDownloader.Models
                         // Save blank state JSON back to overwrite file
                         File.WriteAllText(StateAtLastCloseJSONPath, blankStateJson);
 
-                        return stateAtLastClose.osses.os;
+                        osStateArrayFromLastClose = stateAtLastClose.osses.os;
                     }
                 }
             }
@@ -421,10 +492,41 @@ namespace OSDownloader.Models
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show("There was an error while loading the download list.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            return new OS[] { };
         }
 
+        public void LoadExistingDeploymentShareContentsFromJSON()
+        {
+            string configDirectoryPath = GetApplicationsConfigDirectoryPath();
+            string ExistingDeploymentShareContentsJSONPath = System.IO.Path.Combine(configDirectoryPath, "existingDeploymentShareContents.json");
+
+            try
+            {
+                if (existingDeploymentShareContents == null )
+                {
+                    if (File.Exists(ExistingDeploymentShareContentsJSONPath))
+                    {
+                        // Step 1: Read the JSON file into a string
+                        string json = File.ReadAllText(ExistingDeploymentShareContentsJSONPath);
+
+                        // Step 2: Deserialize the JSON string into a StateAtLastClose object
+                        existingDeploymentShareContents = JsonConvert.DeserializeObject<ExistingDeploymentShareContents>(json);
+                    }
+                    else
+                    {
+                        existingDeploymentShareContents = new ExistingDeploymentShareContents()
+                        {
+                            boot_wims = new Boot_Wims[] { },
+                            os_wims = new Os_Wims[] { }
+                        };
+                        Xceed.Wpf.Toolkit.MessageBox.Show("Could not ascertain what OS files, if any, that you already have saved in your Deployment Share OS Library\n\nAssuming your Library is empty. If this is not the case please re-make your OS Downloader USB from OS Manager", "Missing Existing Library Contents Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("There was an error while loading the download list.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
     }
 }

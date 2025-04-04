@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,11 +18,14 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 
 namespace OSDownloader.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        #region ALL Properties
+
         //ViewModel Event handlers
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -44,7 +48,7 @@ namespace OSDownloader.ViewModels
             }
             set
             {
-                if (_cenralPanelControlDataContext != value )
+                if (_cenralPanelControlDataContext != value)
                 {
                     _cenralPanelControlDataContext = value;
                     RaisePropertyChanged(nameof(CenralPanelControlDataContext));
@@ -76,24 +80,24 @@ namespace OSDownloader.ViewModels
         private bool _downloadsPaused;
         public bool DownloadsPaused {
             get { return _downloadsPaused; }
-            set { 
-                if( value != _downloadsPaused)
+            set {
+                if (value != _downloadsPaused)
                 {
                     _downloadsPaused = value;
                     ((RelayCommand)PauseDownloadsCommand).RaiseCanExecuteChanged();
                     ((RelayCommand)UnPauseDownloadsCommand).RaiseCanExecuteChanged();
                 }
-            } 
+            }
         }
 
         private bool _windowInDownloadsViewMode;
 
-        public bool WindowIsInDownloadsViewMode { 
+        public bool WindowIsInDownloadsViewMode {
             get {
                 return _windowInDownloadsViewMode;
             }
             set {
-                if (_windowInDownloadsViewMode != value || _cenralPanelControlDataContext == null ) //only perform logic if it's changing or if its initializing
+                if (_windowInDownloadsViewMode != value || _cenralPanelControlDataContext == null) //only perform logic if it's changing or if its initializing
                 {
                     _windowInDownloadsViewMode = value;
                     ((RelayCommand)ToggleToDownloadsViewModeCommand).RaiseCanExecuteChanged(); //this causes UI to refresh IsEnabled
@@ -102,20 +106,20 @@ namespace OSDownloader.ViewModels
             }
         }
 
-        
+
 
         //Control Bindings
         private ImageSource _apiUpdateButtonImage;
-        public ImageSource ApiUpdateButtonImage { 
+        public ImageSource ApiUpdateButtonImage {
             get {
                 return _apiUpdateButtonImage;
-            } 
-            set { 
-                if ( _apiUpdateButtonImage != value) {
+            }
+            set {
+                if (_apiUpdateButtonImage != value) {
                     _apiUpdateButtonImage = value;
                     RaisePropertyChanged(nameof(ApiUpdateButtonImage));
                 }
-            } 
+            }
         }
 
         private string _apiUpdateButtonText;
@@ -152,6 +156,107 @@ namespace OSDownloader.ViewModels
             }
         }
 
+        //Disk Space Control Bindings
+        public string PathToEXEIfRunningFromUSB;
+
+        private string _tempDiskNameLabelContent;
+        public string TempDiskNameLabelContent {
+            get => _tempDiskNameLabelContent;
+            set
+            {
+                if (_tempDiskNameLabelContent != value)
+                {
+                    _tempDiskNameLabelContent = value;
+                    RaisePropertyChanged(nameof(TempDiskNameLabelContent));
+                }
+            }
+        }
+
+        private double _tempDiskTotalSpace;
+        public double TempDiskTotalSpace
+        {
+            get => _tempDiskTotalSpace;
+            set
+            {
+                if (_tempDiskTotalSpace != value)
+                {
+                    _tempDiskTotalSpace = value;
+                    RaisePropertyChanged(nameof(TempDiskTotalSpace));
+                }
+            }
+        }
+
+
+        private double _tempDiskUsedSpace;
+        public double TempDiskUsedSpace
+        {
+            get => _tempDiskUsedSpace;
+            set
+            {
+                if (_tempDiskUsedSpace != value)
+                {
+                    _tempDiskUsedSpace = value;
+                    RaisePropertyChanged(nameof(TempDiskUsedSpace));
+                }
+            }
+        }
+
+        private double _tempDiskRequiredSpace;
+        public double TempDiskRequiredSpace
+        {
+            get => _tempDiskRequiredSpace;
+            set
+            {
+                if (_tempDiskRequiredSpace != value)
+                {
+                    _tempDiskRequiredSpace = value;
+                    RaisePropertyChanged(nameof(TempDiskRequiredSpace));
+                }
+            }
+        }
+
+        private double _usbDiskTotalSpace;
+        public double USBDiskTotalSpace
+        {
+            get => _usbDiskTotalSpace;
+            set
+            {
+                if (_usbDiskTotalSpace != value)
+                {
+                    _usbDiskTotalSpace = value;
+                    RaisePropertyChanged(nameof(USBDiskTotalSpace));
+                }
+            }
+        }
+
+        private double _usbDiskUsedSpace;
+        public double USBDiskUsedSpace
+        {
+            get => _usbDiskUsedSpace;
+            set
+            {
+                if (_usbDiskUsedSpace != value)
+                {
+                    _usbDiskUsedSpace = value;
+                    RaisePropertyChanged(nameof(USBDiskUsedSpace));
+                }
+            }
+        }
+
+        private double _usbDiskRequiredSpace;
+        public double USBDiskRequiredSpace
+        {
+            get => _usbDiskRequiredSpace;
+            set
+            {
+                if (_usbDiskRequiredSpace != value)
+                {
+                    _usbDiskRequiredSpace = value;
+                    RaisePropertyChanged(nameof(USBDiskRequiredSpace));
+                }
+            }
+        }
+
         //Status Bar Bindings
         public string StatusBarActiveDownloadsText { get { 
                 return $"{DownloadManager.Instance.ActiveDownloads} Active Downloads"; 
@@ -170,6 +275,10 @@ namespace OSDownloader.ViewModels
         public ICommand CheckForUpdatesCommand { get; set; }
         public ICommand PauseDownloadsCommand { get; set; }
         public ICommand UnPauseDownloadsCommand { get; set; }
+
+        #endregion
+
+        #region Constructor
 
         public MainViewModel()
         {
@@ -202,6 +311,10 @@ namespace OSDownloader.ViewModels
             ApiCallIsInProgress = false;
             _osInfoApiResponseObject = null;
 
+            //Load an Array of files currently pre-existing in the customers OS Library (possibly remote and on another machine)
+            OSListManager.Instance.LoadExistingDeploymentShareContentsFromJSON();
+            //load an array of OS State objects from the last time the GUI Was closed so we can re-open the GUI in the same state
+            OSListManager.Instance.LoadFullStateFromJSON();
 
             //setup event handler for internet connection status monitor
             NetworkChange.NetworkAvailabilityChanged += HandleNetworkAvailabilityChanged;
@@ -211,9 +324,21 @@ namespace OSDownloader.ViewModels
 
             //set intitial data context for central panel
             CenralPanelControlDataContext = _pleaseWaitViewControlDataContext;
+
+            //Set properties for Temp Drive Space Control
+            string downloadsFolder = getDownloadsFolderPathAndPromptUserIfItsInvalid();
+            RescanTempDriveAndUpdateProperties(downloadsFolder);
+            TempDiskRequiredSpace = 0.0;
+
+            //Set properties for USB Drive Space Control
+            PathToEXEIfRunningFromUSB = DriveSpaceInfo.GetEXEPathIfRunningFromUSBDrive();
+            RescanUSBDriveAndUpdateProperties(PathToEXEIfRunningFromUSB);
+            USBDiskRequiredSpace = 0.0;
         }
 
-        //Event Handlers
+        #endregion
+
+        #region Event Handlers
 
         // Generate PropertyChanged event to update the UI
         protected void RaisePropertyChanged(string name)
@@ -256,7 +381,7 @@ namespace OSDownloader.ViewModels
 
         internal void HandleWindowClosing()
         {
-            OSListManager.Instance.SaveFullStateToXml();
+            OSListManager.Instance.SaveFullStateToJSON();
         }
 
         
@@ -267,7 +392,7 @@ namespace OSDownloader.ViewModels
             RaisePropertyChanged( nameof(StatusBarCompletedDownloadsText) );
         }
 
-        
+        #endregion
 
         #region Button Commands
         private bool CanUnPauseDownloads(object obj)
@@ -352,63 +477,14 @@ namespace OSDownloader.ViewModels
                 ApiUpdateButtonText = "Checking for Updates";
                 ApiUpdateButtonisAvailable = false;
 
-                //Make Sure Downloads Folder Exists
-                string downloadsFolder = Settings.Default.DownloadLocation;
-                while (downloadsFolder ==null || downloadsFolder.Trim().Length == 0 || !Directory.Exists(downloadsFolder))
+                //Get Downloads Folder location and exit early if it's invalid and user cancelled the setup
+                string downloadsFolder = getDownloadsFolderPathAndPromptUserIfItsInvalid();
+                if( downloadsFolder == null )
                 {
-                    string errorReason = null;
-                    if (downloadsFolder == null || downloadsFolder.Trim().Length == 0)
-                    {
-                        string message = $"No Temporary Downloads Folder is set\n\nTo use OS Downloader you need to set up a Temporary Folder on this computer where your unfinished downloads will be stored.\n\nPlease Choose a Temp Downloads Location in your Settings.";
-                        MessageBoxResult buttonPressed = Xceed.Wpf.Toolkit.MessageBox.Show(message, "No Temporary Downloads Folder Set", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                        if (buttonPressed == MessageBoxResult.OK) {
-                            ShowSettingsWindow("tiLocation");
-                            downloadsFolder = Settings.Default.DownloadLocation; //refresh the downloadsFolder with the new settings value
-                            continue;
-                        }
-                        else
-                        {
-                            HandleNetworkAvailabilityChanged(System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable());
-                            ApiCallIsInProgress = false;
-                            return;
-                        }
-                    }
-                    string parentFolderPath = Path.GetDirectoryName(downloadsFolder.TrimEnd(new char[] { '\\' } )); //this gets parent dir even not paths that dont exist
-                    
-                    if (!Directory.Exists(parentFolderPath))
-                    {
-                        errorReason = $"the folder's parent [{parentFolderPath}] doesnt exist either";
-                    }
-                    else {
-                        try
-                        {
-                            Directory.CreateDirectory(downloadsFolder);
-                        }
-                        catch (UnauthorizedAccessException accessDeniedExcptionInstance)
-                        {
-                            errorReason = "permission was denied by Windows";
-                        }
-                    }
-
-                    if(errorReason != null) { 
-                        string message = $"Could not create your temporary downloads folder:\n[{downloadsFolder}]\n\nThe Folder does not exist on your computer, and it couldnt be created automatically because {errorReason}.\n\nWould you like to edit this location in your Settings?";
-                        MessageBoxResult buttonPressed = Xceed.Wpf.Toolkit.MessageBox.Show(message, "Invalid Temp Folder Location", MessageBoxButton.OKCancel, MessageBoxImage.Error);
-                        if(buttonPressed == MessageBoxResult.OK)
-                        {
-                            ShowSettingsWindow("tiLocation");
-                            downloadsFolder = Settings.Default.DownloadLocation; //refresh the downloadsFolder with the new settings value
-                        }
-                        else
-                        {
-                            //tidy up and exit the function
-                            HandleNetworkAvailabilityChanged(System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable());
-                            ApiCallIsInProgress = false;
-                            return;
-                        }
-                    }
+                    HandleNetworkAvailabilityChanged(System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable());
+                    ApiCallIsInProgress = false;
+                    return;
                 }
-
-                OS[] osStateArrayFromLastClose = OSListManager.Instance.LoadFullStateFromXml();
 
                 //make API call using async await so as not to mash up the main UI thread
                 _osInfoApiResponseObject = await APIHandler.getAPIResponseObjectAsync();
@@ -429,7 +505,6 @@ namespace OSDownloader.ViewModels
                             (long)os.boot_wim_file_size,
                             os.release_notes,
                             os.public_version_table,
-                            osStateArrayFromLastClose,
                             downloadsFolder
                         );
                     }
@@ -440,6 +515,107 @@ namespace OSDownloader.ViewModels
 
                 ApiCallIsInProgress = false;  //flag api 'can be used' now we're finished with it
             }
+        }
+
+        #endregion
+
+        #region Convenience Methods
+        public void RescanTempDriveAndUpdateProperties( string tempFolderPath )
+        {
+            DriveSpaceInfo tempDriveSpaceInfo = null;
+            if (tempFolderPath != null)
+            {
+                tempDriveSpaceInfo = DriveSpaceInfo.GetDetailedDriveInfo(tempFolderPath);
+            }
+            if(tempDriveSpaceInfo == null)
+            {
+                TempDiskNameLabelContent = "Unknown Drive";
+                TempDiskTotalSpace = 0.1;
+                TempDiskUsedSpace = 0.1;
+            }
+            else
+            {
+                TempDiskNameLabelContent = tempDriveSpaceInfo.DriveLetter + " Drive";
+                TempDiskTotalSpace = tempDriveSpaceInfo.TotalSizeGB * 1024.0 * 1024.0 * 1024.0;
+                TempDiskUsedSpace = tempDriveSpaceInfo.UsedSpaceGB * 1024.0 * 1024.0 * 1024.0;
+            }
+        }
+
+        public void RescanUSBDriveAndUpdateProperties(string usbExePath)
+        {
+            DriveSpaceInfo usbDriveSpaceInfo = null;
+            if (usbExePath != null)
+            {
+                usbDriveSpaceInfo = DriveSpaceInfo.GetDetailedDriveInfo(usbExePath);
+            }
+            if (usbDriveSpaceInfo == null)
+            {
+                USBDiskTotalSpace = 0.0;
+                USBDiskUsedSpace = 0.0;
+            }
+            else
+            {
+                USBDiskTotalSpace = usbDriveSpaceInfo.TotalSizeGB * 1024.0 * 1024.0 * 1024.0;
+                USBDiskUsedSpace = usbDriveSpaceInfo.UsedSpaceGB * 1024.0 * 1024.0 * 1024.0;
+            }
+        }
+
+        public string getDownloadsFolderPathAndPromptUserIfItsInvalid()
+        {
+            //Make Sure Downloads Folder Exists
+            string downloadsFolder = Settings.Default.DownloadLocation;
+            while (downloadsFolder == null || downloadsFolder.Trim().Length == 0 || !Directory.Exists(downloadsFolder))
+            {
+                string errorReason = null;
+                if (downloadsFolder == null || downloadsFolder.Trim().Length == 0)
+                {
+                    string message = $"No Temporary Downloads Folder is set\n\nTo use OS Downloader you need to set up a Temporary Folder on this computer where your unfinished downloads will be stored.\n\nPlease Choose a Temp Downloads Location in your Settings.";
+                    MessageBoxResult buttonPressed = Xceed.Wpf.Toolkit.MessageBox.Show(message, "No Temporary Downloads Folder Set", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                    if (buttonPressed == MessageBoxResult.OK)
+                    {
+                        ShowSettingsWindow("tiLocation");
+                        downloadsFolder = Settings.Default.DownloadLocation; //refresh the downloadsFolder with the new settings value
+                        continue;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                string parentFolderPath = Path.GetDirectoryName(downloadsFolder.TrimEnd(new char[] { '\\' })); //this gets parent dir even not paths that dont exist
+
+                if (!Directory.Exists(parentFolderPath))
+                {
+                    errorReason = $"the folder's parent [{parentFolderPath}] doesnt exist either";
+                }
+                else
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(downloadsFolder);
+                    }
+                    catch (UnauthorizedAccessException accessDeniedExcptionInstance)
+                    {
+                        errorReason = "permission was denied by Windows";
+                    }
+                }
+
+                if (errorReason != null)
+                {
+                    string message = $"Could not create your temporary downloads folder:\n[{downloadsFolder}]\n\nThe Folder does not exist on your computer, and it couldnt be created automatically because {errorReason}.\n\nWould you like to edit this location in your Settings?";
+                    MessageBoxResult buttonPressed = Xceed.Wpf.Toolkit.MessageBox.Show(message, "Invalid Temp Folder Location", MessageBoxButton.OKCancel, MessageBoxImage.Error);
+                    if (buttonPressed == MessageBoxResult.OK)
+                    {
+                        ShowSettingsWindow("tiLocation");
+                        downloadsFolder = Settings.Default.DownloadLocation; //refresh the downloadsFolder with the new settings value
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            return downloadsFolder;
         }
 
         #endregion
